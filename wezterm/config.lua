@@ -89,7 +89,19 @@ config = {
 			action = wezterm.action.CloseCurrentPane({ confirm = true }),
 		},
 
-		-- Splitting panes
+		-- Shortcut for opening a temrinal window
+		{
+			mods = "CTRL",
+			key = "/", -- TODO: Fix
+			action = wezterm.action_callback(function(win, pane)
+				if is_vim(pane) then
+					pane:split({ direction = "Bottom", size = 0.2 })
+					wezterm.log_info("WindowID:", win:window_id(), "PaneID:", pane:pane_id())
+				else
+					win:perform_action(wezterm.action.CloseCurrentPane({ confirm = true }), pane)
+				end
+			end),
+		},
 		{
 			mods = "LEADER",
 			key = "v",
