@@ -4,31 +4,38 @@ local config = {}
 if wezterm.config_builder then
 	config = wezterm.config_builder()
 end
-
 local function is_vim(pane)
-	local process_name = string.gsub(pane:get_foreground_process_name(), "(.*[/\\])(.*)", "%2")
-	return process_name == "nvim" or process_name == "vim"
+	-- this is set by the plugin, and unset on ExitPre in Neovim
+	return pane:get_user_vars().IS_NVIM == "true"
 end
 
-local super_vim_keys_map = {
-	x = utf8.char(0xAB), -- Using 0xAB for CMD+X
-	c = utf8.char(0xAC), -- Using 0xAC for CMD+C
+local direction_keys = {
+	h = "Left",
+	j = "Down",
+	k = "Up",
+	l = "Right",
 }
 
-local function bind_super_key_to_vim(key)
+local function split_nav(resize_or_move, key)
 	return {
 		key = key,
-		mods = "CMD",
+		mods = "CTRL",
 		action = wezterm.action_callback(function(win, pane)
-			local char = super_vim_keys_map[key]
-			if char and is_vim(pane) then
+			if is_vim(pane) then
+				-- pass the keys through to vim/nvim
 				win:perform_action({
-					SendKey = { key = char, mods = nil },
+					SendKey = {
+						key = key,
+						mods = "CTRL",
+					},
 				}, pane)
 			else
-				win:perform_action({
-					SendKey = { key = key, mods = "CMD" },
-				}, pane)
+				-- For standard wezzterm
+				if resize_or_move == "resize" then
+					win:perform_action({ AdjustPaneSize = { key, 3 } }, pane)
+				else
+					win:perform_action({ ActivatePaneDirection = direction_keys[key] }, pane)
+				end
 			end
 		end),
 	}
@@ -39,6 +46,10 @@ config = {
 	automatically_reload_config = true,
 	window_close_confirmation = "NeverPrompt",
 	hide_tab_bar_if_only_one_tab = true,
+	-- TODO: Continue trying to get the opacity to change...
+	window_background_opacity = 10,
+	macos_window_background_blur = 5,
+
 	-- Exit code behaviour
 	exit_behavior = "Hold",
 	exit_behavior_messaging = "Brief",
@@ -56,7 +67,59 @@ config = {
 		top = 0,
 		bottom = 0,
 	},
+	leader = { key = "a", mods = "CTRL", timeout_milliseconds = 10000 },
+
 	keys = {
+		-- move between split panes
+		split_nav("move", "h"),
+		split_nav("move", "j"),
+		split_nav("move", "k"),
+		split_nav("move", "l"),
+		-- resize panes
+		split_nav("resize", "LeftArrow"),
+		split_nav("resize", "DownArrow"),
+		split_nav("resize", "UpArrow"),
+		split_nav("resize", "RightArrow"),
+
+		{
+			mods = "LEADER",
+			key = "d",
+			action = wezterm.action.CloseCurrentPane({ confirm = true }),
+		},
+
+		-- Splitting panes
+		{
+			mods = "LEADER",
+			key = "v",
+			action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+		},
+		{
+			mods = "LEADER",
+			key = "s",
+			action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }),
+		},
+		-- Maximise current pane
+		{
+			mods = "LEADER",
+			key = "m",
+			action = wezterm.action.TogglePaneZoomState,
+		},
+		-- rotate panes
+		{
+			mods = "LEADER",
+			key = "Space",
+			action = wezterm.action.RotatePanes("Clockwise"),
+		},
+		-- show the pane selection mode, but have it swap the active and selected panes
+
+		{
+			mods = "LEADER",
+			key = "x",
+			action = wezterm.action.PaneSelect({
+				mode = "SwapWithActive",
+			}),
+		},
+
 		-- Make Option-Left equivalent to Alt-b which many line editors interpret as backward-word
 		{ key = "LeftArrow", mods = "OPT", action = wezterm.action({ SendString = "\x1bb" }) },
 
@@ -104,9 +167,9 @@ config = {
 			mods = "CMD",
 			action = wezterm.action({ SendString = "\x1b:w\n" }),
 		},
-		-- Add copy and paste as normal
-		bind_super_key_to_vim("x"),
-		bind_super_key_to_vim("c"),
+		-- Add copy and paste as normal. TODO: Could look into using the built in like above
+		require("command_keys").bind_super_key_to_vim("x"),
+		require("command_keys").bind_super_key_to_vim("c"),
 	},
 	mouse_bindings = {
 		{

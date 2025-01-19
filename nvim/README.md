@@ -11,8 +11,9 @@
 - Turn off transperancy, seems to fuck with some stuff regaring colours
 - Add key maps for <S-h> and <S-l> for going to the start/end of a line
 - Get quick fix working for spelling mistakes
+- Get <C-g> working to select a word and multi-cursor, just like intellij
 
-### Low Piroitfy
+## Low Piroitfy
 
 - Get preview showing by default. Have tried:
 - Figure out if it's possible to only show diagnostics for errors
