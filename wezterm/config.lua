@@ -11,6 +11,7 @@ local function is_vim(pane)
 	return pane:get_user_vars().IS_NVIM == "true"
 end
 
+-- TODO: Seperate these into it's own file
 local direction_keys = {
 	h = "Left",
 	j = "Down",
@@ -83,6 +84,7 @@ config = {
 		split_nav("resize", "UpArrow"),
 		split_nav("resize", "RightArrow"),
 
+		-- Close when just using terminal windows
 		{
 			mods = "LEADER",
 			key = "d",
@@ -92,13 +94,23 @@ config = {
 		-- Shortcut for opening a temrinal window
 		{
 			mods = "CTRL",
-			key = "/", -- TODO: Fix
-			action = wezterm.action_callback(function(win, pane)
+			key = "/",
+			action = wezterm.action_callback(function(window, pane)
 				if is_vim(pane) then
+					-- If terminal tab is already open, then close
+					local tab = window:active_tab()
+					local panes = tab:panes()
+					wezterm.log_info("Panes info", panes)
+					for _, current_pane in ipairs(panes) do
+						if not is_vim(current_pane) then
+							current_pane:activate()
+							window:perform_action(wezterm.action.CloseCurrentPane({ confirm = true }), pane)
+							return
+						end
+					end
 					pane:split({ direction = "Bottom", size = 0.2 })
-					wezterm.log_info("WindowID:", win:window_id(), "PaneID:", pane:pane_id())
 				else
-					win:perform_action(wezterm.action.CloseCurrentPane({ confirm = true }), pane)
+					window:perform_action(wezterm.action.CloseCurrentPane({ confirm = true }), pane)
 				end
 			end),
 		},
