@@ -16,19 +16,24 @@ local direction_keys = {
 	j = "Down",
 	k = "Up",
 	l = "Right",
+	LeftArrow = "Left",
+	RightArrow = "Right",
+	DownArrow = "Down",
+	UpArrow = "Up",
 }
 
 local function split_nav(resize_or_move, key)
 	return {
 		key = key,
-		mods = resize_or_move == "resize" and "META" or "CTRL",
+		mods = "CTRL",
 		action = wezterm.action_callback(function(win, pane)
 			if is_vim(pane) then
 				-- pass the keys through to vim/nvim
 				win:perform_action({
-					SendKey = { key = key, mods = resize_or_move == "resize" and "META" or "CTRL" },
+					SendKey = { key = key, mods = "CTRL" },
 				}, pane)
 			else
+				-- Run the wezterm action on the terminal panes
 				if resize_or_move == "resize" then
 					win:perform_action({ AdjustPaneSize = { direction_keys[key], 3 } }, pane)
 				else
