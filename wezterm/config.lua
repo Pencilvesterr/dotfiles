@@ -4,6 +4,8 @@ local config = {}
 if wezterm.config_builder then
 	config = wezterm.config_builder()
 end
+
+-- if you are *NOT* lazy-loading smart-splits.nvim (recommended)
 local function is_vim(pane)
 	-- this is set by the plugin, and unset on ExitPre in Neovim
 	return pane:get_user_vars().IS_NVIM == "true"
@@ -19,20 +21,16 @@ local direction_keys = {
 local function split_nav(resize_or_move, key)
 	return {
 		key = key,
-		mods = "CTRL",
+		mods = resize_or_move == "resize" and "META" or "CTRL",
 		action = wezterm.action_callback(function(win, pane)
 			if is_vim(pane) then
 				-- pass the keys through to vim/nvim
 				win:perform_action({
-					SendKey = {
-						key = key,
-						mods = "CTRL",
-					},
+					SendKey = { key = key, mods = resize_or_move == "resize" and "META" or "CTRL" },
 				}, pane)
 			else
-				-- For standard wezzterm
 				if resize_or_move == "resize" then
-					win:perform_action({ AdjustPaneSize = { key, 3 } }, pane)
+					win:perform_action({ AdjustPaneSize = { direction_keys[key], 3 } }, pane)
 				else
 					win:perform_action({ ActivatePaneDirection = direction_keys[key] }, pane)
 				end
@@ -70,7 +68,6 @@ config = {
 	leader = { key = "a", mods = "CTRL", timeout_milliseconds = 10000 },
 
 	keys = {
-		-- move between split panes
 		split_nav("move", "h"),
 		split_nav("move", "j"),
 		split_nav("move", "k"),
