@@ -46,13 +46,27 @@ local function split_nav(resize_or_move, key)
 end
 
 config = {
+
 	default_cursor_style = "SteadyBar",
 	automatically_reload_config = true,
 	window_close_confirmation = "NeverPrompt",
 	hide_tab_bar_if_only_one_tab = true,
-	-- TODO: Continue trying to get the opacity to change...
-	window_background_opacity = 10,
-	macos_window_background_blur = 5,
+	macos_window_background_blur = 35,
+	-- Tab management
+	tab_bar_at_bottom = false, -- Make it look like tabs, with better GUI controls
+	-- Don't let any individual tab name take too much room
+	tab_max_width = 50,
+	colors = {
+		tab_bar = {
+			active_tab = {
+				-- I use a solarized dark theme; this gives a teal background to the active tab
+				fg_color = "#073642",
+				bg_color = "#2aa198",
+			},
+		},
+	},
+	-- Switch to the last active tab when I close a tab
+	switch_to_last_active_tab_when_closing_tab = true,
 
 	-- Exit code behaviour
 	exit_behavior = "Hold",
@@ -62,7 +76,6 @@ config = {
 	use_fancy_tab_bar = true,
 	window_decorations = "TITLE | RESIZE",
 	check_for_updates = false,
-	tab_bar_at_bottom = false,
 	font_size = 12.5,
 	font = wezterm.font("JetBrains Mono", { weight = "Bold" }),
 	window_padding = {
@@ -220,10 +233,12 @@ config = {
 				saturation = 1.02,
 				brightness = 0.25,
 			},
-			-- attachment = { Parallax = 0.3 },
-			-- width = "100%",
-			-- height = "100%",
+			attachment = { Parallax = 0.3 },
+			width = "100%",
+			height = "100%",
+			opacity = 0.90,
 		},
+
 		{
 			source = {
 				Color = "#282c35",
