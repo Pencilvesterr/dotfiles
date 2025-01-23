@@ -82,17 +82,15 @@ nnoremap <A-p> :tabprev<CR>
 
 " Pane navigation - Ctrl hjkl
 " Can still use normal ctrl-w hjkl
-nmap <C-k> <C-w>k
-nmap <C-j> <C-w>j
-nmap <C-h> <C-w>h
-nmap <C-l> <C-w>l
+noremap <C-h> <C-W>h
+noremap <C-j> <C-W>j
+noremap <C-k> <C-W>k
+noremap <C-l> <C-W>l
 
 " Jump between methods
 " n = normal mode , nore=non-recursive, won't trigger other mappings
 nmap [[ <Action>(MethodUp)
 nmap ]] <Action>(MethodDown)
-nmap <C-j> <Action>(MethodDown)
-nmap <C-k> <Action>(MethodUp)
 
 " Easy visual indentation
 vnoremap < <gv
@@ -125,13 +123,21 @@ map <leader>ze :action ExpandRegionRecursively<CR>
 map <leader>zz :action ExpandCollapseToggleAction<CR>
 
 " Window splits
+" Intellij calls toolbars "Windows" and code windows "Splits"
 map <leader>ww <Action>(HideAllWindows)
 map <leader>wv <Action>(SplitVertically)
 map <leader>ws <Action>(SplitHorizontally)
 map <leader>wu <Action>(Unsplit)
 map <leader>wm <Action>(MoveEditorToOppositeTabGroup)
+nmap <leader>wd <Action>(CloseContent) 
+nmap <leader>wa <Action>(CloseAllEditors)
+nmap <leader>wo <Action>(CloseAllEditorsButActive)
+map <leader>w= <Action>(tabshifter.Actions.EqualSizeSplit)
+
 map <C-Left> <Action>(TabShiftActions.StretchLeft)
 map <C-Right> <Action>(TabShiftActions.StretchRight)
+map <C-Down> <Action>(TabShiftActions.StretchDown)
+map <C-Up> <Action>(TabShiftActions.StretchUp)
 " Note: With the TabShifter plugin, shift+alt [ or ] will stretch the splitter window left or right
 
 " Display options
@@ -145,7 +151,7 @@ map <leader>th <action>(ResizeToolWindowLeft)
 map <leader>tl <action>(ResizeToolWindowRight)
 map <leader>ti <action>(JumpToLastWindow)
 " Open NERDTree (use q or esc to exit)
-map <leader>tt :NERDTreeFocus<CR>
+map <leader>e :NERDTreeFocus<CR>
 map <leader>tc :NERDTreeClose<CR>
 " s - Open file in vertical split
 " o - Open directory
@@ -176,11 +182,6 @@ map <leader>fs <action>(FileStructurePopup)
 " Show the method signature
 map <leader>q <action>(QuickJavaDoc)
 
-" Closing Content
-nmap <leader>xx <Action>(CloseContent)
-nmap <leader>xa <Action>(CloseAllEditors)
-nmap <leader>xo <Action>(CloseAllEditorsButActive)
-
 " Go to code
 nmap gd <Action>(GotoDeclaration)
 nmap gg <Action>(GotoImplementation)
@@ -198,8 +199,8 @@ map <leader>gs <Action>(ActivateVersionControlToolWindow)
 map <leader>gr <Action>(Git.Branches)
 
 " Errors
-map <leader>en <Action>(GotoNextError)
-map <leader>ep <Action>(GotoPreviousError)
+map <leader>xn <Action>(GotoNextError)
+map <leader>xp <Action>(GotoPreviousError)
 
 nmap <leader>mt <Action>(MainMenu)
 nmap <leader>ma <Action>(AnalyzeMenu)
@@ -284,6 +285,11 @@ let g:WhichKeyDesc_window_split_vertically = "<leader>wv Split vertically"
 let g:WhichKeyDesc_window_split_horizontally = "<leader>ws Split horizontally"
 let g:WhichKeyDesc_window_split_unsplit = "<leader>wu Unsplit"
 let g:WhichKeyDesc_window_split_move_editor = "<leader>wm Move editor to opposite tab group"
+let g:WhichKeyDesc_close_content = "<leader>wd Close Current Tab"
+let g:WhichKeyDesc_close_all = "<leader>wa Close All Tabs"
+let g:WhichKeyDesc_close_all_but_active = "<leader>wo Close All Tabs But Active"
+let g:WhichKeyDesc_window_equals = "<leader>w= Equalize window sizes"
+
 let g:WhichKeyDesc_window_adjust_left = "<C-Left> Adjust width left (shift+alt+[)"
 let g:WhichKeyDesc_window_adjust_right = "<C-Right> Adjust width right (shift+alt+])"
 
@@ -294,7 +300,7 @@ let g:WhichKeyDesc_fullscreen = "<leader>df Toggle full screen"
 let g:WhichKeyDesc_distraction_free = "<leader>di Toggle distraction free mode"
 
 let g:WhichKeyDesc_tool_window = "<leader>t Tool window"
-let g:WhichKeyDesc_nerdtree = "<leader>tt NERDTree Explorer"
+let g:WhichKeyDesc_nerdtree = "<leader>e NERDTree Explorer"
 let g:WhichKeyDesc_nerdtree_close = "<leader>tc Close NERDTree"
 let g:WhichKeyDesc_resize_tool_window_left = "<leader>th Resize tool window left (ctrl+alt+left)"
 let g:WhichKeyDesc_resize_tool_window_right = "<leader>tl Resize tool window right (ctrl+alt+right)"
@@ -315,10 +321,7 @@ let g:WhichKeyDesc_file_structure_popup = "<leader>fs Show file structure"
 
 let g:WhichKeyDesc_show_quick_signature = "<leader>q Show quick method doc"
 
-let g:WhichKeyDesc_close = "<leader>x Close Tabs"
-let g:WhichKeyDesc_close_content = "<leader>xx Close Current Tab"
-let g:WhichKeyDesc_close_all = "<leader>xa Close All Tabs"
-let g:WhichKeyDesc_close_all_but_active = "<leader>xo Close All Tabs But Active"
+
 
 let g:WhichKeyDesc_run_prefix = "<leader>r Run + Refactor"
 let g:WhichKeyDesc_run_context = "<leader>rc Run context"
@@ -354,9 +357,9 @@ let g:WhichKeyDesc_git_commit = "<leader>gc Open Git commit sidebar"
 let g:WhichKeyDesc_git_status = "<leader>gs Open Git status dialog"
 let g:WhichKeyDesc_git_branches = "<leader>gr Open Git branches list"
 
-let g:WhichKeyDesc_errors = "<leader>e Error navigation"
-let g:WhichKeyDesc_errors_next = "<leader>en Go to next error"
-let g:WhichKeyDesc_errors_prev = "<leader>ep Go to previous error"
+let g:WhichKeyDesc_close = "<leader>x Diagnostics"
+let g:WhichKeyDesc_errors_next = "<leader>xn Go to next error"
+let g:WhichKeyDesc_errors_prev = "<leader>xp Go to previous error"
 
 let g:WhichKeyDesc_Menu = "<leader>m Menu"
 
