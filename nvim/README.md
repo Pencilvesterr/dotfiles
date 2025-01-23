@@ -18,6 +18,8 @@
 - Get preview showing by default. Have tried:
 - Figure out if it's possible to only show diagnostics for errors
 - Rathern than having `s` be the session for the current dir, use:
+- <https://github.com/linux-cultist/venv-selector.nvim> for selecting venvs automatically
+- Look into setting debug configs [docs](https://github.com/harrisoncramer/harrisoncramer.me/blob/main/src/content/blog/debugging-in-neovim.mdx#multiple-configurations), wonder if there's a better way of having per project configs?
 
 ```lua
 -- load the last session  
