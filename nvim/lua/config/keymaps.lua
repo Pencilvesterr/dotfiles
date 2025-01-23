@@ -17,6 +17,11 @@ vim.keymap.set({ "n", "v" }, "c", '"_c')
 
 vim.keymap.del("n", "<c-/>")
 
+-- Add keymaps for upper text naigation
+vim.keymap.set({ "n", "v" }, "L", "$")
+vim.keymap.set({ "n", "v" }, "H", "^")
+-- Can't do K as its set to quick doc, I should probs get used to not relying on it anywaqy
+
 -- Movinw between wezterm
 vim.keymap.set("n", "<C-Left>", require("smart-splits").resize_left)
 vim.keymap.set("n", "<C-Down>", require("smart-splits").resize_down)
