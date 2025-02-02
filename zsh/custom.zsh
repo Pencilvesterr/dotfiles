@@ -1,6 +1,13 @@
+# OS Specific config
+if [[ "$OSTYPE" == "darwin"* ]]; then
 # Homebrew
-eval "$(/opt/homebrew/bin/brew shellenv)"
-export HOMEBREW_NO_AUTO_UPDATE=1
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  export HOMEBREW_NO_AUTO_UPDATE=1
+  else
+  # Add neovim to path
+  export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+fi
+
 
 
 # Poetry
