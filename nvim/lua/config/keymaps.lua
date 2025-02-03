@@ -17,8 +17,13 @@ vim.keymap.set({ "n", "v" }, "c", '"_c')
 
 vim.keymap.del("n", "<c-/>")
 
+-- Close current buffer
+vim.keymap.set("n", "<leader><delete>", function()
+  Snacks.bufdelete()
+end, { desc = "Close Buffer" })
+
 -- Add keymaps for upper text naigation
-vim.keymap.set({ "n", "v" }, "L", "$")
+vim.keymap.set({ "n", "v" }, "L", "$") -- TODO: Why doesn't this work with d command to delete the reset of the line
 vim.keymap.set({ "n", "v" }, "H", "^")
 -- Can't do K as its set to quick doc, I should probs get used to not relying on it anywaqy
 

@@ -2,6 +2,7 @@
 
 ## TODO
 
+- Learn how to find certain files with `<space>/` (grep search), it uses fzflua, thought it was feeding in commands to ripgrep...
 - Need to stop having enter select the suggestion
 - Want to allow command + / to comment out a line
 - With markdown, want to be able to see the ``` when having text blocks

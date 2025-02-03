@@ -1,8 +1,7 @@
-"" TODO:
-" - Keep copying useful imports form ~/.ideavimrc.bck
+" "" TODO:
 " - Fix whichkey description for leacerx
-" - leader G is overloaded
 " - Add command for safe delete
+" - Update based on git repo for lazyvim: https://github.com/cufarvid/lazy-idea
 
 " Aim is to have this file as a single source of truth for all keybindings
 
@@ -45,7 +44,7 @@ nnoremap c ""c
 vnoremap c ""c
 
 " Unbind space for leader
-" map <space> <nop> - TODO: This was breaking 
+" map <space> <nop> - TODO: This was breaking
 let mapleader = " "
 
 "" Plugin Settings
@@ -129,7 +128,7 @@ map <leader>wv <Action>(SplitVertically)
 map <leader>ws <Action>(SplitHorizontally)
 map <leader>wu <Action>(Unsplit)
 map <leader>wm <Action>(MoveEditorToOppositeTabGroup)
-nmap <leader>wd <Action>(CloseContent) 
+nmap <leader>wd <Action>(CloseContent)
 nmap <leader>wa <Action>(CloseAllEditors)
 nmap <leader>wo <Action>(CloseAllEditorsButActive)
 map <leader>w= <Action>(tabshifter.Actions.EqualSizeSplit)
@@ -187,7 +186,7 @@ nmap gd <Action>(GotoDeclaration)
 nmap gg <Action>(GotoImplementation)
 nmap gy <Action>(GotoTypeDeclaration)
 nmap gi <Action>(GotoImplementation)
-nmap gu <Action>(ShowUsages)
+nmap gr <Action>(ShowUsages)
 nmap gt <Action>(GotoTest)
 nmap gf <Action>(Back)
 nmap gb <Action>(Forward)
@@ -346,7 +345,7 @@ let g:WhichKeyDesc_goto_declaration = "gd Go to Definition"
 let g:WhichKeyDesc_goto_type_declaration = "gy Go to Type Declaration"
 let g:WhichKeyDesc_goto_implementation = "gi Go to Implementation"
 let g:WhichKeyDesc_goto_impl = "gg Go to Implementation"
-let g:WhichKeyDesc_goto_usages = "gu Go to Usages"
+let g:WhichKeyDesc_goto_usages = "gr Go to Usages"
 let g:WhichKeyDesc_goto_test = "gt Go to Test"
 let g:WhichKeyDesc_goto_back = "gb Go Back"
 let g:WhichKeyDesc_goto_forward = "gf Go Forward"
