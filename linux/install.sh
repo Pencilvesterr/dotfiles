@@ -9,6 +9,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . $SCRIPT_DIR/utils.sh
 
 install_linux_apps() {
+    # Switch caps and esc, I could do this in another area but fuck it, adding it here
+    dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:escape']"
+
     # Get sudo permissions from the start
     sudo apt update
 
@@ -29,6 +32,13 @@ install_linux_apps() {
     $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
         sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
     sudo apt-get update
+    # Post install steps
+    sudo groupadd docker
+    sudo usermod -aG docker $USER
+    newgrp docker
+    # Start docker on boot
+    sudo systemctl enable docker.service
+    sudo systemctl enable containerd.service
 
     info "Installing neovim"
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
@@ -72,6 +82,7 @@ install_linux_apps() {
     mkdir -p ~/.local/bin
     ln -s /usr/bin/batcat ~/.local/bin/bat
 
+    # I didn't have much success with this one...
     info "Remapping keys for mac"
     sudo apt install python3-pip
     sudo pip3 install xkeysnail
@@ -87,5 +98,21 @@ install_linux_apps() {
     tar xf lazygit.tar.gz lazygit
     sudo install lazygit -D -t /usr/local/bin/
 
-    sudo apt upgrade
+    info "Installing ripgrep"
+    sudo apt-get install ripgrep
+
+    info "Installing luarocks"
+    curl -L -R -O https://www.lua.org/ftp/lua-5.4.7.tar.gz
+    tar zxf lua-5.4.7.tar.gz
+    cd lua-5.4.7
+    make all test
+    cd ..
+    rm -rf lua-5.4.5
+    rm -rf lua-5.4.5.tar.gz
+
+    sudo apt install luarocks
+
+    info "Installing AppImage installer"
+    sudo apt install libfuse2*
+
 }
