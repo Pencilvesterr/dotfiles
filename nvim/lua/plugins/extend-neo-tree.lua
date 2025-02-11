@@ -2,6 +2,7 @@
 -- https://www.reddit.com/r/neovim/comments/1bmy37q/how_does_lazyvim_configure_neotree_to_open_on/
 return {
   "neo-tree.nvim",
+  enabled = true,
   opts = function(_, opts)
     opts.window.mappings["P"] = { "toggle_preview", config = { use_float = true } }
 
@@ -18,7 +19,14 @@ return {
         { source = "diagnostics", display_name = "󰒡" },
       },
     }
-
+    opts.filesystem.filtered_items = {
+      visible = true,
+      hide_dotfiles = false,
+      hide_gitignored = false,
+      never_show = {
+        ".DS_Store",
+      },
+    }
     -- This was supposed to open preview by default...
   end,
 }
