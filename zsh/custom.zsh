@@ -62,6 +62,7 @@ HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 # \e[4 q: Steady underline cursor (non-blinking).
 # \e[5 q: Blinking bar cursor.
 # \e[6 q: Steady bar cursor (non-blinking).
+# TODO: Look into adding https://github.com/softmoth/zsh-vim-mode
 bindkey -v
 export KEYTIMEOUT=1 # Makes switching modes quicker
 export VI_MODE_SET_CURSOR=true 

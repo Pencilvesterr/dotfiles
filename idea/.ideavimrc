@@ -171,7 +171,7 @@ map <leader>am <action>(ShowIntentionActions)
 map <leader>as <action>(SearchEverywhere)
 
 " File navigation
-map <leader><leader> <Action>(RecentFiles)
+map <leader><leader> <action>(RecentFiles)
 map <leader>ff <action>(GotoFile)
 map <leader>fr <action>(RecentFiles)
 map <leader>fa <action>(FindInPath)
