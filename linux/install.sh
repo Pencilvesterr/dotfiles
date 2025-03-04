@@ -18,6 +18,7 @@ install_linux_apps() {
     info "Installing Wezterm"
     curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /etc/apt/keyrings/wezterm-fury.gpg
     echo 'deb [signed-by=/etc/apt/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list
+    sudo apt update
     sudo apt install wezterm
 
     info "Installing docker"
@@ -49,7 +50,7 @@ install_linux_apps() {
     sudo apt install openssh-server -y
 
     info "Install ZSH"
-    sudo apt install zsh
+    sudo apt install zsh -y
 
     info "Setting zsh as default"
     chsh -s $(which zsh)
@@ -63,7 +64,7 @@ install_linux_apps() {
     info "Install the fuck"
     sudo apt update
     sudo apt install python3-dev python3-pip python3-setuptools
-    pip3 install thefuck --user
+    pip3 install --user git+https://github.com/nvbn/thefuck --break-system-packages
 
     info "Install starship"
     curl -sS https://starship.rs/install.sh | sh
@@ -81,11 +82,6 @@ install_linux_apps() {
     sudo apt install bat
     mkdir -p ~/.local/bin
     ln -s /usr/bin/batcat ~/.local/bin/bat
-
-    # I didn't have much success with this one...
-    info "Remapping keys for mac"
-    sudo apt install python3-pip
-    sudo pip3 install xkeysnail
 
     info "Installing speedtest"
     sudo apt-get install curl
@@ -113,6 +109,12 @@ install_linux_apps() {
     sudo apt install luarocks
 
     info "Installing AppImage installer"
-    sudo apt install libfuse2*
+    sudo apt install libfuse2
 
+    info "Install nerd fonts"
+    wget -P ~/.local/share/fonts https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip &&
+        cd ~/.local/share/fonts &&
+        unzip JetBrainsMono.zip &&
+        rm JetBrainsMono.zip &&
+        fc-cache -fv
 }
