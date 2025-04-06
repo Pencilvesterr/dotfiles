@@ -19,9 +19,9 @@ export LANG="en_AU.UTF-8" # Sets default locale for all categories
 export LC_ALL="en_AU.UTF-8" # Overrides all other locale settings
 export LC_CTYPE="en_AU.UTF-8" # Controls character classification and case conversion
 
-# Use vim as default editor. Change to nvim oneday
-export EDITOR="nvim"
-export VISUAL="nvim"
+# Use vim as default editor. Change to nvim oneday, currently too heavy for pi server
+export EDITOR="vim"
+export VISUAL="vim"
 
 # Add /usr/local/bin to the beginning of the PATH environment variable.
 # This ensures that executables in /usr/local/bin are found before other directories in the PATH.

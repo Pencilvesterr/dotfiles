@@ -43,6 +43,14 @@ install_linux_cli_tools() {
     else
         info "curl, gpg, ca-certificates, and build-essential are already installed."
     fi
+    
+    info "Checking for vim..."
+    if ! command -v vim &> /dev/null; then
+        info "Installing vim"
+        sudo apt install vim -y
+    else
+        info "vim is already installed."
+    fi
 
     info "Checking for Docker..."
     if ! command -v docker &> /dev/null; then
