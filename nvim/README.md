@@ -6,6 +6,7 @@
 - Need to stop having enter select the suggestion
 - Want to allow command + / to comment out a line
 - With markdown, want to be able to see the ``` when having text blocks
+- With markdown, I want to ignore linting diagnostics from nvim-lint
 - Follow the book guide to get rid of the top buffer suggestions
 - Setup edge again for neo-tree
 - Replace the `s` and `S` commands in `extend-snacks.lua`
@@ -14,7 +15,7 @@
 - Get quick fix working for spelling mistakes
 - Get <C-g> working to select a word and multi-cursor, just like intellij
 
-## Low Piroitfy
+## Low Priority
 
 - Get preview showing by default. Have tried:
 - Figure out if it's possible to only show diagnostics for errors
