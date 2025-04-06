@@ -1,11 +1,20 @@
 # OS Specific config
 if [[ "$OSTYPE" == "darwin"* ]]; then
-# Homebrew
+  # Homebrew
   eval "$(/opt/homebrew/bin/brew shellenv)"
   export HOMEBREW_NO_AUTO_UPDATE=1
   else
-  # Add neovim to path
-  export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+    # Add neovim to path
+    # Check architecture
+    ARCH=$(uname -m)
+    if [ "$ARCH" = "x86_64" ]; then
+      export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+    elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+      export PATH="$PATH:/opt/nvim-linux-arm64/bin"
+    else
+        error "Unsupported architecture: $ARCH"
+        return 1
+    fi
 fi
 
 

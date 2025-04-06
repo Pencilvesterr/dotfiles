@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 # TODO: This doesn't run the vscode-extensions.sh 
 
 # Equivelant as the 'source' command
@@ -8,7 +8,7 @@
 . scripts/brew-install-custom.sh
 . scripts/osx-defaults.sh
 . scripts/symlinks.sh
-. linux/install.sh
+. linux/install_debian.sh
 
 info "Dotfiles intallation initialized..."
 read -p "Overwrite existing dotfiles? [y/n] " overwrite_dotfiles
@@ -40,13 +40,14 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     register_keyboard_shortcuts 
     apply_osx_system_defaults
 else 
-    
     if [[ "$install_apps" == "y" ]]; then
         printf "\n"
         info "===================="
         info "Installing Ubuntu Apps"
         info "===================="    
+        install_linux_cli_tools
         install_linux_apps
+        configure_linux_settings
     fi
 fi
 
@@ -70,5 +71,9 @@ if [[ "$overwrite_dotfiles" == "y" ]]; then
     ./scripts/symlinks.sh --delete --include-files
 fi
 ./scripts/symlinks.sh --create
-
 success "Dotfiles set up successfully."
+
+
+info "Restarting zsh to apply changes..."
+/bin/zsh
+
