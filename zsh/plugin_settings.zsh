@@ -26,9 +26,8 @@ zstyle ':fzf-tab:*' use-fzf-default-opts yes
 # switch group using `<` and `>`
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
-
 # FZF Options
-source <(fzf --zsh)
+# TODO: source <(fzf --zsh) This command was breaking when not --zsh, I think it can be removed? 
 export FZF_DEFAULT_COMMAND='rg --hidden -l ""' # Include hidden files
 bindkey "ç" fzf-cd-widget # Fix for ALT+C on Mac
 # Search tree structure in the preview window and CD 

@@ -40,27 +40,30 @@ alias gf='git fetch'
 alias gbranches='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''!seen[$0]++'\'' | head ${1} | cat -n'
 alias glog='git log --graph --oneline --all'
 
-# FZF Commands
-alias gafzf='git ls-files -m -o --exclude-standard | grep -v "__pycache__" | fzf -m --print0 | xargs -0 -o -t git add' # Git add with fzf
-alias grmfzf='git ls-files -m -o --exclude-standard | fzf -m --print0 | xargs -0 -o -t git rm' # Git rm with fzf
-alias grfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore' # Git restore with fzf
-alias grsfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore --staged' # Git restore --staged with fzf
-alias gcofzf='git branch | fzf | xargs git checkout' # Select branch with fzf
+# GIT FZF Commands
+# Git add with fzf
+alias gafzf='git ls-files -m -o --exclude-standard | grep -v "__pycache__" | fzf -m --print0 | xargs -0 -o -t git add' 
+# Git rm with fzf
+alias grmfzf='git ls-files -m -o --exclude-standard | fzf -m --print0 | xargs -0 -o -t git rm' 
+# Git diff with fzf
+alias gdfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore' 
+# Git restore --staged with fzf
+alias grsfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore --staged' 
+# Git checkout with fzf
+alias gcfzf='git branch | fzf | xargs git checkout' 
 
 # -------------------------------------------------------------------
 # Updating built-ins
 # -------------------------------------------------------------------
 eval $(thefuck --alias)
-# Use oxide instead of cd
-alias cd=z
+# Use zoxide instead of cd
+if command -v z &> /dev/null; then
+    alias cd=z
+fi
 # Use bat instead of cat
 alias cat=bat
 
 alias del='echo Moving to ~/.Trash/ ...; mv -i $* ~/.Trash/'
-# alias cdf='eval `osascript /Applications/Utilities/OpenTerminal.app/Contents/Resources/Scripts/OpenTerminal.scpt`'
-#alias ls='ls -FG'
-#alias dir='ls -FGl'
-#alias ll="ls -l"
 
 # Safe options, this could be dangerous for other apps that aren't expecting these
 alias rm='rm -i'

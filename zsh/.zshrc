@@ -7,7 +7,7 @@ setopt HIST_IGNORE_ALL_DUPS
 # Custom functions 
 [ -f "$HOME/.config/zsh/functions.zsh" ] && source "$HOME/.config/zsh/functions.zsh"
 
-# Custom zsh
+# Custom zsh (.zshrc equivalent)
 [ -f "$HOME/.config/zsh/custom.zsh" ] && source "$HOME/.config/zsh/custom.zsh"
 
 # Zsh Plugin Settings
