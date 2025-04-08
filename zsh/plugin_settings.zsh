@@ -26,28 +26,8 @@ zstyle ':fzf-tab:*' use-fzf-default-opts yes
 # switch group using `<` and `>`
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
-# FZF Options
-# TODO: source <(fzf --zsh) This command was breaking when not --zsh, I think it can be removed? 
-export FZF_DEFAULT_COMMAND='rg --hidden -l ""' # Include hidden files
-bindkey "ç" fzf-cd-widget # Fix for ALT+C on Mac
-# Search tree structure in the preview window and CD 
-export FZF_ALT_C_OPTS="
-  --walker-skip .git,node_modules,target
-  --preview 'tree -C {}'"
-
-# (Ctrl+T) Preview file contents with bat
-export FZF_CTRL_T_OPTS="
-  --walker-skip .git,node_modules,target
-  --preview 'bat -n --color=always {}'
-  --bind 'ctrl-/:change-preview-window(down|hidden|)'"
-
-# (Ctrl+R) Search command history 
-# CTRL-Y to copy the command into clipboard using pbcopy
-export FZF_CTRL_R_OPTS="
-  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
-  --color header:italic
-  --header 'Press CTRL-Y to copy command into clipboard'"
-
+# Get the fzf setup config and source it. Required for ctrl-r
+source <(fzf --zsh)
 
 
 
