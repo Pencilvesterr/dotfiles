@@ -9,7 +9,7 @@
 " Can also turn on actions in the global searh menu with: track action IDs
 
 "" Base Settings
-"" ========================================================
+" ========================================================
 
 set scrolloff=10 " Number of lines to leave on screen before scrolling
 " set linenumber " TODO: Maybe revert to set nu?
@@ -17,8 +17,10 @@ set nu " Show line numbers
 set showmode " Status bar
 set showcmd "
 set visualbell " Stops the annoying beeping for invalid input
+set shiftround " Round indent to multiple of shiftwidth (affects > and <)
 
 " Searching settings
+" ========================================================
 set smartcase " Use case sensitive searching if there is a capital letter in the search
 set ignorecase " Case insensitive searching by default
 set incsearch " Start searching as you type
@@ -26,10 +28,21 @@ set hlsearch " Highlight search results
 set gdefault " Makes the :s command global by default
 
 " Ideavim settings
+" ========================================================
 set ideajoin " Join lines in the editor
 set ideamarks " Use idea bookmarks instead of vim marks
 " set idearefactormode=normal " Use normal mode for refactoring
+set nowrap " Don't wrap lines
 
+" Neovim settings that differ from vim
+"" ========================================================
+set backspace=indent,eol,start
+set formatoptions=tcqj
+set listchars=tab:>\ ,trail:-,nbsp:+
+set shortmess=filnxtToOF
+
+" Clipboard settings
+" ========================================================
 " Use clipboard for yanking+pasting, avoid using clipboard when deleting.
 set clipboard=ideaput,unnamed
 " Deleting goes to null register
@@ -58,12 +71,15 @@ Plug 'preservim/nerdtree'
 set nerdtree
 Plug 'dbakker/vim-paragraph-motion' " { and } also select lines with white space only
 
+" Comment with gc<action> and gcc for full line
+Plug 'tpope/vim-commentary'
 " Easymotion settings
 " Will need to install these two plugins separately
 " Install IdeaVim-EasyMotion and AceJump plugins.
 Plug 'easymotion/vim-easymotion'
 set easymotion
 set notimeout
+set matchit " Allows you to use % to jump between matching brackets, default in neovim
 
 
 
@@ -107,10 +123,10 @@ nmap me <Action>(EditBookmark)
 "" Leader commands
 "" ========================================================
 " Code commands
-nmap <leader>cd <Action>(SafeDelete)
-nmap <leader>co <Action>(OptimizeImports)
-nmap <leader>ci <Action>(QuickImplementations)
-nmap <leader>cq <Action>(QuickJavaDoc)
+" nmap <leader>cd <Action>(SafeDelete)
+" nmap <leader>co <Action>(OptimizeImports)
+" nmap <leader>ci <Action>(QuickImplementations)
+" nmap <leader>cq <Action>(QuickJavaDoc)
 " Seek around with easymotion
 nmap s <Plug>(easymotion-s)
 
@@ -265,11 +281,11 @@ let g:WhichKeyDesc_leader = "<leader> Leader key"
 let g:WhichKeyDesc_easymotion = "s Jump with Easymotion"
 let g:WhichKeyDesc_easymotion_prefix = "<leader><leader>"
 
-let g:WhichKeyDesc_code = "<leader>c Code menu"
-let g:WhichKeyDesc_code_delete = "<leader>cd Safe delete"
-let g:WhichKeyDesc_code_optimize = "<leader>co Optimize imports"
-let g:WhichKeyDesc_code_implementation = "<leader>ci Show Implementation (alt+space)"
-let g:WhichKeyDesc_code_documentation = "<leader>cq Show method documentation"
+" let g:WhichKeyDesc_code = "<leader>c Code menu"
+" let g:WhichKeyDesc_code_delete = "<leader>cd Safe delete"
+" let g:WhichKeyDesc_code_optimize = "<leader>co Optimize imports"
+" let g:WhichKeyDesc_code_implementation = "<leader>ci Show Implementation (alt+space)"
+" let g:WhichKeyDesc_code_documentation = "<leader>cq Show method documentation"
 
 let g:WhichKeyDesc_fold = "<leader>z Folding"
 let g:WhichKeyDesc_fold_region = "<leader>zc Collapse region"
@@ -292,11 +308,12 @@ let g:WhichKeyDesc_window_equals = "<leader>w= Equalize window sizes"
 let g:WhichKeyDesc_window_adjust_left = "<C-Left> Adjust width left (shift+alt+[)"
 let g:WhichKeyDesc_window_adjust_right = "<C-Right> Adjust width right (shift+alt+])"
 
-let g:WhichKeyDesc_display = "<leader>d Display options"
-let g:WhichKeyDesc_zen_mode = "<leader>dz Toggle Zen mode"
-let g:WhichKeyDesc_hide_all_windows = "<leader>dd Hide all windows"
-let g:WhichKeyDesc_fullscreen = "<leader>df Toggle full screen"
-let g:WhichKeyDesc_distraction_free = "<leader>di Toggle distraction free mode"
+" TODO: Remove this
+" let g:WhichKeyDesc_display = "<leader>d Display options"
+" let g:WhichKeyDesc_zen_mode = "<leader>dz Toggle Zen mode"
+" let g:WhichKeyDesc_hide_all_windows = "<leader>dd Hide all windows"
+" let g:WhichKeyDesc_fullscreen = "<leader>df Toggle full screen"
+" let g:WhichKeyDesc_distraction_free = "<leader>di Toggle distraction free mode"
 
 let g:WhichKeyDesc_tool_window = "<leader>t Tool window"
 let g:WhichKeyDesc_nerdtree = "<leader>e NERDTree Explorer"
@@ -365,3 +382,47 @@ let g:WhichKeyDesc_Menu = "<leader>m Menu"
 let g:WhichKeyDesc_run = "<Space>r Run + Refactor"
 
 let g:WhichKeyDesc_breakpoints = "<leader>b Breakpoint"
+
+" LazyVim Keymapping
+" ========================================================
+" let g:WhichKeyDesc_debug = "<leader>d Debug"
+"
+" nmap <leader>da <Action>(ChooseRunConfiguration) " Toggle Breakpoint
+" nmap <leader>db <Action>(ToggleLineBreakpoint) " Breakpoint Condition
+" nmap <leader>dB <Action>(AddConditionalBreakpoint) " Continue
+" nmap <leader>dc <Action>(Resume) " Run to Cursor
+" nmap <leader>dC <Action>(ForceRunToCursor) " Go to Line (No Execute)
+" nmap <leader>dg :echo 'Not yet implemented.'<cr> " Step Into
+" nmap <leader>di <Action>(StepInto) " Down
+" nmap <leader>dj <Action>(GotoNextError) " Up
+" nmap <leader>dk <Action>(GotoPreviousError) " Run Last
+" nmap <leader>dl <Action>(Debug) " Step Out
+" nmap <leader>do <Action>(StepOut) " Step Over
+" nmap <leader>dO <Action>(StepOver) " Pause
+" nmap <leader>dp <Action>(Pause) " Toggle REPL
+" nmap <leader>dr <Action>(JShell.Console) " Session
+" nmap <leader>ds :echo 'Not yet implmented.'<cr> " Terminate
+" nmap <leader>dt <Action>(Stop) " Widgets
+" nmap <leader>dw :echo 'There is no equivalent mapping for Widgets.'<cr>
+"
+" let g:WhichKeyDesc_test = "<leader>t" " Run Last
+" nmap <leader>tl <Action>(Run) " Show Output
+" nmap <leader>to <Action>(ActivateRunToolWindow) " Toggle Output Panel
+" nmap <leader>tO <Action>(ActivateRunToolWindow) " Run Nearest
+" nmap <leader>tr <Action>(RunClass) " Toggle Summary
+" nmap <leader>ts :echo 'Not yet implmented.'<cr> " Stop
+" nmap <leader>tS <Action>(Stop) " Run File
+" nmap <leader>tt <Action>(RunClass) " Run All Test Files
+" nmap <leader>tT :echo 'Not yet implmented.'<cr> " Toggle Watch
+" nmap <leader>tw :echo 'Not yet implmented.'<cr>
+" nmap <leader>td <Action>(ChooseDebugConfiguration) " nvim-dap" Debug Nearest
+
+let g:WhichKeyDesc_code = "<leader>c Code"
+nmap <leader>cf <Action>(Format) " Format
+vmap <leader>cf <Action>(Format)
+nmap <leader>cd <Action>(ActivateProblemsViewToolWindow) " Line Diagnostics
+nmap <leader>ca <Action>(RefactoringMenu) " Code Action
+vmap <leader>ca <Action>(RefactoringMenu)
+nmap <leader>cR <Action>(RenameFile) " Rename File
+nmap <leader>cr <Action>(RenameElement) " Rename
+nmap <leader>cA <Action>(ShowIntentionActions) " Source Action
