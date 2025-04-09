@@ -4,8 +4,8 @@ export GIT_AUTO_FETCH_INTERVAL=1200 # in seconds
 export ZSH_DOTENV_PROMPT=false
 
 # FZF-Tab Plugin Config 
-# Disable auto-complete when pressing / by default
-zstyle ':fzf-tab:*' continuous-trigger ''
+# auto-complete when pressing / by default TODO: Not working https://github.com/Aloxaf/fzf-tab#usage
+zstyle ':fzf-tab:*' continuous-trigger '/'
 # disable sort when completing `git checkout`
 zstyle ':completion:*:git-checkout:*' sort false
 # set descriptions format to enable group support
@@ -15,6 +15,7 @@ zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
 zstyle ':completion:*' menu no
+
 # preview directory's content with eza when completing cd
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 # custom fzf flags

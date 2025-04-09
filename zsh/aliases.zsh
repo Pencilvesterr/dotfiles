@@ -95,12 +95,12 @@ alias cd..='cd ..'
 # Neovim
 # -------------------------------------------------------------------
 # If poetry is installed and an environment exists, run "poetry run nvim"
-# poetry_run_nvim() {
-#   if command -v poetry >/dev/null 2>&1 && [ -f "poetry.lock" ]; then
-#     poetry run nvim "$@"
-#   else
-#     nvim "$@"
-#   fi
-# }
-# alias vi='poetry_run_nvim'
-# alias v='poetry_run_nvim'
+ poetry_run_nvim() {
+   if command -v poetry >/dev/null 2>&1 && [ -f "poetry.lock" ]; then
+     poetry run nvim "$@"
+   else
+     nvim "$@"
+   fi
+ }
+ alias nvim='poetry_run_nvim'
+ alias v='poetry_run_nvim'
