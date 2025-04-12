@@ -28,21 +28,24 @@ vim.keymap.set({ "n", "v" }, "H", "^")
 -- Can't do K as its set to quick doc, I should probs get used to not relying on it anywaqy
 
 -- Movinw between wezterm
-vim.keymap.set("n", "<C-Left>", require("smart-splits").resize_left)
-vim.keymap.set("n", "<C-Down>", require("smart-splits").resize_down)
-vim.keymap.set("n", "<C-Up>", require("smart-splits").resize_up)
-vim.keymap.set("n", "<C-Right>", require("smart-splits").resize_right)
--- moving between splits
-vim.keymap.set("n", "<C-h>", require("smart-splits").move_cursor_left)
-vim.keymap.set("n", "<C-j>", require("smart-splits").move_cursor_down)
-vim.keymap.set("n", "<C-k>", require("smart-splits").move_cursor_up)
-vim.keymap.set("n", "<C-l>", require("smart-splits").move_cursor_right)
-vim.keymap.set("n", "<C-\\>", require("smart-splits").move_cursor_previous)
--- swapping buffers between windows
--- vim.keymap.set("n", "<leader><leader>h", require("smart-splits").swap_buf_left)
--- vim.keymap.set("n", "<leader><leader>j", require("smart-splits").swap_buf_down)
--- vim.keymap.set("n", "<leader><leader>k", require("smart-splits").swap_buf_up)
--- vim.keymap.set("n", "<leader><leader>l", require("smart-splits").swap_buf_right)
+-- TODO: Smart splits not available when using neovim in vscode
+if not vim.g.vscode then
+  vim.keymap.set("n", "<C-Left>", require("smart-splits").resize_left)
+  vim.keymap.set("n", "<C-Down>", require("smart-splits").resize_down)
+  vim.keymap.set("n", "<C-Up>", require("smart-splits").resize_up)
+  vim.keymap.set("n", "<C-Right>", require("smart-splits").resize_right)
+  -- moving between splits
+  vim.keymap.set("n", "<C-h>", require("smart-splits").move_cursor_left)
+  vim.keymap.set("n", "<C-j>", require("smart-splits").move_cursor_down)
+  vim.keymap.set("n", "<C-k>", require("smart-splits").move_cursor_up)
+  vim.keymap.set("n", "<C-l>", require("smart-splits").move_cursor_right)
+  vim.keymap.set("n", "<C-\\>", require("smart-splits").move_cursor_previous)
+  -- swapping buffers between windows
+  -- vim.keymap.set("n", "<leader><leader>h", require("smart-splits").swap_buf_left)
+  -- vim.keymap.set("n", "<leader><leader>j", require("smart-splits").swap_buf_down)
+  -- vim.keymap.set("n", "<leader><leader>k", require("smart-splits").swap_buf_up)
+  -- vim.keymap.set("n", "<leader><leader>l", require("smart-splits").swap_buf_right)
+end
 
 -- Copy and paste to system clipboard with command key
 local cmd_x = "<Char-0xAB>"
