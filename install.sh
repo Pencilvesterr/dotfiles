@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-# TODO: This doesn't run the vscode-extensions.sh 
+# TODO: This doesn't run the vscode-extensions.sh
 
 # Equivelant as the 'source' command
 . scripts/utils.sh
@@ -13,6 +13,7 @@ set -e
 info "Dotfiles intallation initialized..."
 read -p "Overwrite existing dotfiles? [y/n] " overwrite_dotfiles
 read -p "Install apps? [y/n] " install_apps
+read -p "Work machine? [y/n] " is_work_machine
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     if [[ "$install_apps" == "y" ]]; then
@@ -37,20 +38,19 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     info "OSX System Defaults"
     info "===================="
 
-    register_keyboard_shortcuts 
+    register_keyboard_shortcuts
     apply_osx_system_defaults
-else 
+else
     if [[ "$install_apps" == "y" ]]; then
         printf "\n"
         info "===================="
         info "Installing Ubuntu Apps"
-        info "===================="    
+        info "===================="
         install_linux_cli_tools
         install_linux_apps
         configure_linux_settings
     fi
 fi
-
 
 printf "\n"
 info "===================="
@@ -71,9 +71,13 @@ if [[ "$overwrite_dotfiles" == "y" ]]; then
     ./scripts/symlinks.sh --delete --include-files
 fi
 ./scripts/symlinks.sh --create
+if [[ "$is_work_machine" == "y" ]]; then
+    info "Installing work symlinks"
+    warning "Deleting existing work dotfiles..."
+    ./scripts/symlinks.sh --delete --include-files --work-conf
+    ./scripts/symlinks.sh --create --work-conf
+fi
 success "Dotfiles set up successfully."
-
 
 info "Restarting zsh to apply changes..."
 /bin/zsh
-

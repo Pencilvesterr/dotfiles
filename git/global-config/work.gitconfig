@@ -1,0 +1,28 @@
+
+[user]
+	name = Morgan Crouch
+	email = mcrouch@atlassian.com
+[push]
+	autoSetupRemote = true
+[core]
+	autocrlf = input
+[maintenance]
+	repo = /Users/mcrouch/dev/atlassian/Convo AI Platform/assistance-service
+	repo = /Users/mcrouch/dev/jira/jira-sparse
+	repo = /Users/mcrouch/dev/jira/jira-full
+[merge]
+	conflictStyle = zdiff3
+[pull]
+	rebase = true
+[trace2]
+	eventTarget = af_unix:/Users/mcrouch/.gittrace/trace.sock
+	eventBrief = true
+	eventNesting = 1
+	configparams = custom.metacommands
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true 
+[include]
+	path = ~/.config/delta/delta.gitconfig

@@ -1,0 +1,17 @@
+
+[user]
+	name = Morgan Crouch
+	email = m8crouch@gmail.com
+[push]
+	autoSetupRemote = true
+[core]
+	autocrlf = input
+[pull]
+	rebase = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[include]
+	path = ~/.config/delta/delta.gitconfig

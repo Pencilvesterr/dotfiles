@@ -20,6 +20,7 @@ after-startup-command = []
 
 # # Start AeroSpace at login
 start-at-login = true 
+start-at-login = true
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true 
@@ -51,8 +52,9 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 on-focus-changed = "move-mouse window-lazy-center"
 
 [workspace-to-monitor-force-assignment]
-1 = 'main'                       
-5 = 'secondary'                   
+1 = 'main'
+5 = 'secondary'
+spotify = 'secondary'
 
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).

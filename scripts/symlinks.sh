@@ -12,14 +12,16 @@ CONFIG_FILE="$SCRIPT_DIR/../symlinks_config.conf"
 
 . $SCRIPT_DIR/utils.sh
 
-
-# Check if configuration file exists
-if [ ! -f "$CONFIG_FILE" ]; then
-    echo "Configuration file not found: $CONFIG_FILE"
-    exit 1
-fi
+check_config_exists() {
+    # Check if configuration file exists
+    if [ ! -f "$CONFIG_FILE" ]; then
+        echo "Configuration file not found: $CONFIG_FILE"
+        exit 1
+    fi
+}
 
 create_symlinks() {
+    check_config_exists
     info "Creating symbolic links..."
 
     # Read dotfile links from the config file
@@ -63,8 +65,8 @@ create_symlinks() {
 }
 
 delete_symlinks() {
+    check_config_exists
     info "Deleting symbolic links..."
-
     while IFS=: read -r _ target || [ -n "$target" ]; do
 
         # Skip empty and invalid lines
@@ -90,11 +92,17 @@ delete_symlinks() {
 if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
     case "$1" in
     "--create")
+        if [ "$2" == "--work-conf" ]; then
+            CONFIG_FILE="$SCRIPT_DIR/../symlinks_config_work.conf"
+        fi
         create_symlinks
         ;;
     "--delete")
         if [ "$2" == "--include-files" ]; then
             include_files=true
+        fi
+        if [ "$3" == "--work-conf" ]; then
+            CONFIG_FILE="$SCRIPT_DIR/../symlinks_config_work.conf"
         fi
         delete_symlinks
         ;;
