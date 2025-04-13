@@ -1,3 +1,4 @@
+# TODO: Not used for now, but import in .gitconfig with [source] command 
 [delta]
 	navigate = true
 	side-by-side = true

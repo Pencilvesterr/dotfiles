@@ -1,4 +1,3 @@
-
 [user]
 	name = Morgan Crouch
 	email = mcrouch@atlassian.com
@@ -25,4 +24,4 @@
 	process = git-lfs filter-process
 	required = true 
 [include]
-	path = ~/.config/delta/delta.gitconfig
+  path = ~/.config/difftastic/difft.gitconfig

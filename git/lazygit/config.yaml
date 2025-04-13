@@ -10,5 +10,4 @@ gui:
 
 git:
   paging:
-    colorArg: always
-    pager: delta --dark --paging=never --commit-style box
+    externalDiffCommand: difft --color=always --display=side-by-side
