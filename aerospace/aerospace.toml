@@ -19,11 +19,10 @@ after-login-command = []
 after-startup-command = []
 
 # # Start AeroSpace at login
-start-at-login = true 
 start-at-login = true
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
-enable-normalization-flatten-containers = true 
+enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = false
 
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
@@ -66,11 +65,11 @@ spotify = 'secondary'
 #                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
 inner.horizontal = 10
-inner.vertical =   10
-outer.left =       5
-outer.bottom =     5
-outer.top =        5
-outer.right =      5
+inner.vertical = 10
+outer.left = 5
+outer.bottom = 5
+outer.top = 5
+outer.right = 5
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -109,10 +108,10 @@ ctrl-alt-j = 'move down'
 ctrl-alt-k = 'move up'
 ctrl-alt-l = 'move right'
 
-ctrl-alt-cmd-h = ['join-with left', 'layout v_accordion'] 
-ctrl-alt-cmd-j = 'join-with down' 
-ctrl-alt-cmd-k = 'join-with up' 
-ctrl-alt-cmd-l = ['join-with right' , 'layout v_accordion']
+ctrl-alt-cmd-h = ['join-with left', 'layout v_accordion']
+ctrl-alt-cmd-j = 'join-with down'
+ctrl-alt-cmd-k = 'join-with up'
+ctrl-alt-cmd-l = ['join-with right', 'layout v_accordion']
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
 ctrl-alt-f6 = 'resize smart -150'
@@ -124,7 +123,8 @@ alt-2 = 'workspace 2'
 alt-3 = 'workspace 3'
 alt-4 = 'workspace 4'
 alt-5 = 'workspace 5'
-# alt-t = 'workspace T'
+alt-6 = 'workspace spotify' # Spotify - alt-s conflicts with lazyvim command
+alt-7 = 'workspace trello' # Trello - alt-t conflicts with lazyvim
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 ctrl-alt-1 = ['move-node-to-workspace 1']
@@ -132,8 +132,8 @@ ctrl-alt-2 = ['move-node-to-workspace 2']
 ctrl-alt-3 = ['move-node-to-workspace 3']
 ctrl-alt-4 = ['move-node-to-workspace 4']
 ctrl-alt-5 = ['move-node-to-workspace 5']
-# ctrl-alt-t = ['move-node-to-workspace T', 'workspace t']
-  
+# ctrl-alt-s = ['move-node-to-workspace s', 'workspace s']
+
 ctrl-alt-enter = "fullscreen"
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
@@ -148,17 +148,28 @@ ctrl-alt-semicolon = 'mode service'
 [mode.service.binding]
 esc = ['reload-config', 'mode main']
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
-f = ['layout floating tiling'] # Toggle between floating and tiling layoutbackspace = ['close-all-windows-but-current', 'mode main']
+f = [
+  'layout floating tiling',
+] # Toggle between floating and tiling layoutbackspace = ['close-all-windows-but-current', 'mode main']
 
 # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 #s = ['layout sticky tiling', 'mode main']
-ctrl-alt-cmd-h = ['join-with left', 'mode main'] # mode main will exit sevice mode
+ctrl-alt-cmd-h = [
+  'join-with left',
+  'mode main',
+] # mode main will exit sevice mode
 ctrl-alt-cmd-j = ['join-with down', 'mode main']
 ctrl-alt-cmd-k = ['join-with up', 'mode main']
 ctrl-alt-cmd-l = ['join-with right', 'mode main']
 
 # Can get app ID by running `aerosapce list-apps`
-# [[on-window-detected]]
+[[on-window-detected]]
+if.app-id = 'com.spotify.client'
+run = 'move-node-to-workspace spotify'
+
+[[on-window-detected]]
+if.app-id = 'com.friendlyfoxes.paws-beta'
+run = 'move-node-to-workspace trello'
+
 # if.app-id = 'com.tinyspeck.slackmacgap'
 # run = "move-node-to-workspace S"
-
