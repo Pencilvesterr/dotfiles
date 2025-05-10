@@ -50,10 +50,6 @@ key-mapping.preset = 'qwerty'
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 on-focus-changed = "move-mouse window-lazy-center"
 
-[workspace-to-monitor-force-assignment]
-1 = 'main'
-5 = 'secondary'
-spotify = 'secondary'
 
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
@@ -118,21 +114,20 @@ ctrl-alt-f6 = 'resize smart -150'
 ctrl-alt-f7 = 'resize smart +150'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-alt-1 = 'workspace 1'
-alt-2 = 'workspace 2'
-alt-3 = 'workspace 3'
-alt-4 = 'workspace 4'
-alt-5 = 'workspace 5'
-alt-6 = 'workspace spotify' # Spotify - alt-s conflicts with lazyvim command
-alt-7 = 'workspace trello' # Trello - alt-t conflicts with lazyvim
+alt-1 = 'workspace 1->Browser' 
+alt-2 = 'workspace 2->Code' 
+alt-3 = 'workspace 3->Terminal' 
+alt-4 = 'workspace 4->Empty' 
+alt-5 = 'workspace 5->Slack' 
+alt-6 = 'workspace 6->Spotify' 
+alt-7 = 'workspace 7->Trello' 
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
-ctrl-alt-1 = ['move-node-to-workspace 1']
-ctrl-alt-2 = ['move-node-to-workspace 2']
-ctrl-alt-3 = ['move-node-to-workspace 3']
-ctrl-alt-4 = ['move-node-to-workspace 4']
-ctrl-alt-5 = ['move-node-to-workspace 5']
-# ctrl-alt-s = ['move-node-to-workspace s', 'workspace s']
+ctrl-alt-1 = ['move-node-to-workspace 1->Browser']
+ctrl-alt-2 = ['move-node-to-workspace 2->Code']
+ctrl-alt-3 = ['move-node-to-workspace 3->Terminal']
+ctrl-alt-4 = ['move-node-to-workspace 4->Empty']
+ctrl-alt-5 = ['move-node-to-workspace 5->Slack']
 
 ctrl-alt-enter = "fullscreen"
 
@@ -143,33 +138,60 @@ ctrl-alt-tab = 'move-workspace-to-monitor --wrap-around next'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 ctrl-alt-semicolon = 'mode service'
+
+[workspace-to-monitor-force-assignment]
+1 = 'main'
+5 = 'secondary'
+6 = 'secondary'
+
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
 esc = ['reload-config', 'mode main']
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
-f = [
-  'layout floating tiling',
-] # Toggle between floating and tiling layoutbackspace = ['close-all-windows-but-current', 'mode main']
+f = ['layout floating tiling'] # Toggle between floating and tiling layoutbackspace = ['close-all-windows-but-current', 'mode main']
+b = ['balance-sizes'] # Balance sizes of windows in the current workspace
 
 # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 #s = ['layout sticky tiling', 'mode main']
-ctrl-alt-cmd-h = [
-  'join-with left',
-  'mode main',
-] # mode main will exit sevice mode
+ctrl-alt-cmd-h = ['join-with left','mode main',] # mode main will exit sevice mode
 ctrl-alt-cmd-j = ['join-with down', 'mode main']
 ctrl-alt-cmd-k = ['join-with up', 'mode main']
 ctrl-alt-cmd-l = ['join-with right', 'mode main']
 
 # Can get app ID by running `aerosapce list-apps`
 [[on-window-detected]]
+if.app-id = 'company.thebrowser.Browser'
+run = "move-node-to-workspace 1->Browser"
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = "move-node-to-workspace 1->Browser"
+
+[[on-window-detected]]
+if.app-id = 'com.jetbrains.pycharm'
+run = "move-node-to-workspace 2->Code"
+[[on-window-detected]]
+if.app-id = 'com.jetbrains.WebStorm'
+run = "move-node-to-workspace 2->Code"
+[[on-window-detected]]
+if.app-id = 'com.jetbrains.intellij'
+run = "move-node-to-workspace 2->Code"
+[[on-window-detected]]
+if.app-id = 'com.todesktop.230313mzl4w4u92'
+run = "move-node-to-workspace 2->Code"
+
+[[on-window-detected]]
+if.app-id = 'com.github.wez.wezterm'
+run = "move-node-to-workspace 3->Terminal"
+
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'
+run = "move-node-to-workspace 5->Slack"
+
+[[on-window-detected]]
 if.app-id = 'com.spotify.client'
-run = 'move-node-to-workspace spotify'
+run = 'move-node-to-workspace 6->Spotify'
 
 [[on-window-detected]]
 if.app-id = 'com.friendlyfoxes.paws-beta'
-run = 'move-node-to-workspace trello'
-
-# if.app-id = 'com.tinyspeck.slackmacgap'
-# run = "move-node-to-workspace S"
+run = 'move-node-to-workspace 7->Trello'
