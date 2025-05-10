@@ -27,7 +27,7 @@
 # $character"""
 
 # Testing only to see what works
- format = """
+format = """
 $hostname\
 $localip\
 $shlvl\
@@ -112,11 +112,10 @@ $shell\
 $character"""
 
 
-
 # === Settings
 
 add_newline = true
-command_timeout = 2000
+command_timeout = 3000
 palette = "nord"
 
 # === Colour
@@ -295,7 +294,6 @@ symbol = " "
 
 [hg_branch]
 symbol = " "
-
 
 
 [julia]
