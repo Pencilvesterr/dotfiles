@@ -3,6 +3,7 @@
 - Setup NeoVim as my default editor
 - Copy relevant info from .vimrc_original_repo to my own .vimrc
 - thefuck has been deprecated. Look into (pay-respects)[https://github.com/iffse/pay-respects/] as a replacement 
+- Import the extensions and key bindings used in cursor to my VSCODE director
 
 # Dotfiles
 
