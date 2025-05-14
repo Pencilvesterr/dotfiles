@@ -73,15 +73,20 @@ Plug 'dbakker/vim-paragraph-motion' " { and } also select lines with white space
 
 " Comment with gc<action> and gcc for full line
 Plug 'tpope/vim-commentary'
-" Easymotion settings
-" Will need to install these two plugins separately
-" Install IdeaVim-EasyMotion and AceJump plugins.
-Plug 'easymotion/vim-easymotion'
-set easymotion
 set notimeout
 set matchit " Allows you to use % to jump between matching brackets, default in neovim
 
+" Plugins which require installing IDE Plugin
+" Install:
+"  - IdeaVim-EasyMotion
+"  - AceJump
+Plug 'easymotion/vim-easymotion'
+set easymotion
 
+" Install:
+" - Vim FunctionTextObj
+" Provides vif / vaf for selecting functions and methods
+set functiontextobj
 
 "" Key mappings
 "" ========================================================
