@@ -117,18 +117,19 @@ ctrl-alt-f7 = 'resize smart +150'
 alt-1 = 'workspace 1->Browser' 
 alt-2 = 'workspace 2->Code' 
 alt-3 = 'workspace 3->Terminal' 
-alt-4 = 'workspace 4->Empty' 
+alt-4 = 'workspace 4->Zoom+Misc' 
 alt-5 = 'workspace 5->Slack' 
-alt-6 = 'workspace 6->Spotify' 
-alt-7 = 'workspace 7->Trello' 
-
+alt-8 = 'workspace 8->Trello' 
+alt-7 = 'workspace 7->Spotify' 
+alt-6 = 'workspace 6->Browser2'
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 ctrl-alt-1 = ['move-node-to-workspace 1->Browser']
 ctrl-alt-2 = ['move-node-to-workspace 2->Code']
 ctrl-alt-3 = ['move-node-to-workspace 3->Terminal']
-ctrl-alt-4 = ['move-node-to-workspace 4->Empty']
+ctrl-alt-4 = ['move-node-to-workspace 4->Zoom+Misc']
 ctrl-alt-5 = ['move-node-to-workspace 5->Slack']
-
+ctrl-alt-6 = ['move-node-to-workspace 6->Browser2']
+ctrl-alt-8 = ['move-node-to-workspace 8->Trello']
 ctrl-alt-enter = "fullscreen"
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
@@ -140,9 +141,11 @@ ctrl-alt-tab = 'move-workspace-to-monitor --wrap-around next'
 ctrl-alt-semicolon = 'mode service'
 
 [workspace-to-monitor-force-assignment]
-1 = 'main'
-5 = 'secondary'
-6 = 'secondary'
+'1->Browser' = 'main'
+'5->Slack' = 'secondary'
+'8->Trello' = 'secondary'
+'7->Spotify' = 'secondary'
+'6->Browser2' = 'secondary'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -170,6 +173,10 @@ run = "move-node-to-workspace 1->Browser"
 [[on-window-detected]]
 if.app-id = 'com.jetbrains.pycharm'
 run = "move-node-to-workspace 2->Code"
+# Remote dev
+[[on-window-detected]]
+if.app-id = 'com.jetbrains.cwm.guest'
+run = "move-node-to-workspace 2->Code"
 [[on-window-detected]]
 if.app-id = 'com.jetbrains.WebStorm'
 run = "move-node-to-workspace 2->Code"
@@ -185,13 +192,20 @@ if.app-id = 'com.github.wez.wezterm'
 run = "move-node-to-workspace 3->Terminal"
 
 [[on-window-detected]]
+if.app-id = 'us.zoom.xos'
+run = "move-node-to-workspace 4->Zoom+Misc"
+[[on-window-detected]]
+if.app-id = 'com.postmanlabs.mac'
+run = "move-node-to-workspace 4->Zoom+Misc"
+
+[[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
 run = "move-node-to-workspace 5->Slack"
 
 [[on-window-detected]]
-if.app-id = 'com.spotify.client'
-run = 'move-node-to-workspace 6->Spotify'
+if.app-id = 'com.friendlyfoxes.paws-beta'
+run = 'move-node-to-workspace 8->Trello'
 
 [[on-window-detected]]
-if.app-id = 'com.friendlyfoxes.paws-beta'
-run = 'move-node-to-workspace 7->Trello'
+if.app-id = 'com.spotify.client'
+run = 'move-node-to-workspace 7->Spotify'
