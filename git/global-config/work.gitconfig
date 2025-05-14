@@ -12,7 +12,7 @@
 [merge]
 	conflictStyle = zdiff3
 [pull]
-	rebase = true
+	rebase = false
 [trace2]
 	eventTarget = af_unix:/Users/mcrouch/.gittrace/trace.sock
 	eventBrief = true
