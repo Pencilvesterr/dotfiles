@@ -1,0 +1,543 @@
+" "" TODO:
+" - Fix whichkey description for leacerx
+" - Add command for safe delete
+" - Update based on git repo for lazyvim: https://github.com/cufarvid/lazy-idea
+
+" Aim is to have this file as a single source of truth for all keybindings
+
+" List of available idea actions: https://gist.github.com/zchee/9c78f91cc5ad771c1f5d
+" Can also turn on actions in the global searh menu with: track action IDs
+
+" ==============================================================================
+" Core Vim Settings
+" ==============================================================================
+" These settings control fundamental Vim editor behaviors.
+
+set scrolloff=10  " Keep 10 lines visible above/below cursor when scrolling
+set nu            " Show line numbers (short for 'number')
+set showmode      " Display the current mode (e.g., -- INSERT --) in the status line
+set showcmd       " Display incomplete commands in the status line
+set visualbell    " Use a visual flash instead of an audible beep for errors
+set shiftround    " Round indentation to a multiple of 'shiftwidth' when using > or <
+
+" ==============================================================================
+" Search Settings
+" ==============================================================================
+" Configure how searching behaves in Vim.
+
+set smartcase     " Override 'ignorecase' if the search pattern contains an uppercase letter
+set ignorecase    " Ignore case in search patterns by default
+set incsearch     " Show partial matches for a search pattern as it's being typed
+set hlsearch      " Highlight all matches for the last search pattern
+set gdefault      " Make the :s (substitute) command global by default (i.e., replace all occurrences in a line)
+
+" ==============================================================================
+" IdeaVim Specific Settings
+" ==============================================================================
+" Settings that are specific to the IdeaVim plugin for JetBrains IDEs.
+
+set ideajoin      " Use IntelliJ's join lines functionality (shift + j)
+set ideamarks     " Use IntelliJ's bookmark system instead of Vim's native marks
+" set idearefactormode=normal " Uncomment to use normal mode for refactoring dialogs
+set nowrap        " Do not wrap long lines; they will extend off the screen
+
+" ==============================================================================
+" Neovim Compatibility Settings
+" ==============================================================================
+" Settings to make IdeaVim behave more like Neovim in certain aspects.
+
+set backspace=indent,eol,start  " Allow backspacing over autoindent, end-of-line, and start of insert
+set formatoptions=tcqj          " t: auto-wrap text using textwidth
+                                " c: auto-wrap comments using textwidth, indenting new lines
+                                " q: allow formatting of comments with gq
+                                " j: remove comment leader when joining lines (if possible)
+set listchars=tab:>\ ,trail:-,nbsp:+ " Define how to display tabs, trailing spaces, and non-breakable spaces
+set shortmess=filnxtToOF        " Abbreviate messages to avoid excessive prompts
+                                " f: file info (read errors)
+                                " i: intro message
+                                " l: Lsearch
+                                " n: Nsearch
+                                " x: xsearch
+                                " t: truncate messages
+                                " T: truncate file messages only
+                                " o: overwrite messages
+                                " O: overwrite file messages
+                                " F: file read messages
+
+" ==============================================================================
+" Clipboard Configuration
+" ==============================================================================
+" Control how Vim interacts with the system clipboard.
+
+" Use system clipboard for yanking (y) and putting (p).
+" Avoid using the system clipboard when deleting text.
+set clipboard=ideaput,unnamed
+
+" Ensure that delete operations (d, dd, x, c, C) go to the black hole register ("").
+" This prevents accidental overwriting of the system clipboard content.
+nnoremap d ""d
+nnoremap dd ""dd
+vnoremap d ""d
+nnoremap x ""x
+vnoremap x ""x
+nnoremap C ""C
+vnoremap C ""C
+nnoremap c ""c
+vnoremap c ""c
+
+" ==============================================================================
+" Leader Key Definition
+" ==============================================================================
+" The leader key is a prefix for custom shortcuts.
+
+" Unbind space for leader (some users prefer this, but can cause issues if not handled carefully)
+" map <space> <nop> " - TODO: This was breaking, re-evaluate if needed.
+let mapleader = " " " Set the leader key to Space
+
+" ==============================================================================
+" Plugin Management & Settings
+" ==============================================================================
+" Using vim-plug syntax for managing plugins.
+" Note: For IdeaVim, plugins are often features that need to be enabled
+" or separate IDE plugins that IdeaVim integrates with.
+
+" --- Built-in IdeaVim Plugins/Features ---
+set surround        " Enable `ys` (yank surround), `cs` (change surround), `ds` (delete surround)
+set highlightedyank " Briefly highlight the region of text that was just yanked
+
+" --- Plugins to Install Separately (if not bundled or if using a Vim manager) ---
+" These usually refer to Vim plugins that IdeaVim can leverage.
+" For actual installation, refer to IdeaVim's documentation or manage via IDE plugins.
+
+" NERDTree: A tree explorer for navigating the filesystem.
+" Requires the NERDTree plugin to be available to IdeaVim.
+Plug 'preservim/nerdtree'
+set nerdtree " Enable NERDTree (this might be an alias for an Action or specific to a setup)
+
+" vim-paragraph-motion: Enhances { and } paragraph motions.
+" { and } will also select lines with white space only.
+Plug 'dbakker/vim-paragraph-motion'
+
+" vim-commentary: Easy commenting (gc<motion>, gcc for line).
+Plug 'tpope/vim-commentary'
+" `set notimeout` is generally useful with plugins that have multi-key sequences
+" to prevent Vim from timing out too quickly if you pause mid-sequence.
+set notimeout
+
+" matchit: Extends % to jump between matching pairs beyond (), [], {}.
+" (e.g., if/else/endif, HTML tags). Default in Neovim.
+set matchit
+
+" --- Plugins Requiring IDE Plugin Installation ---
+
+" vim-easymotion: Provides powerful motion commands to jump to any visible character.
+" Requires installing the 'IdeaVim-EasyMotion' IDE plugin.
+Plug 'easymotion/vim-easymotion'
+set easymotion " Enable EasyMotion (this might be an alias or specific setup)
+
+" Vim FunctionTextObj: Provides text objects for functions/methods (e.g., vif, vaf).
+" Requires installing the 'Vim FunctionTextObj' IDE plugin.
+set functiontextobj " Enable text objects for functions
+
+" ==============================================================================
+" General Key Mappings
+" ==============================================================================
+" Custom key mappings not tied to the leader key.
+
+" --- Enhanced HJKL Navigation ---
+" Move by screen lines rather than physical lines if wrapped (less relevant with `set nowrap`).
+" ^ goes to the first non-blank character of the line.
+" $ goes to the end of the line.
+map H ^
+map L $
+map J 5j
+map K 5k
+
+" --- Tab Navigation (IDE Tabs) ---
+" Use Alt + n/p to switch between IDE tabs.
+nnoremap <A-n> :tabnext<CR>    " Next tab
+nnoremap <A-p> :tabprev<CR>    " Previous tab
+
+" --- Pane Navigation (Editor Splits) ---
+" Use Ctrl + hjkl for navigating between split windows.
+" This mirrors common Vim/Tmux bindings. Normal Ctrl-W + hjkl still works.
+noremap <C-h> <C-W>h  " Navigate to split left
+noremap <C-j> <C-W>j  " Navigate to split down
+noremap <C-k> <C-W>k  " Navigate to split up
+noremap <C-l> <C-W>l  " Navigate to split right
+
+" --- Method Navigation (IDE Actions) ---
+" Jump to the previous/next method in the current file.
+" `nmap` is for normal mode, `noremap` prevents recursive mapping.
+nmap [[ <Action>(MethodUp)    " Previous method
+nmap ]] <Action>(MethodDown)  " Next method
+
+" --- Visual Mode Indentation ---
+" After selecting text in visual mode (v, V, Ctrl-V):
+" < : unindent the selection and stay in visual mode.
+" > : indent the selection and stay in visual mode.
+" `gv` reselects the last visual selection.
+vnoremap < <gv
+vnoremap > >gv
+
+" --- Popup Menu Navigation (IDE Autocomplete/Suggestions) ---
+" Navigate IntelliJ's popup menus (like autocomplete) using Ctrl-j/k.
+inoremap <C-j> <Action>(PopupMenu-selectNext) " Select next item in popup
+inoremap <C-k> <Action>(PopupMenu-selectPrev) " Select previous item in popup
+
+" --- Bookmark Management (IDE Bookmarks) ---
+" Uses IntelliJ's bookmarking system due to `set ideamarks`.
+nmap mm <Action>(ToggleBookmark)      " Toggle bookmark on the current line
+nmap ms <Action>(ShowBookmarks)       " Show all bookmarks
+nmap me <Action>(EditBookmark)        " Edit description of bookmark on current line
+
+" ==============================================================================
+" Leader Key Mappings
+" ==============================================================================
+" Mappings prefixed with the <leader> key (Space by default).
+
+" --- EasyMotion ---
+" `s` followed by character(s) to jump with EasyMotion.
+" The <Plug> notation is standard for invoking plugin mappings.
+nmap s <Plug>(easymotion-s)
+
+" --- Folding ---
+" Manage code folds. These often map to IDE actions for folding.
+map <leader>zC :action CollapseAllRegions<CR>        " Collapse all foldable regions in the file
+map <leader>zE :action ExpandAllRegions<CR>          " Expand all foldable regions in the file
+map <leader>zc :action CollapseRegionRecursively<CR> " Collapse the current region and its sub-regions
+map <leader>ze :action ExpandRegionRecursively<CR>   " Expand the current region and its sub-regions
+map <leader>zz :action ExpandCollapseToggleAction<CR>" Toggle fold at cursor
+
+" --- Window Management (Splits & IDE Window Controls) ---
+" IntelliJ calls toolbars "Windows" and code editor splits "Splits".
+map <leader>ww <Action>(HideAllWindows)             " Hide all tool windows (like Project, Structure, etc.)
+map <leader>wv <Action>(SplitVertically)            " Split the current editor vertically
+map <leader>ws <Action>(SplitHorizontally)          " Split the current editor horizontally
+map <leader>wu <Action>(Unsplit)                    " Remove the current editor split
+map <leader>wm <Action>(MoveEditorToOppositeTabGroup)" Move current editor to the other split group (if it exists)
+nmap <leader>wd <Action>(CloseContent)               " Close the current active editor tab
+nmap <leader>wa <Action>(CloseAllEditors)            " Close all open editor tabs
+nmap <leader>wo <Action>(CloseAllEditorsButActive)   " Close all editor tabs except the active one
+map <leader>w= <Action>(tabshifter.Actions.EqualSizeSplit) " Equalize the size of editor splits (requires TabShifter plugin)
+
+" Adjust split sizes using Ctrl + Arrow keys.
+" These might also be related to the TabShifter plugin or general IDE actions.
+" TODO: This is broken, and should be move cursor to the next/previous split.
+map <C-Left> <Action>(TabShiftActions.StretchLeft)   " Stretch editor split left
+map <C-Right> <Action>(TabShivigate to split leftftActions.StretchRight) " Stretch editor split right
+map <C-Down> <Action>(TabShiftActions.StretchDown)   " Stretch editor split down
+map <C-Up> <Action>(TabShiftActions.StretchUp)       " Stretch editor split up
+" Note: With the TabShifter plugin, Shift+Alt+[ or ] can also stretch splitter windows.
+
+" --- Display Modes ---
+map <leader>dd <Action>(HideAllWindows)             " Duplicate of <leader>ww; hides all tool windows
+map <leader>dz <Action>(ToggleZenMode)              " Toggle Zen mode (minimalist UI)
+map <leader>df <Action>(ToggleFullScreen)           " Toggle full-screen mode for the IDE
+map <leader>di <Action>(ToggleDistractionFreeMode)  " Toggle distraction-free mode (centered editor, no toolbars)
+
+" --- Tool Windows ---
+map <leader>th <Action>(ResizeToolWindowLeft)       " Resize the active tool window (e.g., make Project view wider)
+map <leader>tl <Action>(ResizeToolWindowRight)      " Resize the active tool window (e.g., make Project view narrower)
+map <leader>ti <Action>(JumpToLastWindow)           " Jump focus to the last active tool window (like F12)
+
+" NERDTree specific leader mappings
+map <leader>e :NERDTreeFocus<CR>  " Open and focus NERDTree file explorer
+map <leader>tc :NERDTreeClose<CR> " Close NERDTree
+" NERDTree internal keybindings (active when NERDTree window is focused):
+"   s - Open file in a vertical split
+"   o - Open directory or file
+"   O - Recursively open directories
+"   x - Close parent directory
+"   X - Recursively close all children directories
+"   Navigation:
+"     p - Go to parent directory
+"     P - Go to root directory
+"     K - Go to first file/directory in current listing
+"     J - Go to last file/directory in current listing
+"   m - Show NERDTree menu
+"   n - Create a new file in the selected directory
+"   N - Create a new directory in the selected directory
+
+" --- IDE Actions ---
+map <leader>am <Action>(ShowIntentionActions) " Show intention actions and quick-fixes (Alt+Enter)
+map <leader>as <Action>(SearchEverywhere)     " Open 'Search Everywhere' dialog (Double Shift)
+
+" --- File Navigation ---
+map <leader><leader> <Action>(RecentFiles)      " Show recent files (Ctrl+E)
+map <leader>ff <Action>(GotoFile)              " Go to File (Ctrl+Shift+N)
+map <leader>fr <Action>(RecentFiles)          " Show recent files (duplicate of <leader><leader>)
+map <leader>fa <Action>(FindInPath)            " Find in Path (Ctrl+Shift+F)
+map <leader>fl <Action>(RecentLocations)      " Show recent locations (Ctrl+Shift+E)
+map <leader>fs <Action>(FileStructurePopup)    " Show file structure popup (Ctrl+F12)
+
+" --- Code Information ---
+map <leader>q <Action>(QuickJavaDoc) " Show quick documentation for symbol at cursor (Ctrl+Q)
+
+" --- Code Navigation (Go To) ---
+nmap gd <Action>(GotoDeclaration)        " Go to declaration or definition (Ctrl+B or Ctrl+Click)
+nmap gg <Action>(GotoImplementation)     " Go to implementation(s) (Ctrl+Alt+B) - often same as gi
+nmap gy <Action>(GotoTypeDeclaration)    " Go to type declaration (Ctrl+Shift+B)
+nmap gi <Action>(GotoImplementation)     " Go to implementation(s) (Ctrl+Alt+B)
+nmap gr <Action>(ShowUsages)             " Show usages of the symbol at cursor (Alt+F7)
+nmap gt <Action>(GotoTest)               " Go to corresponding test file (Ctrl+Shift+T)
+nmap gf <Action>(Back)                   " Navigate back to previous location (Ctrl+Alt+Left Arrow)
+nmap gb <Action>(Forward)                " Navigate forward (Ctrl+Alt+Right Arrow)
+nmap gs <Action>(GotoSuperMethod)        " Go to super method/class (Ctrl+U)
+
+" --- Git Integration ---
+map <leader>gc <Action>(CheckinProject)             " Open Commit dialog (Ctrl+K)
+map <leader>gs <Action>(ActivateVersionControlToolWindow) " Show Version Control tool window (Alt+9)
+map <leader>gr <Action>(Git.Branches)               " Show Git branches popup (Ctrl+`)
+
+" --- Error Navigation ---
+map <leader>xn <Action>(GotoNextError)     " Go to next error/warning in file (F2)
+map <leader>xp <Action>(GotoPreviousError) " Go to previous error/warning in file (Shift+F2)
+
+" --- IDE Menus ---
+" Access main IDE menus via leader sequences.
+nmap <leader>mt <Action>(MainMenu)          " Open Main Menu (File, Edit, View...)
+nmap <leader>ma <Action>(AnalyzeMenu)       " Open Analyze Menu
+nmap <leader>mb <Action>(BuildMenu)         " Open Build Menu
+nmap <leader>mc <Action>(CodeMenu)          " Open Code Menu
+nmap <leader>mf <Action>(FindMenuGroup)     " Open Find Menu group
+nmap <leader>mg <Action>(GoToMenu)          " Open GoTo Menu
+nmap <leader>ms <Action>(ScopeViewPopupMenu) " Open Scope View Popup Menu (related to project scopes)
+nmap <leader>me <Action>(EditorTabPopupMenu) " Open context menu for editor tabs
+nmap <leader>mm <Action>(ToolWindowsGroup)   " Open Tool Windows menu group
+
+" --- Running & Debugging ---
+nmap <leader>rc <Action>(ContextRun)             " Run context configuration (Shift+F10 for current file/test)
+nmap <leader>rx <Action>(chooseRunConfiguration) " Choose a run/debug configuration (Alt+Shift+F10)
+nmap <leader>rr <Action>(Run)                    " Run the last used configuration (Shift+F10)
+nmap <leader>rt <Action>(RunTests)               " Run tests for the current context/file
+nmap <leader>rs <Action>(Stop)                   " Stop the currently running process (Ctrl+F2)
+nmap <leader>rg <Action>(ContextDebug)           " Debug context configuration (Shift+F9 for current file/test)
+nmap <leader>rd <Action>(Debug)                  " Debug the last used configuration (Shift+F9)
+nmap <leader>rv <Action>(IdeaVim.ReloadVimRc.reload) " Reload .ideavimrc configuration
+
+" --- Refactoring ---
+map <leader>rfn <Action>(RenameElement)        " Rename element (Shift+F6)
+map <leader>rfm <Action>(ExtractMethod)        " Extract Method (Ctrl+Alt+M)
+map <leader>rfv <Action>(IntroduceVariable)    " Introduce Variable (Ctrl+Alt+V)
+map <leader>rff <Action>(IntroduceField)       " Introduce Field (Ctrl+Alt+F)
+map <leader>rfs <Action>(ChangeSignature)      " Change Method Signature (Ctrl+F6)
+map <leader>rfr <Action>(Refactorings.QuickListPopupAction) " Show Refactor This popup (Ctrl+Alt+Shift+T)
+
+" --- Breakpoints ---
+nmap <leader>bb <Action>(ToggleLineBreakpoint) " Toggle breakpoint on current line (Ctrl+F8)
+nmap <leader>be <Action>(EditBreakpoint)       " Edit breakpoint on current line
+nmap <leader>bv <Action>(ViewBreakpoints)      " View all breakpoints (Ctrl+Shift+F8)
+
+" ==============================================================================
+" Which-Key Plugin Settings
+" ==============================================================================
+" Configure the Which-Key plugin, which displays available keybindings.
+" Requires the 'Which-Key' IDE plugin to be installed and configured for IdeaVim.
+
+set which-key " Enable Which-Key (actual command might vary based on IDE plugin)
+
+" --- Which-Key Appearance ---
+let g:WhichKey_FontSize = 16        " Font size for Which-Key popup
+let g:WhichKey_CommandColor = "#41ead4" " Color for the command part
+let g:WhichKey_PrefixColor = "#f335b2"  " Color for the prefix part
+let g:WhichKey_SortOrder = "by_key_prefix_first" " How to sort the displayed keys
+
+" --- Which-Key Descriptions (No Leader Prefix) ---
+" Descriptions for mappings that don't start with the leader key.
+let g:WhichKeyDesc_bookmarks = "m Bookmarks"
+let g:WhichKeyDesc_bookmarks_toggle = "mm Toggle bookmark"
+let g:WhichKeyDesc_bookmarks_show = "ms Show bookmarks"
+let g:WhichKeyDesc_bookmarks_edit = "me Edit bookmark"
+
+let g:WhichKeyDesc_goto = "g GOTO"
+let g:WhichKeyDesc_goto_declaration = "gd Go to Definition"
+let g:WhichKeyDesc_goto_type_declaration = "gy Go to Type Declaration"
+let g:WhichKeyDesc_goto_implementation = "gi Go to Implementation"
+let g:WhichKeyDesc_goto_impl = "gg Go to Implementation"  " Alternative for implementation
+let g:WhichKeyDesc_goto_usages = "gr Go to Usages"
+let g:WhichKeyDesc_goto_test = "gt Go to Test"
+let g:WhichKeyDesc_goto_back = "gb Go Back (IDE Navigation)"
+let g:WhichKeyDesc_goto_forward = "gf Go Forward (IDE Navigation)"
+let g:WhichKeyDesc_goto_super = "gs Go to Super Method"
+
+" --- Which-Key Descriptions (Leader Key Prefixed) ---
+let g:WhichKeyDesc_leader = "<leader> Leader key"
+
+let g:WhichKeyDesc_easymotion = "s Jump with Easymotion"
+" This description seems to be for <leader><leader> if easymotion_prefix is intended.
+" However, `nmap s <Plug>(easymotion-s)` is for `s` directly. Clarify if <leader><leader> is also mapped.
+" let g:WhichKeyDesc_easymotion_prefix = "<leader><leader>"
+
+" Code Commands (Commented out, consider re-adding if mappings are restored)
+" let g:WhichKeyDesc_code_actions_menu = "<leader>c Code menu"
+" let g:WhichKeyDesc_code_delete = "<leader>cd Safe delete"
+" let g:WhichKeyDesc_code_optimize = "<leader>co Optimize imports"
+" let g:WhichKeyDesc_code_implementation = "<leader>ci Show Implementation (alt+space)"
+" let g:WhichKeyDesc_code_documentation = "<leader>cq Show method documentation"
+
+let g:WhichKeyDesc_fold = "<leader>z Folding"
+let g:WhichKeyDesc_fold_region = "<leader>zc Collapse current region recursively"
+let g:WhichKeyDesc_fold_all_region = "<leader>zC Collapse all regions"
+let g:WhichKeyDesc_unfold_region = "<leader>ze Expand current region recursively"
+let g:WhichKeyDesc_unfold_all = "<leader>zE Expand all regions"
+let g:WhichKeyDesc_fold_toggle = "<leader>zz Toggle fold at cursor"
+
+let g:WhichKeyDesc_window = "<leader>w Window & Splits"
+let g:WhichKeyDesc_window_hide = "<leader>ww Hide/Show all tool windows"
+let g:WhichKeyDesc_window_split_vertically = "<leader>wv Split vertically"
+let g:WhichKeyDesc_window_split_horizontally = "<leader>ws Split horizontally"
+let g:WhichKeyDesc_window_split_unsplit = "<leader>wu Unsplit current editor"
+let g:WhichKeyDesc_window_split_move_editor = "<leader>wm Move editor to opposite tab group"
+let g:WhichKeyDesc_close_content = "<leader>wd Close Current Editor Tab"
+let g:WhichKeyDesc_close_all = "<leader>wa Close All Editor Tabs"
+let g:WhichKeyDesc_close_all_but_active = "<leader>wo Close All Tabs But Active"
+let g:WhichKeyDesc_window_equals = "<leader>w= Equalize window split sizes"
+
+let g:WhichKeyDesc_window_adjust_left = "<C-Left> Stretch Split Left"
+let g:WhichKeyDesc_window_adjust_right = "<C-Right> Stretch Split Right"
+" Note: <C-Up> and <C-Down> for split resizing are mapped but not described here. Add if desired.
+
+let g:WhichKeyDesc_display = "<leader>d Display Options"
+let g:WhichKeyDesc_hide_all_windows = "<leader>dd Hide all tool windows (same as <leader>ww)"
+let g:WhichKeyDesc_zen_mode = "<leader>dz Toggle Zen mode"
+let g:WhichKeyDesc_fullscreen = "<leader>df Toggle full screen"
+let g:WhichKeyDesc_distraction_free = "<leader>di Toggle distraction free mode"
+
+let g:WhichKeyDesc_tool_window = "<leader>t Tool Windows"
+let g:WhichKeyDesc_nerdtree = "<leader>e NERDTree Explorer"
+let g:WhichKeyDesc_nerdtree_close = "<leader>tc Close NERDTree"
+let g:WhichKeyDesc_resize_tool_window_left = "<leader>th Resize tool window left (Ctrl+Alt+Left)"
+let g:WhichKeyDesc_resize_tool_window_right = "<leader>tl Resize tool window right (Ctrl+Alt+Right)"
+let g:WhichKeyDesc_jump_to_last_too_window = "<leader>ti Jump to last tool window (F12)"
+
+let g:WhichKeyDesc_action = "<leader>a IDE Actions"
+let g:WhichKeyDesc_action_context_menu = "<leader>am Show Intention Actions (Alt+Enter)"
+let g:WhichKeyDesc_action_search = "<leader>as Search Everywhere (Double Shift)"
+
+let g:WhichKeyDesc_file_quickLook = "<leader><leader> Recent Files (Ctrl+E)"
+
+let g:WhichKeyDesc_file_nav = "<leader>f File Navigation"
+let g:WhichKeyDesc_file_nav_goto_file = "<leader>ff Go to File (Ctrl+Shift+N)"
+let g:WhichKeyDesc_file_nav_goto_content = "<leader>fa Find in Path (Ctrl+Shift+F)"
+let g:WhichKeyDesc_file_nav_show_recent_files = "<leader>fr Show Recent Files (Ctrl+E)"
+let g:WhichKeyDesc_file_nav_show_recent_locations = "<leader>fl Show Recent Locations (Ctrl+Shift+E)"
+let g:WhichKeyDesc_file_structure_popup = "<leader>fs Show File Structure (Ctrl+F12)"
+
+let g:WhichKeyDesc_show_quick_signature = "<leader>q Show Quick Documentation (Ctrl+Q)"
+
+let g:WhichKeyDesc_ide_menus = "<leader>m IDE Menus"
+let g:WhichKeyDesc_menu_main = "<leader>mt Main Menu (File, Edit...)"
+let g:WhichKeyDesc_menu_analyze = "<leader>ma Analyze Menu"
+let g:WhichKeyDesc_menu_build = "<leader>mb Build Menu"
+let g:WhichKeyDesc_menu_code = "<leader>mc Code Menu"
+let g:WhichKeyDesc_menu_find = "<leader>mf Find Menu Group"
+let g:WhichKeyDesc_menu_goto = "<leader>mg GoTo Menu"
+let g:WhichKeyDesc_menu_scope = "<leader>ms Scope View Popup"
+let g:WhichKeyDesc_menu_editor_tabs = "<leader>me Editor Tabs Popup Menu"
+let g:WhichKeyDesc_menu_tool_windows = "<leader>mm Tool Windows Menu Group"
+
+let g:WhichKeyDesc_run_prefix = "<leader>r Run / Debug / Refactor"
+let g:WhichKeyDesc_run_context = "<leader>rc Run Context Configuration"
+let g:WhichKeyDesc_choose_config = "<leader>rx Choose Run/Debug Configuration"
+let g:WhichKeyDesc_rerun_last = "<leader>rr Rerun Last Configuration"
+let g:WhichKeyDesc_run_tests_context = "<leader>rt Run Tests (Context)"
+let g:WhichKeyDesc_stop_process = "<leader>rs Stop Current Process"
+let g:WhichKeyDesc_debug_context = "<leader>rg Debug Context Configuration"
+let g:WhichKeyDesc_debug_last = "<leader>rd Debug Last Configuration"
+let g:WhichKeyDesc_reload_vimrc = "<leader>rv Reload .ideavimrc"
+
+let g:WhichKeyDesc_refactoring_menu_group = "<leader>rf Refactoring"
+let g:WhichKeyDesc_refactoring_rename = "<leader>rfn Rename Element (Shift+F6)"
+let g:WhichKeyDesc_refactoring_method = "<leader>rfm Extract Method (Ctrl+Alt+M)"
+let g:WhichKeyDesc_refactoring_variable = "<leader>rfv Introduce Variable (Ctrl+Alt+V)"
+let g:WhichKeyDesc_refactoring_field = "<leader>rff Introduce Field (Ctrl+Alt+F)"
+let g:WhichKeyDesc_refactoring_signature = "<leader>rfs Change Signature (Ctrl+F6)"
+let g:WhichKeyDesc_refactoring_all = "<leader>rfr Refactor This... (Ctrl+Alt+Shift+T)"
+
+let g:WhichKeyDesc_git_menu = "<leader>g Git"
+let g:WhichKeyDesc_git_commit = "<leader>gc Commit Changes (Ctrl+K)"
+let g:WhichKeyDesc_git_tool_window = "<leader>gs Version Control Tool Window (Alt+9)"
+let g:WhichKeyDesc_git_branches = "<leader>gr Git Branches Popup (Ctrl+`)"
+
+let g:WhichKeyDesc_diagnostics_errors = "<leader>x Diagnostics / Errors"
+let g:WhichKeyDesc_errors_next = "<leader>xn Go to Next Error (F2)"
+let g:WhichKeyDesc_errors_prev = "<leader>xp Go to Previous Error (Shift+F2)"
+
+let g:WhichKeyDesc_breakpoints_menu = "<leader>b Breakpoints"
+let g:WhichKeyDesc_breakpoints_toggle = "<leader>bb Toggle Line Breakpoint (Ctrl+F8)"
+let g:WhichKeyDesc_breakpoints_edit = "<leader>be Edit Breakpoint"
+let g:WhichKeyDesc_breakpoints_view = "<leader>bv View Breakpoints (Ctrl+Shift+F8)"
+
+" The following seems to be a duplicate or alternative way to group run commands.
+" If `g:WhichKeyDesc_run_prefix` is used, this might be redundant or for a different prefix.
+" let g:WhichKeyDesc_run = "<Space>r Run + Refactor"
+
+" ==============================================================================
+" LazyVim Inspired Key Mappings (Section for potential future additions or specific style)
+" ==============================================================================
+" This section is for keymappings inspired by LazyVim or similar configurations.
+" Currently, it includes mappings for Code Actions and Formatting.
+
+" --- Code Actions & Formatting (LazyVim Style) ---
+let g:WhichKeyDesc_code_lazyvim_style = "<leader>c Code (LazyVim Style)"
+" Format code: <leader>cf in normal mode and visual mode
+nmap <leader>cf <Action>(Format)
+vmap <leader>cf <Action>(Format)
+let g:WhichKeyDesc_code_format_lazy = "<leader>cf Format Code"
+
+" Show line diagnostics / problems view: <leader>cd
+nmap <leader>cd <Action>(ActivateProblemsViewToolWindow)
+let g:WhichKeyDesc_code_diagnostics_lazy = "<leader>cd Show Line Diagnostics / Problems"
+
+" Code Action (similar to intentions/quick fixes): <leader>ca in normal and visual mode
+nmap <leader>ca <Action>(RefactoringMenu) " This was RefactoringMenu, ShowIntentionActions might be more direct for "Code Action"
+vmap <leader>ca <Action>(RefactoringMenu) " Same as above
+let g:WhichKeyDesc_code_action_lazy = "<leader>ca Code Action / Refactor Menu"
+
+" Rename File: <leader>cR
+nmap <leader>cR <Action>(RenameFile)
+let g:WhichKeyDesc_code_rename_file_lazy = "<leader>cR Rename File"
+
+" Rename Element (variable, method, etc.): <leader>cr (duplicates <leader>rfn)
+nmap <leader>cr <Action>(RenameElement)
+let g:WhichKeyDesc_code_rename_element_lazy = "<leader>cr Rename Element"
+
+" Source Action (often similar to intentions): <leader>cA
+nmap <leader>cA <Action>(ShowIntentionActions)
+let g:WhichKeyDesc_code_source_action_lazy = "<leader>cA Show Intention Actions (Source Action)"
+
+" --- Debug Mappings (LazyVim Style - example, uncomment and adapt if used) ---
+" let g:WhichKeyDesc_debug_lazy = "<leader>d Debug (LazyVim Style)"
+" nmap <leader>da <Action>(ChooseRunConfiguration) " Choose Debug Config
+" nmap <leader>db <Action>(ToggleLineBreakpoint) " Toggle Breakpoint
+" nmap <leader>dB <Action>(AddConditionalBreakpoint) " Conditional Breakpoint
+" nmap <leader>dc <Action>(Resume) " Continue (Resume Program)
+" nmap <leader>dC <Action>(ForceRunToCursor) " Force Run to Cursor
+" nmap <leader>dg :echo 'LazyVim Debug: Go to Line (No Execute) - Not implemented.'<cr> " Go to Line (No Execute)
+" nmap <leader>di <Action>(StepInto) " Step Into
+" nmap <leader>dj <Action>(GotoNextError) " This was 'Down' in original, mapped to Next Error for IDE context
+" nmap <leader>dk <Action>(GotoPreviousError) " This was 'Up' in original, mapped to Prev Error for IDE context
+" nmap <leader>dl <Action>(Debug) " Run Last Debug Config
+" nmap <leader>do <Action>(StepOut) " Step Out
+" nmap <leader>dO <Action>(StepOver) " Step Over
+" nmap <leader>dp <Action>(Pause) " Pause Execution
+" nmap <leader>dr <Action>(JShell.Console) " Toggle REPL (example: JShell)
+" nmap <leader>ds :echo 'LazyVim Debug: Session - Not implemented.'<cr> " Session management
+" nmap <leader>dt <Action>(Stop) " Terminate Debug Session
+" nmap <leader>dw :echo 'LazyVim Debug: Widgets - No direct equivalent.'<cr> " Widgets
+
+" --- Test Mappings (LazyVim Style - example, uncomment and adapt if used) ---
+" let g:WhichKeyDesc_test_lazy = "<leader>t Test (LazyVim Style)"
+" nmap <leader>tl <Action>(Run) " Run Last Test
+" nmap <leader>to <Action>(ActivateRunToolWindow) " Show Test Output
+" nmap <leader>tO <Action>(ActivateRunToolWindow) " Toggle Output Panel (same as above)
+" nmap <leader>tr <Action>(RunClass) " Run Nearest Test (e.g., current class)
+" nmap <leader>ts :echo 'LazyVim Test: Toggle Summary - Not implemented.'<cr> " Toggle Summary
+" nmap <leader>tS <Action>(Stop) " Stop Test Execution
+" nmap <leader>tt <Action>(RunClass) " Run Test File (e.g., current class)
+" nmap <leader>tT :echo 'LazyVim Test: Run All Test Files - Not implemented for specific key.'<cr>
+" nmap <leader>tw :echo 'LazyVim Test: Toggle Watch - Not implemented.'<cr> " Toggle Watch
+" nmap <leader>td <Action>(ChooseDebugConfiguration) " Debug Nearest Test
+
+" Ensure there's a blank line at the end of the file if preferred

@@ -23,6 +23,8 @@ export LC_CTYPE="en_AU.UTF-8" # Controls character classification and case conve
 export EDITOR="vim"
 export VISUAL="vim"
 
+export ZDOTDIR="/Users/$USER/.config/zsh"
+
 # Add /usr/local/bin to the beginning of the PATH environment variable.
 # This ensures that executables in /usr/local/bin are found before other directories in the PATH.
 export PATH="/usr/local/bin:$PATH"

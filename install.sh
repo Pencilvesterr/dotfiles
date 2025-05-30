@@ -80,4 +80,4 @@ fi
 success "Dotfiles set up successfully."
 
 info "Restarting zsh to apply changes..."
-/bin/zsh
+exec zsh
