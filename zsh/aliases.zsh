@@ -69,12 +69,13 @@ alias gs='git status'
 # Git status short format
 alias gss="git status -s"
 alias gd='git diff'
-alias gm='git commit -m'
+alias gc="echo 'Use gcm for commit, gco for checkout --- '"
+alias gcm='git commit -m'
 # Add all and commit with message
-alias gma='git commit -am'
+alias gcma='git commit -am'
 alias gb='git branch'
-alias gc='git checkout'
-alias gcb='git checkout -b'
+alias gco='git checkout'
+alias gcob='git checkout -b'
 alias gra='git remote add'
 alias grr='git remote rm'
 alias gcl='git clone'
