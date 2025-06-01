@@ -31,11 +31,11 @@ g() {
       alias_name = substr(parts[1], 7)  # Remove "alias "
       alias_command = parts[2]
       gsub(/^'\''|'\''$/, "", alias_command)  # Remove quotes
-      printf "\033[1;36m%s\033[0m %s\n", alias_name, alias_command
       if (comment != "") {
-        printf "  \033[90m%s\033[0m\n", comment
+        printf "\033[90m%s\033[0m\n", comment
         comment = ""
       }
+      printf "\033[1;36m%s\033[0m %s\n", alias_name, alias_command
     }
     ' "${(%):-%x}"  # Current file path in zsh
     
@@ -49,14 +49,16 @@ g() {
 alias galiases='g --help'
 # Git add with fzf
 alias gafzf='git ls-files -m -o --exclude-standard | grep -v "__pycache__" | fzf -m --print0 | xargs -0 -o -t git add' 
-# Git rm with fzf
+# Git rm with fzf, removes file from git index (not from disk)
 alias grmfzf='git ls-files -m -o --exclude-standard | fzf -m --print0 | xargs -0 -o -t git rm' 
-# Git diff with fzf
-alias gdfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore' 
-# Git restore --staged with fzf
+# Git restore with fzf, will revert file to last commit state
+alias grfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore' 
+# Git restore --staged with fzf, opposite of git add where changes remain, but no longer staged for commit 
 alias grsfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore --staged' 
+# Git diff with fzf, shows changes in file
+alias gdfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git diff' 
 # Git checkout a branch with fzf
-alias gcfzf='git branch | fzf | xargs git checkout' 
+alias gcofzf='git branch --format="%(refname:short)" | fzf | xargs -r git checkout'
 
 alias ga='git add'
 alias gp='git pull'		
