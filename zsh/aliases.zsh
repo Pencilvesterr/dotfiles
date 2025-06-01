@@ -16,30 +16,37 @@ alias vi='vim' # Mask builtin with better default
 # -------------------------------------------------------------------
 # Git
 # -------------------------------------------------------------------
-alias ga='git add'
-alias gp='git push'
-alias gl='git log --all --decorate --oneline --graph'
-alias gs='git status'
-alias gss="git status -s"
-alias gd='git diff'
-alias gm='git commit -m'
-alias gma='git commit -am'
-alias gb='git branch'
-alias gc='git checkout'
-alias gcb='git checkout -b'
-alias gra='git remote add'
-alias grr='git remote rm'
-alias gp='git pull'		
-alias gpu='git push'
-# Useful for large repos as only pulls changes for that one branch
-# Instead of a full fetch
-alias gpo='git pull origin'
-alias gcl='git clone'
-alias gf='git fetch'
-alias gbranches='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''!seen[$0]++'\'' | head ${1} | cat -n'
-alias glog='git log --graph --oneline --all'
-
-# GIT FZF Commands
+# List all git aliases for easy discovery
+# Git helper function - shows aliases on --help
+g() {
+  if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    echo "🔧 Git Aliases:"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    
+    # Read this file and extract git aliases with their comments
+    awk '
+    /^# [^-]/ { comment = substr($0, 3) }
+    /^alias g.*=.*git/ { 
+      split($0, parts, "=")
+      alias_name = substr(parts[1], 7)  # Remove "alias "
+      alias_command = parts[2]
+      gsub(/^'\''|'\''$/, "", alias_command)  # Remove quotes
+      printf "\033[1;36m%s\033[0m %s\n", alias_name, alias_command
+      if (comment != "") {
+        printf "  \033[90m%s\033[0m\n", comment
+        comment = ""
+      }
+    }
+    ' "${(%):-%x}"  # Current file path in zsh
+    
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "💡 Usage: g <git_command> or use any alias above"
+  else
+    git "$@"
+  fi
+}
+# List all git aliases
+alias galiases='g --help'
 # Git add with fzf
 alias gafzf='git ls-files -m -o --exclude-standard | grep -v "__pycache__" | fzf -m --print0 | xargs -0 -o -t git add' 
 # Git rm with fzf
@@ -48,8 +55,32 @@ alias grmfzf='git ls-files -m -o --exclude-standard | fzf -m --print0 | xargs -0
 alias gdfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore' 
 # Git restore --staged with fzf
 alias grsfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore --staged' 
-# Git checkout with fzf
+# Git checkout a branch with fzf
 alias gcfzf='git branch | fzf | xargs git checkout' 
+
+alias ga='git add'
+alias gp='git pull'		
+alias gpo='git pull origin'
+alias gpu='git push'
+alias gl='git log --all --decorate --oneline --graph'
+# Pretty log graph
+alias glog='git log --graph --oneline --all'
+alias gs='git status'
+# Git status short format
+alias gss="git status -s"
+alias gd='git diff'
+alias gm='git commit -m'
+# Add all and commit with message
+alias gma='git commit -am'
+alias gb='git branch'
+alias gc='git checkout'
+alias gcb='git checkout -b'
+alias gra='git remote add'
+alias grr='git remote rm'
+alias gcl='git clone'
+alias gf='git fetch'
+# Show recent branch history
+alias gbranches='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''!seen[$0]++'\'' | head ${1} | cat -n'
 
 # -------------------------------------------------------------------
 # Updating built-ins
