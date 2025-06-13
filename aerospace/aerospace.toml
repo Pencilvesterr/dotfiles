@@ -50,7 +50,8 @@ key-mapping.preset = 'qwerty'
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 on-focus-changed = "move-mouse window-lazy-center"
 
-
+# Callback to move Slack to 0->Slack2 workspace when switching to it
+exec-on-workspace-change = ['/bin/bash', '-c', '/Users/mcrouch/dev/personal/dotfiles/aerospace/move-slack-to-workspace.sh']
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
@@ -118,20 +119,23 @@ alt-1 = 'workspace 1->Browser'
 alt-2 = 'workspace 2->Code' 
 alt-3 = 'workspace 3->Terminal' 
 alt-4 = 'workspace 4->Zoom+Postman' 
-alt-5 = 'workspace 5->Other' 
-alt-8 = 'workspace 8->Trello' 
+alt-5 = 'workspace 5->Slack1' 
+alt-6 = 'workspace 6->Slack2'
 alt-7 = 'workspace 7->Spotify' 
-alt-6 = 'workspace 6->Slack'
-alt-0 = 'workspace 0-Other2'
+alt-8 = 'workspace 8->Trello' 
+alt-9 = 'workspace 9->Zoom2'
+alt-0 = 'workspace 0->Other'
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 ctrl-alt-1 = ['move-node-to-workspace 1->Browser']
 ctrl-alt-2 = ['move-node-to-workspace 2->Code']
 ctrl-alt-3 = ['move-node-to-workspace 3->Terminal']
 ctrl-alt-4 = ['move-node-to-workspace 4->Zoom+Postman']
-ctrl-alt-5 = ['move-node-to-workspace 5->Other']
-ctrl-alt-6 = ['move-node-to-workspace 6->Slack']
+ctrl-alt-5 = ['move-node-to-workspace 5->Slack1']
+ctrl-alt-6 = ['move-node-to-workspace 6->Slack2']
+ctrl-alt-7 = ['move-node-to-workspace 7->Spotify']
 ctrl-alt-8 = ['move-node-to-workspace 8->Trello']
-ctrl-alt-0 = ['move-node-to-workspace 0-Other2']
+ctrl-alt-9 = ['move-node-to-workspace 9->Zoom2']
+ctrl-alt-0 = ['move-node-to-workspace 0->Other']
 ctrl-alt-enter = "fullscreen"
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
@@ -144,11 +148,15 @@ ctrl-alt-semicolon = 'mode service'
 
 [workspace-to-monitor-force-assignment]
 '1->Browser' = 'main'
-'5->Other' = 'main'
-'6->Slack' = 'secondary'
+'2->Code' = 'main'
+'3->Terminal' = 'main'
+'4->Zoom+Postman' = 'main'
+'5->Slack1' = 'main'
+'6->Slack2' = 'secondary'
 '7->Spotify' = 'secondary'
 '8->Trello' = 'secondary'
-'0-Other2' = 'secondary'
+'9->Zoom2' = 'secondary'
+'0->Other' = 'secondary'
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
@@ -188,6 +196,9 @@ run = "move-node-to-workspace 2->Code"
 [[on-window-detected]]
 if.app-id = 'com.todesktop.230313mzl4w4u92'
 run = "move-node-to-workspace 2->Code"
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+run = "move-node-to-workspace 2->Code"
 
 [[on-window-detected]]
 if.app-id = 'com.github.wez.wezterm'
@@ -195,14 +206,14 @@ run = "move-node-to-workspace 3->Terminal"
 
 [[on-window-detected]]
 if.app-id = 'us.zoom.xos'
-run = "move-node-to-workspace 4->Zoom+Postman"
+run = "move-node-to-workspace 9->Zoom2"
 [[on-window-detected]]
 if.app-id = 'com.postmanlabs.mac'
 run = "move-node-to-workspace 4->Zoom+Postman"
 
 [[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
-run = "move-node-to-workspace 6->Slack"
+run = "move-node-to-workspace 6->Slack2"
 
 [[on-window-detected]]
 if.app-id = 'com.friendlyfoxes.paws-beta'
@@ -211,3 +222,4 @@ run = 'move-node-to-workspace 8->Trello'
 [[on-window-detected]]
 if.app-id = 'com.spotify.client'
 run = 'move-node-to-workspace 7->Spotify'
+
