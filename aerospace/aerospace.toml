@@ -50,8 +50,7 @@ key-mapping.preset = 'qwerty'
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 on-focus-changed = "move-mouse window-lazy-center"
 
-# Callback to move Slack to 0->Slack2 workspace when switching to it
-exec-on-workspace-change = ['/bin/bash', '-c', '/Users/mcrouch/dev/personal/dotfiles/aerospace/move-slack-to-workspace.sh']
+exec-on-workspace-change = ['/opt/homebrew/bin/bash', '-c', '/Users/mcrouch/dev/personal/dotfiles/aerospace/move-apps-to-workspace.sh']
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
