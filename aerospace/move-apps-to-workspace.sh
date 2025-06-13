@@ -3,13 +3,12 @@ set -e
 set -x
 
 # Define app mappings: app_name -> window_identifier
-declare -A APP_MAPPINGS=(
-    ["Slack"]="Slack"
-    ["Zoom"]="zoom.us"
-    # Add more apps as needed
-    # ["Discord"]="Discord"
-    # ["Teams"]="Microsoft Teams"
-)
+# Define app mappings using arrays (compatible with older bash versions)
+WORKSPACE_APP_NAME=("Slack" "Zoom")
+APP_IDENTIFIERS=("Slack" "zoom.us")
+# Add more apps as needed
+# WORKSPACE_APP_NAME+=("Discord" "Teams")
+# APP_IDENTIFIERS+=("Discord" "Microsoft Teams")
 
 # Function to move app windows to current workspace
 move_app_to_workspace() {
@@ -47,11 +46,12 @@ move_app_to_workspace() {
 }
 
 # Check each app to see if the current workspace name contains it
-for app_name in "${!APP_MAPPINGS[@]}"; do
+for i in "${!WORKSPACE_APP_NAME[@]}"; do
+    app_name="${WORKSPACE_APP_NAME[$i]}"
     echo "Checking if workspace '$AEROSPACE_FOCUSED_WORKSPACE' contains '$app_name'"
     if [[ "$AEROSPACE_FOCUSED_WORKSPACE" == *"$app_name"* ]]; then
         echo "Match found! Processing $app_name"
-        window_identifier="${APP_MAPPINGS[$app_name]}"
+        window_identifier="${APP_IDENTIFIERS[$i]}"
         move_app_to_workspace "$app_name" "$window_identifier" "$AEROSPACE_FOCUSED_WORKSPACE"
         break  # Only handle one app per workspace switch
     fi
