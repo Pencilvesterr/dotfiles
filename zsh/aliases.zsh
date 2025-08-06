@@ -93,8 +93,6 @@ eval $(thefuck --alias)
 if command -v z &> /dev/null; then
     alias cd=z
 fi
-# Use bat instead of cat
-alias cat=bat
 
 alias del='echo Moving to ~/.Trash/ ...; mv -i $* ~/.Trash/'
 
