@@ -4,14 +4,6 @@
 #
 
 #
-# Browser
-#
-
-if [[ "$OSTYPE" == darwin* ]]; then
-│ export BROWSER="${BROWSER:-open}"
-fi
-
-#
 # Editors
 #
 
@@ -46,7 +38,4 @@ PATH="/Library/Frameworks/Python.framework/Versions/3.12/bin:${PATH}"
 export PATH
 
 
-# Lazy load jenv 
-# Adding it here so it only runs once after login - https://github.com/jenv/jenv/issues/148#issuecomment-322187986
-eval "$(jenv init - --no-rehash)"
-(jenv rehash &) 2> /dev/null
+

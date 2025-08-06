@@ -17,8 +17,7 @@ zsh-users/zsh-completions path:src kind:fpath
 Aloxaf/fzf-tab
 softmoth/zsh-vim-mode # Tried jeffreytse/zsh-vi-mode but it broke ctrl+r
 
-# --- Lazy loading slow tools
-shihyuho/zsh-jenv-lazy
+
 
 #  --- CLI Tools
 # kind:path will put the plugin folder to $PATH, make sure that's how it should be installed
