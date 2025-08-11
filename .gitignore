@@ -3,5 +3,4 @@
 .idea
 wezterm/*.jpg
 wezterm/*.png
-work.zsh
 Brewfile.lock.json

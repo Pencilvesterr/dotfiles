@@ -5,6 +5,7 @@
 	autoSetupRemote = true
 [core]
 	autocrlf = input
+	excludesfile = /Users/mcrouch/.gitignore_global
 [maintenance]
 	repo = /Users/mcrouch/dev/atlassian/Convo AI Platform/assistance-service
 	repo = /Users/mcrouch/dev/jira/jira-sparse
@@ -22,6 +23,6 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
-	required = true 
+	required = true
 [include]
-  path = ~/.config/difftastic/difft.gitconfig
+	path = ~/.config/difftastic/difft.gitconfig
