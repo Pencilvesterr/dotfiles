@@ -28,7 +28,10 @@ zstyle ':fzf-tab:*' use-fzf-default-opts yes
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
 # Get the fzf setup config and source it. Required for ctrl-r
-source <(fzf --zsh)
+# Cache fzf config for faster startup
+if command -v fzf >/dev/null 2>&1; then
+  source <(fzf --zsh)
+fi
 
 
 
