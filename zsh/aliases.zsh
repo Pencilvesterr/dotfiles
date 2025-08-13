@@ -57,8 +57,8 @@ alias grfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore
 alias grsfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore --staged' 
 # Git diff with fzf, shows changes in file
 alias gdfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git diff' 
-# Git checkout a branch with fzf
-alias gcofzf='git branch --format="%(refname:short)" | fzf | xargs -r git checkout'
+# Git checkout a branch with fzf (10 most recent branches)
+alias gcofzf='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''NF && !seen[$0]++'\'' | fzf | xargs -r git checkout'
 
 alias ga='git add'
 alias gp='git pull'		
@@ -83,7 +83,7 @@ alias grr='git remote rm'
 alias gcl='git clone'
 alias gf='git fetch'
 # Show recent branch history
-alias gbranches='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''!seen[$0]++'\'' | head ${1} | cat -n'
+alias gbranches='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''NF && !seen[$0]++'\'' | head ${1} | cat -n'
 
 # -------------------------------------------------------------------
 # Updating built-ins
