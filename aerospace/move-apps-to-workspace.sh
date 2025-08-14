@@ -4,8 +4,8 @@ set -x
 
 # Define app mappings: app_name -> window_identifier
 # Define app mappings using arrays (compatible with older bash versions)
-WORKSPACE_APP_NAME=("Slack" "Zoom")
-APP_IDENTIFIERS=("Slack" "zoom.us")
+WORKSPACE_APP_NAME=("Slack" "Zoom" "Chrome")
+APP_IDENTIFIERS=("Slack" "zoom.us" "Google Chrome")
 # Add more apps as needed
 # WORKSPACE_APP_NAME+=("Discord" "Teams")
 # APP_IDENTIFIERS+=("Discord" "Microsoft Teams")
