@@ -385,5 +385,10 @@
   "[lua]": {
     "editor.defaultFormatter": "sumneko.lua"
   },
-  "diffEditor.ignoreTrimWhitespace": false
+  "diffEditor.ignoreTrimWhitespace": false,
+  "yaml.schemas": {
+    "file:///Users/mcrouch/dev/atlassian/atlascode/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml"
+  },
+  "atlascode.jira.enabled": true,
+  "atlascode.bitbucket.enabled": false
 }

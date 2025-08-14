@@ -54,7 +54,7 @@ alias grmfzf='git ls-files -m -o --exclude-standard | fzf -m --print0 | xargs -0
 # Git restore with fzf, will revert file to last commit state
 alias grfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore' 
 # Git restore --staged with fzf, opposite of git add where changes remain, but no longer staged for commit 
-alias grsfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore --staged' 
+alias grsfzf='git diff --staged --name-only | fzf -m --print0 | xargs -0 -o -t git restore --staged' 
 # Git diff with fzf, shows changes in file
 alias gdfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git diff' 
 # Git checkout a branch with fzf (10 most recent branches)
