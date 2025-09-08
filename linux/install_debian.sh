@@ -30,6 +30,7 @@ install_linux_apps() {
 }
 
 
+# TODO: Extract these into their own functions for modularity/ ease of disabling
 install_linux_cli_tools() {
     # Get sudo permissions from the start
     sudo apt update
@@ -133,7 +134,7 @@ install_linux_cli_tools() {
     if [ "$(basename "$SHELL")" != "zsh" ]; then
         info "Setting zsh as default shell"
         if command -v zsh &> /dev/null; then
-            chsh -s $(which zsh)
+            sudo chsh -s $(which zsh)
             info "Default shell changed to ZSH. Please log out and log back in for the change to take effect."
         else
             warning "ZSH is not installed. Cannot set it as default."
