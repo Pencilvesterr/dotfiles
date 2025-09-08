@@ -121,7 +121,7 @@ alt-4 = 'workspace 4->Zoom+Postman'
 alt-5 = 'workspace 5->Slack' 
 alt-6 = 'workspace 6->Chrome'
 alt-7 = 'workspace 7->Spotify' 
-alt-8 = 'workspace 8->Trello' 
+alt-8 = 'workspace 8->Terminal' 
 alt-9 = 'workspace 9->Zoom'
 alt-0 = 'workspace 0->Slack'
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
@@ -132,7 +132,7 @@ ctrl-alt-4 = ['move-node-to-workspace 4->Zoom+Postman']
 ctrl-alt-5 = ['move-node-to-workspace 5->Slack']
 ctrl-alt-6 = ['move-node-to-workspace 6->Chrome']
 ctrl-alt-7 = ['move-node-to-workspace 7->Spotify']
-ctrl-alt-8 = ['move-node-to-workspace 8->Trello']
+ctrl-alt-8 = ['move-node-to-workspace +']
 ctrl-alt-9 = ['move-node-to-workspace 9->Zoom']
 ctrl-alt-0 = ['move-node-to-workspace 0->Slack']
 ctrl-alt-enter = "fullscreen"
@@ -153,7 +153,7 @@ ctrl-alt-semicolon = 'mode service'
 '5->Slack' = 'main'
 '6->Chrome' = 'secondary'
 '7->Spotify' = 'secondary'
-'8->Trello' = 'secondary'
+'8->Terminal' = 'secondary'
 '9->Zoom' = 'secondary'
 '0->Slack' = 'secondary'
 # 'service' binding mode declaration.
@@ -203,22 +203,25 @@ if.app-id = 'com.github.wez.wezterm'
 run = "move-node-to-workspace 3->Terminal"
 
 [[on-window-detected]]
-if.app-id = 'us.zoom.xos'
-run = "move-node-to-workspace 9->Zoom"
-[[on-window-detected]]
 if.app-id = 'com.postmanlabs.mac'
 run = "move-node-to-workspace 4->Zoom+Postman"
+
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
 run = "move-node-to-workspace 6->Chrome"
 
 [[on-window-detected]]
 if.app-id = 'com.friendlyfoxes.paws-beta'
-run = 'move-node-to-workspace 8->Trello'
+run = 'move-node-to-workspace 8->Terminal'
 
 [[on-window-detected]]
 if.app-id = 'com.spotify.client'
 run = 'move-node-to-workspace 7->Spotify'
+
+
+[[on-window-detected]]
+if.app-id = 'us.zoom.xos'
+run = "move-node-to-workspace 9->Zoom"
 
 [[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
