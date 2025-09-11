@@ -122,7 +122,7 @@ alt-5 = 'workspace 5->Slack'
 alt-6 = 'workspace 6->Chrome'
 alt-7 = 'workspace 7->Spotify' 
 alt-8 = 'workspace 8->Terminal' 
-alt-9 = 'workspace 9->Zoom'
+alt-9 = 'workspace 9->Zoom+Postman'
 alt-0 = 'workspace 0->Slack'
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 ctrl-alt-1 = ['move-node-to-workspace 1->Browser']
@@ -133,7 +133,7 @@ ctrl-alt-5 = ['move-node-to-workspace 5->Slack']
 ctrl-alt-6 = ['move-node-to-workspace 6->Chrome']
 ctrl-alt-7 = ['move-node-to-workspace 7->Spotify']
 ctrl-alt-8 = ['move-node-to-workspace +']
-ctrl-alt-9 = ['move-node-to-workspace 9->Zoom']
+ctrl-alt-9 = ['move-node-to-workspace 9->Zoom+Postman']
 ctrl-alt-0 = ['move-node-to-workspace 0->Slack']
 ctrl-alt-enter = "fullscreen"
 
@@ -154,7 +154,7 @@ ctrl-alt-semicolon = 'mode service'
 '6->Chrome' = 'secondary'
 '7->Spotify' = 'secondary'
 '8->Terminal' = 'secondary'
-'9->Zoom' = 'secondary'
+'9->Zoom+Postman' = 'secondary'
 '0->Slack' = 'secondary'
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -221,7 +221,7 @@ run = 'move-node-to-workspace 7->Spotify'
 
 [[on-window-detected]]
 if.app-id = 'us.zoom.xos'
-run = "move-node-to-workspace 9->Zoom"
+run = "move-node-to-workspace 9->Zoom+Postman"
 
 [[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'

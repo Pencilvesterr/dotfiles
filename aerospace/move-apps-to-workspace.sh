@@ -9,19 +9,22 @@ set -e
 # Configuration: Get apps for workspace using case statement
 get_apps_for_workspace() {
     case "$1" in
-        "5->Slack"|"0->Slack")
+        *"Slack"*)
             echo "Slack"
             ;;
-        "9->Zoom")
-            echo "zoom.us"
-            ;;
-        "4->Zoom+Postman")
+        *"Zoom+Postman"*)
             echo "zoom.us|Postman"
             ;;
-        "6->Chrome")
+        *"Zoom"*)
+            echo "zoom.us"
+            ;;
+        *"Chrome"*)
             echo "Google Chrome"
             ;;
-        "3->Terminal"|"8->Terminal")
+        *"Code"*)
+            echo "Code|Cursor|IntelliJ IDEA"
+            ;;
+        *"Terminal"*)
             echo "WezTerm"
             ;;
         *)
