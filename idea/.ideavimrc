@@ -64,6 +64,9 @@ nnoremap C ""C
 vnoremap C ""C
 nnoremap c ""c
 vnoremap c ""c
+" Paste without overwriting clipboard (visual mode)
+xnoremap p "_dP
+xnoremap P "_dP
 
 " ========================================
 " Plugin Configurations
@@ -116,24 +119,41 @@ map J 5j
 map K 5k
 
 " Tab navigation - Alt n/p (from original - PRESERVED)
+let g:WhichKeyDesc_tab_next = "<A-n> Next Tab"
 nnoremap <A-n> :tabnext<CR>
+
+let g:WhichKeyDesc_tab_prev = "<A-p> Previous Tab"
 nnoremap <A-p> :tabprev<CR>
 
 " Jump between methods (from original - PRESERVED)
+let g:WhichKeyDesc_method_up = "[[ Method Up"
 nmap [[ <Action>(MethodUp)
+
+let g:WhichKeyDesc_method_down = "]] Method Down"
 nmap ]] <Action>(MethodDown)
 
 " Easy visual indentation
+let g:WhichKeyDesc_indent_left = "< Indent Left (Visual)"
 vnoremap < <gv
+
+let g:WhichKeyDesc_indent_right = "> Indent Right (Visual)"
 vnoremap > >gv
 
 " Popup navigation (from original - PRESERVED)
+let g:WhichKeyDesc_popup_next = "<C-j> Popup Next (Insert)"
 inoremap <C-j> <Action>(PopupMenu-selectNext)
+
+let g:WhichKeyDesc_popup_prev = "<C-k> Popup Previous (Insert)"
 inoremap <C-k> <Action>(PopupMenu-selectPrev)
 
 " Bookmark (from original - PRESERVED)
+let g:WhichKeyDesc_bookmark_toggle = "mm Toggle Bookmark"
 nmap mm <Action>(ToggleBookmark)
+
+let g:WhichKeyDesc_bookmark_show = "ms Show Bookmarks"
 nmap ms <Action>(ShowBookmarks)
+
+let g:WhichKeyDesc_bookmark_edit = "me Edit Bookmark"
 nmap me <Action>(EditBookmark)
 
 " ========================================
@@ -155,19 +175,18 @@ nmap <C-k> <C-w>k
 
 let g:WhichKeyDesc_window_right = "<C-l> Go to Right Window"
 nmap <C-l> <C-w>l
-
 " Window Resizing
 let g:WhichKeyDesc_window_height_inc = "<C-Up> Increase Window Height"
-nmap <C-Up> <Action>(IncrementWindowHeight)
+nmap <C-Up> <Action>(TabShiftActions.StretchUp)
 
 let g:WhichKeyDesc_window_height_dec = "<C-Down> Decrease Window Height"
-nmap <C-Down> <Action>(DecrementWindowHeight)
+nmap <C-Down> <Action>(TabShiftActions.StretchDown)
 
 let g:WhichKeyDesc_window_width_dec = "<C-Left> Decrease Window Width"
-nmap <C-Left> <Action>(DecrementWindowWidth)
+nmap <C-Left> <Action>(TabShiftActions.StretchLeft)
 
 let g:WhichKeyDesc_window_width_inc = "<C-Right> Increase Window Width"
-nmap <C-Right> <Action>(IncrementWindowWidth)
+nmap <C-Right> <Action>(TabShiftActions.Stretch)
 
 " Line Movement (LazyVim style)
 let g:WhichKeyDesc_move_down = "<A-j> Move Down"
@@ -179,13 +198,14 @@ let g:WhichKeyDesc_move_up = "<A-k> Move Up"
 nmap <A-k> <Action>(MoveLineUp)
 vmap <A-k> <Action>(MoveLineUp)
 imap <A-k> <Esc><Action>(MoveLineUp)i
-
+   
+" TODO: Removed becuase overrides J L to go to end of line
 " Buffer Navigation (LazyVim style - OVERRIDES original)
-let g:WhichKeyDesc_buffer_prev = "<S-h> Prev Buffer"
-nmap <S-h> <Action>(PreviousTab)
-
-let g:WhichKeyDesc_buffer_next = "<S-l> Next Buffer"
-nmap <S-l> <Action>(NextTab)
+" let g:WhichKeyDesc_buffer_prev = "<S-h> Prev Buffer"
+" nmap <S-h> <Action>(PreviousTab)
+" 
+" let g:WhichKeyDesc_buffer_next = "<S-l> Next Buffer"
+" nmap <S-l> <Action>(NextTab)
 
 let g:WhichKeyDesc_buffer_prev_alt = "[b Prev Buffer"
 nmap [b <Action>(PreviousTab)
@@ -193,11 +213,12 @@ nmap [b <Action>(PreviousTab)
 let g:WhichKeyDesc_buffer_next_alt = "]b Next Buffer"
 nmap ]b <Action>(NextTab)
 
+
+" ========================================
+" Buffer Management (LazyVim style)
+" ========================================
 let g:WhichKeyDesc_buffer_switch = "<leader>bb Switch to Other Buffer"
 nnoremap <leader>bb <C-^>
-
-let g:WhichKeyDesc_buffer_switch_alt = "<leader>` Switch to Other Buffer"
-nnoremap <leader>` <C-^>
 
 " Buffer management (LazyVim style)
 let g:WhichKeyDesc_buffer_delete = "<leader>bd Delete Buffer"
@@ -215,6 +236,10 @@ nmap <leader>bp <Action>(PinActiveTabToggle)
 let g:WhichKeyDesc_buffer_right = "<leader>br Delete Buffers to the Right"
 nmap <leader>br <Action>(CloseAllToTheRight)
 
+let g:WhichKeyDesc_buffer_switch_alt = "<leader>` Switch to Other Buffer"
+nnoremap <leader>` <C-^>
+
+" ========================================
 " Clear search highlighting (LazyVim style)
 let g:WhichKeyDesc_escape_clear = "<esc> Escape and Clear hlsearch"
 nmap <esc> :nohlsearch<CR>
@@ -279,10 +304,10 @@ omap ig <Plug>textobj-entire-i
 " Which-Key Group Descriptions
 let g:WhichKeyDesc_leader = "<leader> Leader key"
 let g:WhichKeyDesc_leader_c = "<leader>c code"
+let g:WhichKeyDesc_leader_b = "<leader>b buffer"
 let g:WhichKeyDesc_leader_d = "<leader>d debug"
 let g:WhichKeyDesc_leader_f = "<leader>f file/find"
 let g:WhichKeyDesc_leader_g = "<leader>g git"
-let g:WhichKeyDesc_leader_q = "<leader>q quit"
 let g:WhichKeyDesc_leader_s = "<leader>s search"
 let g:WhichKeyDesc_leader_t = "<leader>t test"
 let g:WhichKeyDesc_leader_u = "<leader>u ui"
@@ -398,7 +423,7 @@ nmap <leader>sw mzviw<Action>(FindInPath)<esc>`z
 vmap <leader>sw <Action>(FindInPath)
 
 " ========================================
-" Debug mappings (LazyVim style)
+" Debug mappings (LazyVim style) - Actions when debugging
 " ========================================
 
 let g:WhichKeyDesc_debug_breakpoint = "<leader>db Toggle Breakpoint"
@@ -407,7 +432,7 @@ nmap <leader>db <Action>(ToggleLineBreakpoint)
 let g:WhichKeyDesc_debug_breakpoint_condition = "<leader>dB Breakpoint Condition"
 nmap <leader>dB <Action>(AddConditionalBreakpoint)
 
-let g:WhichKeyDesc_debug_continue = "<leader>dc Run/Continue"
+let g:WhichKeyDesc_debug_continue = "<leader>dc Resume"
 nmap <leader>dc <Action>(Resume)
 
 let g:WhichKeyDesc_debug_step_into = "<leader>di Step Into"
@@ -448,7 +473,7 @@ nmap <leader>tt <Action>(RunClass)
 " UI toggles (LazyVim style)
 " ========================================
 
-let g:WhichKeyDesc_ui_diagnostics = "<leader>ud Toggle Diagnostics"
+let g:WhichKeyDesc_uiconvo_ai_enable_cmdb_transformer_workspace_lookup_diagnostics = "<leader>ud Toggle Diagnostics"
 nmap <leader>ud <Action>(ActivateProblemsViewToolWindow)
 
 let g:WhichKeyDesc_ui_inlay_hints = "<leader>uh Toggle Inlay Hints"
@@ -456,6 +481,9 @@ nmap <leader>uh <Action>(ToggleInlayHintsGloballyAction)
 
 let g:WhichKeyDesc_ui_line_numbers = "<leader>ul Toggle Line Numbers"
 nmap <leader>ul :set number!<CR>
+
+let g:WhichKeyDesc_window_hide = "<leader>uu Toggle all tool windows"
+nmap <leader>uu <Action>(HideAllWindows)
 
 
 " ========================================
@@ -492,8 +520,7 @@ nmap <leader>wo <Action>(CloseAllEditorsButActive)
 let g:WhichKeyDesc_window_equals = "<leader>w= Equalize window sizes"
 nmap <leader>w= <Action>(tabshifter.Actions.EqualSizeSplit)
 
-let g:WhichKeyDesc_window_hide = "<leader>ww Toggle all tool windows"
-nmap <leader>ww <Action>(HideAllWindows)
+
 
 " ========================================
 " Diagnostics/Quickfix (LazyVim style)
@@ -547,10 +574,17 @@ let g:WhichKeyDesc_signature_help = "gK Signature Help"
 nmap gK <Action>(ParameterInfo)
 
 " Additional go mappings (from original)
+let g:WhichKeyDesc_goto_test = "gt Goto Test"
 nmap gt <Action>(GotoTest)
+
+let g:WhichKeyDesc_go_back = "gf Go Back"
 nmap gf <Action>(Back)
+
+let g:WhichKeyDesc_go_forward = "gb Go Forward"
 nmap gb <Action>(Forward)
-nmap gs <Action>(GotoSuperMethod)
+
+let g:WhichKeyDesc_goto_super = "gS Goto Super Method (Interface/Parent)"
+nmap gS <Action>(GotoSuperMethod)
 
 " ========================================
 " Original Preserved Mappings (Non-conflicting)
@@ -631,9 +665,10 @@ nmap <leader>q <Action>(QuickJavaDoc)
 " ========================================
 " Additional Neovim-style mappings
 " ========================================
+let g:WhichKeyDesc_yank_to_end = "Y Yank to End of Line"
 nnoremap Y y$
-inoremap <C-U> <C-G>u<C-U>
-inoremap <C-W> <C-G>u<C-W>
+
+let g:WhichKeyDesc_repeat_macro = "Q Repeat Last Macro"
 nnoremap Q @@
 
 " Selection increment/decrement
@@ -644,24 +679,3 @@ vmap <C-Space> <Action>(EditorSelectWord)
 let g:WhichKeyDesc_selection_decrement = "<BS> Decrement Selection"
 vmap <BS> <Action>(EditorUnSelectWord)
 
-" ========================================
-" WhichKey Descriptions for Non-Leader Keys
-" ========================================
-
-" Bookmarks
-let g:WhichKeyDesc_bookmarks = "m Bookmarks"
-let g:WhichKeyDesc_bookmarks_toggle = "mm Toggle bookmark"
-let g:WhichKeyDesc_bookmarks_show = "ms Show bookmarks"
-let g:WhichKeyDesc_bookmarks_edit = "me Edit bookmark"
-
-" Go to mappings
-let g:WhichKeyDesc_goto = "g GOTO
-let g:WhichKeyDesc_goto_declaration = "gd Go to Definition"
-let g:WhichKeyDesc_goto_type_declaration = "gy Go to Type Declaration"
-let g:WhichKeyDesc_goto_implementation = "gi Go to Implementation"
-let g:WhichKeyDesc_goto_impl = "gg Go to Implementation"
-let g:WhichKeyDesc_goto_usages = "gr Go to Usages"
-let g:WhichKeyDesc_goto_test = "gt Go to Test"
-let g:WhichKeyDesc_goto_back = "gb Go Back"
-let g:WhichKeyDesc_goto_forward = "gf Go Forward"
-let g:WhichKeyDesc_goto_super = "gs Go to Super Method"
