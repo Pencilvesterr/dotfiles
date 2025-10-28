@@ -94,9 +94,6 @@ set easymotion
 " Provides vif / vaf for selecting functions and methods
 set functiontextobj
 
-" LazyVim-style surround configuration
-let g:surround_no_mappings = 1
-
 " Additional text object plugins
 set textobj-indent  " Indent text objects (ai, ii, aI, iI)
 set textobj-entire  " Entire file text objects (ag, ig)
@@ -147,6 +144,7 @@ let g:WhichKeyDesc_popup_prev = "<C-k> Popup Previous (Insert)"
 inoremap <C-k> <Action>(PopupMenu-selectPrev)
 
 " Bookmark (from original - PRESERVED)
+let g:WhichKeyDesc_bookmark = "m Bookmark"
 let g:WhichKeyDesc_bookmark_toggle = "mm Toggle Bookmark"
 nmap mm <Action>(ToggleBookmark)
 
@@ -186,7 +184,7 @@ let g:WhichKeyDesc_window_width_dec = "<C-Left> Decrease Window Width"
 nmap <C-Left> <Action>(TabShiftActions.StretchLeft)
 
 let g:WhichKeyDesc_window_width_inc = "<C-Right> Increase Window Width"
-nmap <C-Right> <Action>(TabShiftActions.Stretch)
+nmap <C-Right> <Action>(TabShiftActions.StretchRight)
 
 " Line Movement (LazyVim style)
 let g:WhichKeyDesc_move_down = "<A-j> Move Down"
@@ -265,19 +263,12 @@ xmap s <Plug>(easymotion-s)
 omap s <Plug>(easymotion-s)
 
 " ========================================
-" Surround Mappings (LazyVim Style)
+" Surround Mappings
 " ========================================
-
-let g:WhichKeyDesc_surround = "gs surround"
-let g:WhichKeyDesc_surround_add = "gsa Add Surrounding"
-nmap gsa <Plug>YSurround
-xmap gsa <Plug>VSurround
-
-let g:WhichKeyDesc_surround_delete = "gsd Delete Surrounding"
-nmap gsd <Plug>DSurround
-
-let g:WhichKeyDesc_surround_replace = "gsr Replace Surrounding"
-nmap gsr <Plug>CSurround
+" Explicit mappings for surround plugin (IdeaVim doesn't auto-map them)
+nmap ys <Plug>YSurround
+nmap cs <Plug>CSurround
+nmap ds <Plug>DSurround
 
 " ========================================
 " Text Objects (LazyVim Style)
@@ -429,7 +420,7 @@ vmap <leader>sw <Action>(FindInPath)
 let g:WhichKeyDesc_debug_breakpoint = "<leader>db Toggle Breakpoint"
 nmap <leader>db <Action>(ToggleLineBreakpoint)
 
-let g:WhichKeyDesc_debug_breakpoint_condition = "<leader>dB Breakpoint Condition"
+let g:WhichKeyDesc_debug_breakpoint_condition = "<leader>dB Add Conditional Breakpoint"
 nmap <leader>dB <Action>(AddConditionalBreakpoint)
 
 let g:WhichKeyDesc_debug_continue = "<leader>dc Resume"
@@ -440,6 +431,9 @@ nmap <leader>di <Action>(StepInto)
 
 let g:WhichKeyDesc_debug_step_out = "<leader>do Step Out"
 nmap <leader>do <Action>(StepOut)
+
+let g:WhichKeyDesc_debug_show_all_breakpoints = "<leader>da Show All Breakpoints"
+nmap <leader>da <Action>(ViewBreakpoints)
 
 let g:WhichKeyDesc_debug_step_over = "<leader>dO Step Over"
 nmap <leader>dO <Action>(StepOver)
