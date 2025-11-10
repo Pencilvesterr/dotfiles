@@ -21,7 +21,6 @@ function python3() { _lazy_init_pyenv; command python3 "$@" }
 function pip()     { _lazy_init_pyenv; command pip     "$@" }
 function pip3()    { _lazy_init_pyenv; command pip3    "$@" }
 function pyenv()   { _lazy_init_pyenv; command pyenv   "$@" }
-source ~/.afm-git-configrc
 export PATH="/Users/mcrouch/.local/bin:$PATH"
 
 # NVM is handdled with undg/zsh-nvm-lazy-load

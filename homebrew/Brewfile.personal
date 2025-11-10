@@ -1,0 +1,13 @@
+brew "openjdk"
+
+cask "tailscale"
+cask "insomnia"
+cask "notion"
+cask "plex"
+cask "whatsapp"
+cask "jetbrains-toolbox"
+cask "zoom"
+cask "grammarly-desktop"
+
+# Mac app store
+mas "Trello", id: 1278508951
