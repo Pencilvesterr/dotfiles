@@ -28,6 +28,7 @@ brew "zoxide" # Better cd
 brew "mas" # Mac application store
 # Applications
 cask "stats" # System monitor in top bar
+cask "arc" # Web browser
 cask "nikitabobko/tap/aerospace"
 cask "alfred"
 cask "betterdisplay"
