@@ -7,6 +7,7 @@ brew "coreutils"
 brew "eza" # Modern, maintained replacement for ls
 brew "fzf"
 brew "git"
+brew "git-lfs"
 brew "gnu-tar" # Provides the ability to tar files
 brew "jenv"
 brew "mvnvm" # Maven for Java
