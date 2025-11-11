@@ -1,2 +1,7 @@
 # Get grammarly + toolbox through self service
 mas "Amphetamine", id: 937984704
+brew "gradle"
+brew "uv"
+brew "terraform"
+cask "postman™"
+cask "aldente"

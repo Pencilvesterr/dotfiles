@@ -3,7 +3,7 @@
 # Get the absolute path of the directory where the script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-. $SCRIPT_DIR/utils.sh
+. "$SCRIPT_DIR"/utils.sh
 
 register_keyboard_shortcuts() {
     # Register CTRL+/ keyboard shortcut to avoid system beep when pressed
@@ -18,9 +18,6 @@ EOF
 
 apply_osx_system_defaults() {
     info "Applying OSX system defaults..."
-
-    # Disable key repeats
-    defaults write -g ApplePressAndHoldEnabled -bool false
 
     # Enable three finger drag
     defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
@@ -65,6 +62,10 @@ apply_osx_system_defaults() {
     defaults write com.apple.dock magnification -float 1
     defaults write com.apple.dock "minimize-to-application" -bool false
     defaults write com.apple.dock tilesize -float 45
+
+    # Disable hot corners in bottom right (br)
+    defaults write com.apple.dock wvous-br-corner -int 0
+    killall Dock
 }
 
 if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then

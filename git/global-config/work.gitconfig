@@ -7,9 +7,8 @@
 	autocrlf = input
 	excludesfile = /Users/mcrouch/.gitignore_global
 [maintenance]
-	repo = /Users/mcrouch/dev/atlassian/Convo AI Platform/assistance-service
-	repo = /Users/mcrouch/dev/jira/jira-sparse
-	repo = /Users/mcrouch/dev/jira/jira-full
+	repo = /Users/mcrouch/dev/atlassian/jira
+	repo = /Users/mcrouch/dev/atlassian/conversational-ai-platform
 [merge]
 	conflictStyle = zdiff3
 [pull]
