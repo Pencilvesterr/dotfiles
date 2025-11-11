@@ -19,7 +19,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     if [[ "$install_apps" == "y" ]]; then
         printf "\n"
         info "===================="
-        info "Prerequisites"
+        info "Setting Up Prerequisites"
         info "===================="
 
         install_xcode
@@ -27,10 +27,17 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 
         printf "\n"
         info "===================="
-        info "Apps"
+        info "Installing Apps"
         info "===================="
 
-        run_brew_bundle
+        install_brewfile "$SCRIPT_DIR/../homebrew/Brewfile"
+        if [[ "$is_work_machine" == "y" ]]; then
+            info "Installing work Brewfile"
+            install_brewfile "$SCRIPT_DIR/../homebrew/Brewfile.work"
+        else
+          info "Installing personal Brewfile"
+          install_brewfile "$SCRIPT_DIR/../homebrew/Brewfile.personal"
+        fi
     fi
 
     printf "\n"

@@ -390,5 +390,6 @@
     "file:///Users/mcrouch/dev/atlassian/atlascode/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml"
   },
   "atlascode.jira.enabled": true,
-  "atlascode.bitbucket.enabled": false
+  "atlascode.bitbucket.enabled": false,
+  "git.openRepositoryInParentFolders": "always"
 }

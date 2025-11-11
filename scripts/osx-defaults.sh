@@ -25,7 +25,7 @@ apply_osx_system_defaults() {
     # Enable three finger drag
     defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
 
-    # Don't dide icons on desktop
+    # Don't hide icons on desktop
     defaults write com.apple.finder CreateDesktop -bool false
 
     # Avoid creating .DS_Store files on network volumes
