@@ -10,6 +10,7 @@ export PATH="$PATH:/Users/mcrouch/.local/bin"
 export PATH="/opt/homebrew/opt/util-linux/bin:$PATH"
 # Add pyenv to path
 export PATH="/Users/mcrouch/.pyenv/shims:${PATH}"
+
 # Lazy-load pyenv to speed up shell startup
 function _lazy_init_pyenv() {
   unset -f python python3 pip pip3 _lazy_init_pyenv
@@ -48,3 +49,6 @@ function jenv()   { _lazy_init_jenv; command jenv   "$@" }
 
 # Added by work automatically?
 export PATH="/Users/mcrouch/.orbit/bin:$PATH"
+
+# Setting up atlas
+export PATH="/opt/atlassian/bin:$PATH"

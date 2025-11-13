@@ -27,3 +27,12 @@
 	path = ~/.config/difftastic/difft.gitconfig
 [rerere]
 	enabled = true
+[githooks]
+	installDir = /Users/mcrouch/.githooks
+	runner = /Users/mcrouch/.githooks/release/base-template.sh
+	cloneUrl = https://github.com/rycus86/githooks.git
+	cloneBranch = master
+[alias]
+	hooks = !\"/Users/mcrouch/.githooks/bin/githooks\"
+[githooks "autoupdate"]
+	enabled = true
