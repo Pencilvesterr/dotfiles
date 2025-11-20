@@ -13,6 +13,9 @@ get_apps_for_workspace() {
     *"Slack"*)
         echo "Slack"
         ;;
+    *"Browser"*)
+        echo "Arc"
+        ;;
     *"Zoom+Postman"*)
         echo "Postman|zoom.us"
         ;;
@@ -50,7 +53,6 @@ move_app_to_workspace() {
     # Note: We'll move all windows of this app, even if some are already in the workspace
 
     echo "$(date): Moving $app_identifier to $current_workspace"
-    echo "Moving $app_identifier to $current_workspace"
 
     # Move all windows of this app to current workspace
     echo "$(date): Searching for all windows of: $app_identifier"
