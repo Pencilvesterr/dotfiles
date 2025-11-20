@@ -6,9 +6,6 @@
 [core]
 	autocrlf = input
 	excludesfile = /Users/mcrouch/.gitignore_global
-[maintenance]
-	repo = /Users/mcrouch/dev/atlassian/jira
-	repo = /Users/mcrouch/dev/atlassian/conversational-ai-platform
 [merge]
 	conflictStyle = zdiff3
 [pull]
@@ -36,3 +33,4 @@
 	hooks = !\"/Users/mcrouch/.githooks/bin/githooks\"
 [githooks "autoupdate"]
 	enabled = true
+	lastrun = 1763437909
