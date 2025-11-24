@@ -76,7 +76,7 @@ alias gcm='git commit -m'
 # Add all and commit with message
 alias gcma='git commit -am'
 alias gb='git branch'
-alias gco='git checkout'
+# alias for gco is now a function below
 alias gcob='git checkout -b'
 alias gra='git remote add'
 alias grr='git remote rm'
@@ -84,6 +84,36 @@ alias gcl='git clone'
 alias gf='git fetch'
 # Show recent branch history
 alias gbranches='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''NF && !seen[$0]++'\'' | head ${1} | cat -n'
+
+# Will work to checkout main or master, even if i get it wrong
+gco() {
+    # If the argument is 'main', try main first, then fallback to master
+    if [ "$1" = "main" ]; then
+        if git rev-parse --verify main >/dev/null 2>&1; then
+            git checkout main
+        elif git rev-parse --verify master >/dev/null 2>&1; then
+            echo "Branch 'main' not found, checking out 'master' instead"
+            git checkout master
+        else
+            echo "Neither 'main' nor 'master' branch exists"
+            return 1
+        fi
+    # If the argument is 'master', try master first, then fallback to main
+    elif [ "$1" = "master" ]; then
+        if git rev-parse --verify master >/dev/null 2>&1; then
+            git checkout master
+        elif git rev-parse --verify main >/dev/null 2>&1; then
+            echo "Branch 'master' not found, checking out 'main' instead"
+            git checkout main
+        else
+            echo "Neither 'main' nor 'master' branch exists"
+            return 1
+        fi
+    else
+        # For any other branch, just pass through to regular git checkout
+        git checkout "$@"
+    fi
+}
 
 # -------------------------------------------------------------------
 # Updating built-ins
