@@ -13,17 +13,11 @@ get_apps_for_workspace() {
     *"Slack"*)
         echo "Slack"
         ;;
-    *"Browser"*)
-        echo "Arc"
-        ;;
     *"Zoom+Postman"*)
         echo "Postman|zoom.us"
         ;;
     *"Zoom"*)
         echo "zoom.us"
-        ;;
-    *"Chrome"*)
-        echo "Google Chrome"
         ;;
     *"Code"*)
         echo "Code|Cursor|IntelliJ IDEA"
