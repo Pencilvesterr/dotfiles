@@ -36,15 +36,15 @@ Then follow the on-screen prompts.
 
 ## Uninstalling
 
-If you ever want to remove the symlinks created by the installation script, you can use the provided symlinks removal script:
+If you ever want to remove the hardlinks created by the installation script, you can use the provided hardlinks removal script:
 
-To delete all symlinks created by the installation script, run:
+To delete all hardlinks created by the installation script, run:
 
 ```bash
-./scripts/symlinks.sh --delete
+./scripts/hardlinks.sh --delete
 ```
 
-This will remove the symlinks but will not delete the actual configuration files, allowing you to easily revert to your previous configuration if needed.
+This will remove the hardlinks but will not delete the actual configuration files, allowing you to easily revert to your previous configuration if needed.
 
 ## Adding New Dotfiles and Software
 
@@ -53,7 +53,7 @@ This will remove the symlinks but will not delete the actual configuration files
 When adding new dotfiles to this repository, follow these steps:
 
 1. Place your dotfile in the appropriate location within the repository.
-2. Update the `symlinks_config.conf` file to include the symlink creation for your new dotfile.
+2. Update the `hardlinks_config.conf` file to include the hardlink creation for your new dotfile.
 3. If necessary, update the `install.sh` script to set up the software.
 
 ### Software Installation

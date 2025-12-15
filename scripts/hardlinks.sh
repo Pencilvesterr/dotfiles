@@ -8,7 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Get the absolute path of the directory where the script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-CONFIG_FILE="$SCRIPT_DIR/../symlinks_config.conf"
+CONFIG_FILE="$SCRIPT_DIR/../hardlinks_config.conf"
 
 . $SCRIPT_DIR/utils.sh
 
@@ -20,9 +20,9 @@ check_config_exists() {
     fi
 }
 
-create_symlinks() {
+create_hardlinks() {
     check_config_exists
-    info "Creating symbolic links..."
+    info "Creating hard links..."
 
     # Read dotfile links from the config file
     while IFS=: read -r source target || [ -n "$source" ]; do
@@ -42,11 +42,20 @@ create_symlinks() {
             continue
         fi
 
-        # Check if the symbolic link already exists
-        if [ -L "$target" ]; then
-            warning "Symbolic link already exists: $target"
-        elif [ -f "$target" ]; then
-            warning "File already exists: $target"
+        # Check if source is a directory (hard links don't work for directories)
+        if [ -d "$source" ]; then
+            error "Error: Cannot create hard link for directory '$source'. Skipping."
+            continue
+        fi
+
+        # Check if the hard link already exists
+        if [ -f "$target" ]; then
+            # Check if it's already the same inode (already hard linked)
+            if [ "$source" -ef "$target" ]; then
+                warning "Hard link already exists: $target"
+            else
+                warning "File already exists: $target"
+            fi
         else
             # Extract the directory portion of the target path
             target_dir=$(dirname "$target")
@@ -57,16 +66,16 @@ create_symlinks() {
                 info "Created directory: $target_dir"
             fi
 
-            # Create the symbolic link
-            ln -s "$source" "$target"
-            success "Created symbolic link: $target"
+            # Create the hard link
+            ln "$source" "$target"
+            success "Created hard link: $target"
         fi
     done <"$CONFIG_FILE"
 }
 
-delete_symlinks() {
+delete_hardlinks() {
     check_config_exists
-    info "Deleting symbolic links..."
+    info "Deleting hard links..."
     while IFS=: read -r _ target || [ -n "$target" ]; do
 
         # Skip empty and invalid lines
@@ -77,9 +86,9 @@ delete_symlinks() {
         # Evaluate variables
         target=$(eval echo "$target")
 
-        # Check if the symbolic link or file exists
-        if [ -L "$target" ] || { [ "$include_files" == true ] && [ -f "$target" ]; }; then
-            # Remove the symbolic link or file
+        # Check if the file exists
+        if [ -f "$target" ] || { [ "$include_files" == true ] && [ -f "$target" ]; }; then
+            # Remove the file
             rm -rf "$target"
             success "Deleted: $target"
         else
@@ -93,18 +102,18 @@ if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
     case "$1" in
     "--create")
         if [ "$2" == "--work-conf" ]; then
-            CONFIG_FILE="$SCRIPT_DIR/../symlinks_config_work.conf"
+            CONFIG_FILE="$SCRIPT_DIR/../hardlinks_config_work.conf"
         fi
-        create_symlinks
+        create_hardlinks
         ;;
     "--delete")
         if [ "$2" == "--include-files" ]; then
             include_files=true
         fi
         if [ "$3" == "--work-conf" ]; then
-            CONFIG_FILE="$SCRIPT_DIR/../symlinks_config_work.conf"
+            CONFIG_FILE="$SCRIPT_DIR/../hardlinks_config_work.conf"
         fi
-        delete_symlinks
+        delete_hardlinks
         ;;
     "--help")
         # Display usage/help message
