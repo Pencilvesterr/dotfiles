@@ -115,7 +115,7 @@ $character"""
 # === Settings
 
 add_newline = true
-command_timeout = 1000
+command_timeout = 3000
 palette = "nord"
 
 # === Colour
