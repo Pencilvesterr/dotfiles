@@ -387,6 +387,9 @@ nmap <leader>gs <Action>(ActivateVersionControlToolWindow)
 let g:WhichKeyDesc_git_branches = "<leader>gr Open Git branches list"
 nmap <leader>gr <Action>(Git.Branches)
 
+let g:WhichKeyDesc_git_compare_branch = "<leader>go Compare with branch"
+nmap <leader>go <Action>(Git.CompareWithBranch)
+
 " ========================================
 " Search mappings (LazyVim style)
 " ========================================
