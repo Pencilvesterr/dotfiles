@@ -48,7 +48,8 @@ g() {
 # List all git aliases
 alias galiases='g --help'
 # Git add with fzf
-alias gafzf='git ls-files -m -o --exclude-standard | grep -v "__pycache__" | fzf -m --print0 | xargs -0 -o -t git add' 
+alias gafzf='git add $(git ls-files --modified --others --exclude-standard | fzf -m)'
+
 # Git rm with fzf, removes file from git index (not from disk)
 alias grmfzf='git ls-files -m -o --exclude-standard | fzf -m --print0 | xargs -0 -o -t git rm' 
 # Git restore with fzf, will revert file to last commit state
