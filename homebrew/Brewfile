@@ -23,6 +23,7 @@ brew "thefuck"
 brew "tldr"
 brew "tree" # Adds the 'tree' cli command
 brew "vim"
+brew "difftastic" # Defaulting for git diff
 # brew "wakeonlan" # Only if still using LG C1
 # brew "ykman" # Yubikey CLI
 brew "zoxide" # Better cd
