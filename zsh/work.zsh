@@ -34,18 +34,49 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 # Seems to be something to do with Atlassian dev boxes?
 export PATH="/Users/mcrouch/.orbit/bin:$PATH"
 
-# Lazy-load jenv export hook only when a Java tool is needed
-function _lazy_init_jenv() {
-  unset -f java javac mvn gradle jenv _lazy_init_jenv
+
+# jenv - Background lazy loading for fast startup
+# Strategy: Zero cost at startup, auto-loads in background after first prompt
+# Wrapper functions ensure immediate availability if needed before background init completes
+
+typeset -g _JENV_LOADED=0
+
+# Core initialization function
+_jenv_do_init() {
+  if (( _JENV_LOADED )); then
+    return 0
+  fi
+  _JENV_LOADED=1
+  
+  # Remove wrapper functions - no longer needed after init
+  unfunction java javac mvn gradle jenv jinit 2>/dev/null
+  
+  # Initialize jenv
+  export PATH="$HOME/.jenv/bin:$PATH"
   eval "$(jenv init - --no-rehash)"
   (jenv rehash &) 2>/dev/null
 }
 
-function java()   { _lazy_init_jenv; command java   "$@" }
-function javac()  { _lazy_init_jenv; command javac  "$@" }
-function mvn()    { _lazy_init_jenv; command mvn    "$@" }
-function gradle() { _lazy_init_jenv; command gradle "$@" }
-function jenv()   { _lazy_init_jenv; command jenv   "$@" }
+# Background initialization hook (runs after first prompt is displayed)
+_jenv_background_init() {
+  # Remove this hook to prevent repeated calls
+  add-zsh-hook -d precmd _jenv_background_init
+  
+  # Initialize jenv in background (non-blocking)
+  { _jenv_do_init } &!
+}
+
+# Wrapper functions for immediate use (if Java commands called before background init)
+java()   { _jenv_do_init; command java   "$@" }
+javac()  { _jenv_do_init; command javac  "$@" }
+mvn()    { _jenv_do_init; command mvn    "$@" }
+gradle() { _jenv_do_init; command gradle "$@" }
+jenv()   { _jenv_do_init; command jenv   "$@" }
+jinit()  { _jenv_do_init; echo "✓ jenv initialized" }
+
+# Schedule background initialization after first prompt
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _jenv_background_init
 
 # Added by work automatically?
 export PATH="/Users/mcrouch/.orbit/bin:$PATH"

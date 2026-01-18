@@ -1,7 +1,8 @@
 # zsh Options
 setopt HIST_IGNORE_ALL_DUPS
 
-#zmodload zsh/zprof # > Start of code to profile
+# > Start of code to profile
+# zmodload zsh/zprof
 
 
 # Custom functions 
@@ -19,4 +20,5 @@ setopt HIST_IGNORE_ALL_DUPS
 # Work
 [ -f "$HOME/.config/zsh/work.zsh" ] && source "$HOME/.config/zsh/work.zsh"
 
-#zprof # > End of code to profile
+# > End of code to profile
+# zprof
