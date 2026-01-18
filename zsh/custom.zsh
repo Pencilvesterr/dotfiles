@@ -123,3 +123,7 @@ bindkey -M vicmd 'y' vi-yank-xclip
 # Add word movement bindings so that opt + left/right work in wezterm
 bindkey "^[f" forward-word
 bindkey "^[b" backward-word
+
+# Make word-based operations stop at most punctuation (macOS-like behavior)
+# Default WORDCHARS is: *?_-.[]~=/&;!#$%^(){}<>
+WORDCHARS=''
