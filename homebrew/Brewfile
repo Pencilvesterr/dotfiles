@@ -20,6 +20,7 @@ brew "speedtest-cli"
 brew "starship" # Zsh theme
 brew "terminal-notifier"
 brew "thefuck"
+brew "neovim"
 brew "tldr"
 brew "tree" # Adds the 'tree' cli command
 brew "vim"
