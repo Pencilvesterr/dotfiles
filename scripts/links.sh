@@ -188,6 +188,12 @@ if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
         else
             create_hardlinks "$HARDLINKS_CONFIG"
             create_softlinks "$SOFTLINKS_CONFIG"
+
+            # Automatically create work config links if user is mcrouch
+            if [ "$(whoami)" == "mcrouch" ]; then
+                info "Detected user 'mcrouch' - creating work config links..."
+                create_hardlinks "$SCRIPT_DIR/../hardlinks_config_work.conf"
+            fi
         fi
         ;;
     "--delete")
@@ -199,6 +205,12 @@ if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
         else
             delete_hardlinks "$HARDLINKS_CONFIG"
             delete_softlinks "$SOFTLINKS_CONFIG"
+
+            # Automatically delete work config links if user is mcrouch
+            if [ "$(whoami)" == "mcrouch" ]; then
+                info "Detected user 'mcrouch' - deleting work config links..."
+                delete_hardlinks "$SCRIPT_DIR/../hardlinks_config_work.conf"
+            fi
         fi
         ;;
     "--help")
