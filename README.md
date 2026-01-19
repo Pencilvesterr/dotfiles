@@ -41,7 +41,7 @@ If you ever want to remove the hardlinks created by the installation script, you
 To delete all hardlinks created by the installation script, run:
 
 ```bash
-./scripts/hardlinks.sh --delete
+./scripts/links.sh --delete
 ```
 
 This will remove the hardlinks but will not delete the actual configuration files, allowing you to easily revert to your previous configuration if needed.

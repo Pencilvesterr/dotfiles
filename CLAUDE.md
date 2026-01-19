@@ -15,19 +15,19 @@ This is a personal dotfiles repository for macOS and Linux development environme
 ./install.sh
 
 # Create hardlinks from dotfiles to system locations
-./scripts/hardlinks.sh --create
+./scripts/links.sh --create
 
 # Create work-specific hardlinks
-./scripts/hardlinks.sh --create --work-conf
+./scripts/links.sh --create --work-conf
 
 # Delete hardlinks
-./scripts/hardlinks.sh --delete
+./scripts/links.sh --delete
 
 # Delete hardlinks including files (use when overwriting)
-./scripts/hardlinks.sh --delete --include-files
+./scripts/links.sh --delete --include-files
 
 # Delete work-specific hardlinks
-./scripts/hardlinks.sh --delete --include-files --work-conf
+./scripts/links.sh --delete --include-files --work-conf
 ```
 
 ### Package Management
@@ -56,13 +56,17 @@ brew bundle check --file=homebrew/Brewfile
 
 ### Hardlink System
 
-The core installation mechanism uses **hardlinks** (not symlinks) via `scripts/hardlinks.sh`:
+The core installation mechanism uses **hardlinks** and **softlinks** (symlinks) via `scripts/links.sh`:
 
-- Configuration: `hardlinks_config.conf` (main) and `hardlinks_config_work.conf` (work-specific)
+- Configuration:
+  - `hardlinks_config.conf` - for file hardlinks (main config)
+  - `softlinks_config.conf` - for symlinks (supports directories)
+  - `hardlinks_config_work.conf` - work-specific hardlinks
 - Format: `source_path:target_path` (one per line, comments start with `#`)
 - The script expands variables like `$(pwd)` and `$HOME`
 - Creates parent directories if needed
 - Detects existing hardlinks by checking if files share the same inode
+- Softlinks can be used for directories (hardlinks cannot)
 
 ### Directory Structure
 
@@ -113,13 +117,16 @@ Zsh config is split into modular files for maintainability:
 ## Adding New Dotfiles
 
 1. Place the config file in the appropriate subdirectory
-2. Add an entry to `hardlinks_config.conf` in the format:
+2. Add an entry to the appropriate config file:
+   - For files: use `hardlinks_config.conf`
+   - For directories: use `softlinks_config.conf`
+   - For work-specific: use `hardlinks_config_work.conf`
+
+   Format:
    ```
    $(pwd)/path/to/source:$HOME/path/to/target
    ```
-3. Run `./scripts/hardlinks.sh --create`
-
-For work-specific configs, use `hardlinks_config_work.conf` instead.
+3. Run `./scripts/links.sh --create`
 
 ## Adding New Software
 

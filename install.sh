@@ -7,7 +7,7 @@ set -e
 . scripts/prerequisites.sh
 . scripts/brew-install-custom.sh
 . scripts/osx-defaults.sh
-. scripts/hardlinks.sh
+. scripts/links.sh
 . linux/install_debian.sh
 
 info "Dotfiles intallation initialized..."
@@ -72,17 +72,17 @@ info "===================="
 info "Symbolic Links"
 info "===================="
 
-chmod +x ./scripts/hardlinks.sh
+chmod +x ./scripts/links.sh
 if [[ "$overwrite_dotfiles" == "y" ]]; then
     warning "Deleting existing dotfiles..."
-    ./scripts/hardlinks.sh --delete --include-files
+    ./scripts/links.sh --delete --include-files
 fi
-./scripts/hardlinks.sh --create
+./scripts/links.sh --create
 if [[ "$is_work_machine" == "y" ]]; then
     info "Installing work hardlinks"
     warning "Deleting existing work dotfiles..."
-    ./scripts/hardlinks.sh --delete --include-files --work-conf
-    ./scripts/hardlinks.sh --create --work-conf
+    ./scripts/links.sh --delete --include-files --work-conf
+    ./scripts/links.sh --create --work-conf
 fi
 success "Dotfiles set up successfully."
 

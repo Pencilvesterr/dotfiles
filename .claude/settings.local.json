@@ -10,7 +10,8 @@
       "Bash(zsh:*)",
       "Bash(git add:*)",
       "Bash(.git/hooks/pre-commit)",
-      "Bash(bash:*)"
+      "Bash(bash:*)",
+      "Bash(nvim:*)"
     ]
   }
 }

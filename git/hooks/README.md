@@ -7,8 +7,8 @@ This directory contains git hooks that are installed by `./install.sh`.
 Automatically synchronizes hardlinks before each commit to ensure the repository and system config files stay in sync.
 
 **What it does:**
-1. Runs `./scripts/hardlinks.sh --delete --include-files` for both regular and work configs
-2. Runs `./scripts/hardlinks.sh --create` for both regular and work configs
+1. Runs `./scripts/links.sh --delete --include-files` for both regular and work configs
+2. Runs `./scripts/links.sh --create` for both regular and work configs
 3. Stages any files that were modified during the sync
 4. Proceeds with the commit
 
