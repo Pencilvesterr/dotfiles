@@ -1,4 +1,4 @@
-# !/bin/zsh
+#!/bin/zsh
 # --- Machine specific, don't add to git
 
 # -------------------------------------------------------------------
@@ -36,8 +36,8 @@ export PATH="/Users/mcrouch/.orbit/bin:$PATH"
 
 
 # jenv - Background lazy loading for fast startup
-# Strategy: Zero cost at startup, auto-loads in background after first prompt
-# Wrapper functions ensure immediate availability if needed before background init completes
+# Strategy: Set JAVA_HOME immediately, then full init in background
+# This ensures scripts like ./jmake work immediately while keeping startup fast
 
 typeset -g _JENV_LOADED=0
 
@@ -47,23 +47,14 @@ _jenv_do_init() {
     return 0
   fi
   _JENV_LOADED=1
-  
+
   # Remove wrapper functions - no longer needed after init
   unfunction java javac mvn gradle jenv jinit 2>/dev/null
-  
+
   # Initialize jenv
   export PATH="$HOME/.jenv/bin:$PATH"
   eval "$(jenv init - --no-rehash)"
   (jenv rehash &) 2>/dev/null
-}
-
-# Background initialization hook (runs after first prompt is displayed)
-_jenv_background_init() {
-  # Remove this hook to prevent repeated calls
-  add-zsh-hook -d precmd _jenv_background_init
-  
-  # Initialize jenv in background (non-blocking)
-  { _jenv_do_init } &!
 }
 
 # Wrapper functions for immediate use (if Java commands called before background init)
@@ -74,9 +65,18 @@ gradle() { _jenv_do_init; command gradle "$@" }
 jenv()   { _jenv_do_init; command jenv   "$@" }
 jinit()  { _jenv_do_init; echo "✓ jenv initialized" }
 
-# Schedule background initialization after first prompt
-autoload -Uz add-zsh-hook
-add-zsh-hook precmd _jenv_background_init
+# Set JAVA_HOME immediately for scripts (like ./jmake) that need it
+# This is fast and doesn't block shell startup
+if [[ -s "$HOME/.jenv/version" ]]; then
+  export PATH="$HOME/.jenv/bin:$PATH"
+  JENV_VERSION=$(cat "$HOME/.jenv/version")
+  if [[ -d "$HOME/.jenv/versions/$JENV_VERSION" ]]; then
+    export JAVA_HOME="$HOME/.jenv/versions/$JENV_VERSION"
+  fi
+fi
+
+# Start full jenv initialization in background immediately (non-blocking)
+{ _jenv_do_init } &!
 
 # Added by work automatically?
 export PATH="/Users/mcrouch/.orbit/bin:$PATH"

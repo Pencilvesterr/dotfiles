@@ -86,5 +86,24 @@ if [[ "$is_work_machine" == "y" ]]; then
 fi
 success "Dotfiles set up successfully."
 
+printf "\n"
+info "===================="
+info "Git Hooks"
+info "===================="
+
+# Install git hooks if we're in a git repository
+if [ -d ".git" ]; then
+    info "Installing git pre-commit hook..."
+    if [ -f "git/hooks/pre-commit" ]; then
+        cp git/hooks/pre-commit .git/hooks/pre-commit
+        chmod +x .git/hooks/pre-commit
+        success "Git pre-commit hook installed"
+    else
+        warning "Git hook file not found: git/hooks/pre-commit"
+    fi
+else
+    warning "Not a git repository, skipping git hooks installation"
+fi
+
 info "Restarting zsh to apply changes..."
 exec zsh

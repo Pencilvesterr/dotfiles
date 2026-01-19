@@ -378,6 +378,9 @@ nmap <leader>gf <Action>(Vcs.ShowTabbedFileHistory)
 let g:WhichKeyDesc_git_log = "<leader>gl Git Log"
 nmap <leader>gl <Action>(Vcs.Show.Log)
 
+let g:WhichKeyDesc_git_diff = "<leader>gd Git Diff"
+nmap <leader>gd <Action>(Compare.SameVersion)
+
 let g:WhichKeyDesc_git_commit = "<leader>gc Open Git commit sidebar"
 nmap <leader>gc <Action>(CheckinProject)
 

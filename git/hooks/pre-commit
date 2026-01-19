@@ -1,0 +1,48 @@
+#!/bin/bash
+# Pre-commit hook to ensure hardlinks are synchronized before committing
+
+# Get the root directory of the git repository
+REPO_ROOT=$(git rev-parse --show-toplevel)
+
+# Change to repo directory
+cd "$REPO_ROOT" || exit 1
+
+echo "🔗 Synchronizing hardlinks before commit..."
+
+# Function to recreate hardlinks and stage any changes
+sync_hardlinks() {
+    local config_flag=$1
+    local config_name=$2
+
+    # Delete and recreate hardlinks to ensure they're in sync
+    if ./scripts/hardlinks.sh --delete --include-files $config_flag 2>&1 | grep -q "Error:"; then
+        echo "⚠️  Warning: Some hardlinks for $config_name couldn't be deleted"
+    fi
+
+    if ! ./scripts/hardlinks.sh --create $config_flag 2>&1 | grep -q "Created hard link\|already exists"; then
+        echo "⚠️  Warning: Issues creating hardlinks for $config_name"
+    fi
+}
+
+# Sync regular hardlinks
+sync_hardlinks "" "regular config"
+
+# Sync work hardlinks if config exists
+#if [ -f "$REPO_ROOT/hardlinks_config_work.conf" ]; then
+#    sync_hardlinks "--work-conf" "work config"
+#fi
+
+# Find any files in the repo that were modified by the hardlink sync
+# and stage them for this commit
+changed_files=$(git diff --name-only)
+
+if [ -n "$changed_files" ]; then
+    echo "📝 Staging updated files:"
+    echo "$changed_files" | while read -r file; do
+        echo "   - $file"
+        git add "$file"
+    done
+fi
+
+echo "✅ Hardlinks synchronized"
+exit 0

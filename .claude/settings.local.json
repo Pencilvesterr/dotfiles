@@ -1,7 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(source:*)",
+      "Bash(echo:*)",
+      "Bash(test:*)",
+      "Bash(./scripts/hardlinks.sh:*)",
+      "Bash(zsh -c:*)",
+      "Bash(zsh:*)",
+      "Bash(git add:*)",
+      "Bash(.git/hooks/pre-commit)",
+      "Bash(bash:*)"
     ]
   }
 }
