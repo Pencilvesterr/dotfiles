@@ -19,7 +19,7 @@ brew "ripgrep"
 brew "speedtest-cli"
 brew "starship" # Zsh theme
 brew "terminal-notifier"
-brew "thefuck"
+brew "eugene-babichenko/fixit/fixit" # The fuck replacement
 brew "tldr"
 brew "tree" # Adds the 'tree' cli command
 brew "vim"
