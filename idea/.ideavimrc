@@ -561,8 +561,11 @@ nmap [e <Action>(GotoPreviousError)
 let g:WhichKeyDesc_goto_definition = "gd Goto Definition"
 nmap gd <Action>(GotoDeclaration)
 
-let g:WhichKeyDesc_references = "gr References"
-nmap gr <Action>(FindUsages)
+let g:WhichKeyDesc_references = "gr Usage"
+nmap gr <Action>(ShowUsages)
+
+let g:WhichKeyDesc_usages = "gR References"
+nmap gR <Action>(FindUsages)
 
 let g:WhichKeyDesc_goto_implementation = "gI Goto Implementation"
 nmap gI <Action>(GotoImplementation)
