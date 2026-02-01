@@ -15,9 +15,11 @@ brew "node"
 brew "poetry"
 brew "pre-commit"
 brew "ranger" # r to navigate the file system
+brew "ripgrep"
 brew "speedtest-cli"
 brew "starship" # Zsh theme
 brew "terminal-notifier"
+brew "eugene-babichenko/fixit/fixit" # The fuck replacement
 brew "tldr"
 brew "tree" # Adds the 'tree' cli command
 brew "vim"

@@ -119,7 +119,6 @@ gco() {
 # -------------------------------------------------------------------
 # Updating built-ins
 # -------------------------------------------------------------------
-eval $(thefuck --alias)
 # Use zoxide instead of cd
 if command -v z &> /dev/null; then
     alias cd=z

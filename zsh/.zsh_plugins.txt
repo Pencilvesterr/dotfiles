@@ -14,7 +14,7 @@ zsh-users/zsh-autosuggestions kind:defer # Inline ghosted auto-suggestions to ta
 zsh-users/zsh-history-substring-search kind:defer
 
 zsh-users/zsh-completions path:src kind:fpath
-Aloxaf/fzf-tab
+Aloxaf/fzf-tab # Replace zsh's default completion selection menu with fzf!
 softmoth/zsh-vim-mode # Tried jeffreytse/zsh-vi-mode but it broke ctrl+r
 
 

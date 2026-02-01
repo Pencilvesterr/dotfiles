@@ -127,3 +127,6 @@ bindkey "^[b" backward-word
 # Make word-based operations stop at most punctuation (macOS-like behavior)
 # Default WORDCHARS is: *?_-.[]~=/&;!#$%^(){}<>
 WORDCHARS=''
+
+# Setup fixit, the fuck replacement
+eval "$(fixit init --name fuck zsh)"
