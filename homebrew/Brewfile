@@ -14,21 +14,25 @@ brew "mvnvm" # Maven for Java
 brew "node"
 brew "poetry"
 brew "pre-commit"
-brew "ranger"
-brew "ripgrep"
+brew "ranger" # r to navigate the file system
 brew "speedtest-cli"
 brew "starship" # Zsh theme
 brew "terminal-notifier"
-brew "thefuck"
-brew "neovim"
 brew "tldr"
 brew "tree" # Adds the 'tree' cli command
 brew "vim"
 brew "difftastic" # Defaulting for git diff
-# brew "wakeonlan" # Only if still using LG C1
-# brew "ykman" # Yubikey CLI
+
 brew "zoxide" # Better cd
 brew "mas" # Mac application store
+
+# Neovim + LazyVim setup
+brew "neovim"
+brew "tree-sitter-cli" # Required for lazyvim
+brew "ripgrep"
+brew "fd" # Alternative to find in CLI
+brew "lazygit" # Git UI
+brew "luarocks"
 
 # Applications
 cask "stats" # System monitor in top bar
