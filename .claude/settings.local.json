@@ -11,7 +11,14 @@
       "Bash(git add:*)",
       "Bash(.git/hooks/pre-commit)",
       "Bash(bash:*)",
-      "Bash(nvim:*)"
+      "Bash(git fetch:*)",
+      "Bash(brew reinstall:*)",
+      "Bash(brew info:*)",
+      "Bash(otool:*)",
+      "Bash(brew install:*)",
+      "Bash(nvim:*)",
+      "Bash(brew list:*)",
+      "Bash(sw_vers:*)"
     ]
   }
 }
