@@ -4,7 +4,7 @@
 #
 
 # -------------------------------------------------------------------
-# System commands 
+# System commands
 # -------------------------------------------------------------------
 alias shutdown='sudo shutdown now'
 alias restart='sudo reboot'
@@ -22,11 +22,11 @@ g() {
   if [[ "$1" == "--help" || "$1" == "-h" ]]; then
     echo "🔧 Git Aliases:"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    
+
     # Read this file and extract git aliases with their comments
     awk '
     /^# [^-]/ { comment = substr($0, 3) }
-    /^alias g.*=.*git/ { 
+    /^alias g.*=.*git/ {
       split($0, parts, "=")
       alias_name = substr(parts[1], 7)  # Remove "alias "
       alias_command = parts[2]
@@ -38,7 +38,7 @@ g() {
       printf "\033[1;36m%s\033[0m %s\n", alias_name, alias_command
     }
     ' "${(%):-%x}"  # Current file path in zsh
-    
+
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "💡 Usage: g <git_command> or use any alias above"
   else
@@ -51,18 +51,18 @@ alias galiases='g --help'
 alias gafzf='git add $(git ls-files --modified --others --exclude-standard | fzf -m)'
 
 # Git rm with fzf, removes file from git index (not from disk)
-alias grmfzf='git ls-files -m -o --exclude-standard | fzf -m --print0 | xargs -0 -o -t git rm' 
+alias grmfzf='git ls-files -m -o --exclude-standard | fzf -m --print0 | xargs -0 -o -t git rm'
 # Git restore with fzf, will revert file to last commit state
-alias grfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore' 
-# Git restore --staged with fzf, opposite of git add where changes remain, but no longer staged for commit 
-alias grsfzf='git diff --staged --name-only | fzf -m --print0 | xargs -0 -o -t git restore --staged' 
+alias grfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git restore'
+# Git restore --staged with fzf, opposite of git add where changes remain, but no longer staged for commit
+alias grsfzf='git diff --staged --name-only | fzf -m --print0 | xargs -0 -o -t git restore --staged'
 # Git diff with fzf, shows changes in file
-alias gdfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git diff' 
+alias gdfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git diff'
 # Git checkout a branch with fzf (10 most recent branches)
 alias gcofzf='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''NF && !seen[$0]++'\'' | fzf | xargs -r git checkout'
 
 alias ga='git add'
-alias gp='git pull'		
+alias gp='git pull'
 alias gpo='git pull origin'
 alias gpu='git push'
 alias gl='git log --all --decorate --oneline --graph'
@@ -135,7 +135,7 @@ alias python='python3'
 alias pip='pip3'
 
 # -------------------------------------------------------------------
-# Misc 
+# Misc
 # -------------------------------------------------------------------
 # Ranger
 alias r=". ranger"
@@ -143,7 +143,7 @@ alias r=". ranger"
 # Better ls
 alias ls="eza --all --icons=always"
 
-# Misc 
+# Misc
 alias please='sudo'
 alias zshrc='code "${ZDOTDIR:-$HOME}"/.zshrc'
 alias zdot='cd ${ZDOTDIR:-~}'
