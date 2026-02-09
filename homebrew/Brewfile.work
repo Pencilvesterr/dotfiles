@@ -9,7 +9,7 @@ brew "gradle"
 brew "uv"
 brew "terraform"
 
-cask "postman™"
+cask "postman"
 cask "aldente"
 # Notifications in centre https://github.com/NotWadeGrimridge/PingPlace
 cask "pingplace", args: { no_quarantine: true }
