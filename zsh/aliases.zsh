@@ -19,7 +19,6 @@ alias vi='vim' # Mask builtin with better default
 # List all git aliases for easy discovery
 # Git helper function - shows aliases on --help
 g() {
-  if [[ "$1" == "--help" || "$1" == "-h" ]]; then
     echo "🔧 Git Aliases:"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
@@ -38,15 +37,9 @@ g() {
       printf "\033[1;36m%s\033[0m %s\n", alias_name, alias_command
     }
     ' "${(%):-%x}"  # Current file path in zsh
-
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "💡 Usage: g <git_command> or use any alias above"
-  else
-    git "$@"
-  fi
 }
 # List all git aliases
-alias galiases='g --help'
+alias galiases='g'
 # Git add with fzf
 alias gafzf='git add $(git ls-files --modified --others --exclude-standard | fzf -m)'
 
@@ -114,6 +107,18 @@ gco() {
         # For any other branch, just pass through to regular git checkout
         git checkout "$@"
     fi
+}
+# Checkout and reset branch to origin, useful for quickly syncing with remote
+gcou() {
+    # Confirm that they want to do this, as it will discard local changes
+    echo "⚠️  This will discard any local changes on branch '$1' and reset it to match 'origin/$1'. Are you sure? (y/N)"
+    read -r response
+    if [[ ! "$response" =~ ^[Yy]$ ]]; then
+        echo "Aborting."
+        return 1
+    fi
+    echo
+    git fetch && git checkout "$1" && git reset --hard "origin/$1"
 }
 
 # -------------------------------------------------------------------
