@@ -328,6 +328,9 @@ nmap <leader>fr <Action>(RecentFiles)
 let g:WhichKeyDesc_terminal = "<leader>ft Terminal"
 nmap <leader>ft <Action>(ActivateTerminalToolWindow)
 
+let g:WhichKeyDesc_copy_path_from_root = "<leader>fc Copy path from repo root"
+nmap <leader>fc <Action>(CopyPathFromRepositoryRootProvider)
+
 " ========================================
 " Explorer/Tree (Preserving NERDTree from original)
 " ========================================
