@@ -72,8 +72,9 @@ alias gcma='git commit -am'
 alias gb='git branch'
 # alias for gco is now a function below
 alias gcob='git checkout -b'
-alias gra='git remote add'
-alias grr='git remote rm'
+alias grh='git reset --hard'
+alias grhu='git reset --hard @{u}'
+alias grs='git reset --soft'
 alias gcl='git clone'
 alias gf='git fetch'
 # Show recent branch history
@@ -110,6 +111,11 @@ gco() {
 }
 # Checkout and reset branch to origin, useful for quickly syncing with remote
 gcou() {
+    # verify a sting has been given as a param
+    if [ -z "$1" ]; then
+        echo "Usage: gcou <branch-name>"
+        return 1
+    fi
     # Confirm that they want to do this, as it will discard local changes
     echo "⚠️  This will discard any local changes on branch '$1' and reset it to match 'origin/$1'. Are you sure? (y/N)"
     read -r response
