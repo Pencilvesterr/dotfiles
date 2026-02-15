@@ -1,0 +1,24 @@
+#!/bin/bash
+# Pre-commit hook to ensure hardlinks are synchronized before committing
+
+# Get the root directory of the git repository
+REPO_ROOT=$(git rev-parse --show-toplevel)
+
+# Change to repo directory
+cd "$REPO_ROOT" || exit 1
+
+echo "🔗 Synchronizing hardlinks before commit..."
+
+
+# Delete and recreate hardlinks to ensure they're in sync
+# Delete and recreate hardlinks to ensure they're in sync
+if ./scripts/links.sh --delete --include-files | grep -q "Error:"; then
+    echo "⚠️  Warning: Some hardlinks for $config_name couldn't be deleted"
+fi
+
+if ./scripts/links.sh --create | grep -q "Error"; then
+    echo "⚠️  Warning: Issues creating hardlinks"
+fi
+
+echo "✅ Hardlinks synchronized"
+exit 0

@@ -6,7 +6,7 @@
 [core]
 	autocrlf = input
 [pull]
-	rebase = true
+	rebase = false
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
@@ -14,3 +14,6 @@
 	required = true
 [include]
   path = ~/.config/difftastic/difft.gitconfig
+[rerere]
+	enabled = true
+

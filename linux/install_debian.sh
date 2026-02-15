@@ -30,6 +30,7 @@ install_linux_apps() {
 }
 
 
+# TODO: Extract these into their own functions for modularity/ ease of disabling
 install_linux_cli_tools() {
     # Get sudo permissions from the start
     sudo apt update
@@ -77,6 +78,17 @@ install_linux_cli_tools() {
     else
         info "zoxide is already installed."
     fi
+
+    info "Checking for fixit..."
+      if ! command -v fixit &> /dev/null; then
+          echo "deb [arch=$(dpkg --print-architecture) trusted=yes] https://eugene-babichenko.github.io/fixit/ppa ./" | sudo tee /etc/apt/sources.list.d/fixit.list > /dev/null
+          sudo apt update
+          sudo apt install fixit
+      else
+          info "zoxide is already installed."
+      fi
+
+
 
     info "Checking for Neovim..."
     if ! command -v nvim &> /dev/null; then
@@ -133,7 +145,7 @@ install_linux_cli_tools() {
     if [ "$(basename "$SHELL")" != "zsh" ]; then
         info "Setting zsh as default shell"
         if command -v zsh &> /dev/null; then
-            chsh -s $(which zsh)
+            sudo chsh -s $(which zsh)
             info "Default shell changed to ZSH. Please log out and log back in for the change to take effect."
         else
             warning "ZSH is not installed. Cannot set it as default."
@@ -150,28 +162,6 @@ install_linux_cli_tools() {
     else
         info "fzf is already installed."
     fi
-
-    info "Checking for thefuck..."
-    if ! command -v fuck &> /dev/null; then
-        info "Install thefuck using pipx"
-        # Remove potentially conflicting apt packages if they were installed
-        sudo apt-get remove -y python3-thefuck || true
-        # Install pipx if not installed
-        if ! command -v pipx &> /dev/null; then
-            info "Installing pipx"
-            sudo apt install pipx -y
-            pipx ensurepath # Ensure pipx paths are available
-        else
-            info "pipx is already installed."
-        fi
-        # Install thefuck
-        pipx install thefuck
-        # Note: To make 'fuck' alias available, you might need to add `eval "$(thefuck --alias)"` to your ~/.bashrc or ~/.zshrc
-        info "'thefuck' installed via pipx. You might need to add 'eval \"\$(thefuck --alias)\"' to your shell config."
-    else
-        info "thefuck is already installed."
-    fi
-
 
     info "Checking for starship..."
     if ! command -v starship &> /dev/null; then
@@ -193,6 +183,14 @@ install_linux_cli_tools() {
         sudo apt install -y eza
     else
         info "eza is already installed."
+    fi
+
+    info "Checking for difft..."
+    if ! command -v difft &> /dev/null; then
+        info "Installing difft"
+        brew install difftastic
+    else
+        info "difft is already installed."
     fi
 
     info "Checking for bat..."

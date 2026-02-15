@@ -88,7 +88,7 @@ config = {
 			attachment = { Parallax = 0.3 },
 			width = "100%",
 			height = "100%",
-			opacity = 0.90,
+			opacity = 0.80,
 		},
 
 		{
@@ -97,7 +97,7 @@ config = {
 			},
 			width = "100%",
 			height = "100%",
-			opacity = 0.55,
+			opacity = 0.60,
 		},
 	},
 	-- from: https://akos.ma/blog/adopting-wezterm/

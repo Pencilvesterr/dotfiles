@@ -7,7 +7,7 @@ set -e
 . scripts/prerequisites.sh
 . scripts/brew-install-custom.sh
 . scripts/osx-defaults.sh
-. scripts/symlinks.sh
+. scripts/links.sh
 . linux/install_debian.sh
 
 info "Dotfiles intallation initialized..."
@@ -19,7 +19,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     if [[ "$install_apps" == "y" ]]; then
         printf "\n"
         info "===================="
-        info "Prerequisites"
+        info "Setting Up Prerequisites"
         info "===================="
 
         install_xcode
@@ -27,10 +27,17 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 
         printf "\n"
         info "===================="
-        info "Apps"
+        info "Installing Apps"
         info "===================="
 
-        run_brew_bundle
+        install_brewfile "$SCRIPT_DIR/../homebrew/Brewfile"
+        if [[ "$is_work_machine" == "y" ]]; then
+            info "Installing work Brewfile"
+            install_brewfile "$SCRIPT_DIR/../homebrew/Brewfile.work"
+        else
+          info "Installing personal Brewfile"
+          install_brewfile "$SCRIPT_DIR/../homebrew/Brewfile.personal"
+        fi
     fi
 
     printf "\n"
@@ -65,19 +72,22 @@ info "===================="
 info "Symbolic Links"
 info "===================="
 
-chmod +x ./scripts/symlinks.sh
+chmod +x ./scripts/links.sh
 if [[ "$overwrite_dotfiles" == "y" ]]; then
     warning "Deleting existing dotfiles..."
-    ./scripts/symlinks.sh --delete --include-files
+    ./scripts/links.sh --delete --include-files
 fi
-./scripts/symlinks.sh --create
+./scripts/links.sh --create
 if [[ "$is_work_machine" == "y" ]]; then
-    info "Installing work symlinks"
+    info "Installing work hardlinks"
     warning "Deleting existing work dotfiles..."
-    ./scripts/symlinks.sh --delete --include-files --work-conf
-    ./scripts/symlinks.sh --create --work-conf
+    ./scripts/links.sh --delete --include-files --work-conf
+    ./scripts/links.sh --create --work-conf
 fi
 success "Dotfiles set up successfully."
 
+printf "\n"
+
+
 info "Restarting zsh to apply changes..."
-/bin/zsh
+exec zsh

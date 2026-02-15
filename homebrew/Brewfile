@@ -1,7 +1,6 @@
 # Sources
 tap "felixkratz/formulae"
-tap "homebrew/bundle"
-tap "homebrew/services"
+tap "eugene-babichenko/fixit" # tap for fixit
 # CLI
 # Note: Lots of tools are added with .zsh_plugins.txt through antidote
 brew "bat"
@@ -9,57 +8,58 @@ brew "coreutils"
 brew "eza" # Modern, maintained replacement for ls
 brew "fzf"
 brew "git"
+brew "git-lfs"
 brew "gnu-tar" # Provides the ability to tar files
-brew "openjdk"
-brew "orbstack" # Better docker desktop
 brew "jenv"
-brew "mvnvm"
+brew "mvnvm" # Maven for Java
 brew "node"
 brew "poetry"
 brew "pre-commit"
-brew "ranger"
+brew "ranger" # r to navigate the file system
 brew "ripgrep"
 brew "speedtest-cli"
 brew "starship" # Zsh theme
 brew "terminal-notifier"
-brew "thefuck"
+brew "eugene-babichenko/fixit/fixit" # The fuck replacement
 brew "tldr"
 brew "tree" # Adds the 'tree' cli command
 brew "vim"
-# brew "wakeonlan" # Only if still using LG C1
-# brew "ykman" # Yubikey CLI
+brew "difftastic" # Defaulting for git diff
+
 brew "zoxide" # Better cd
 brew "mas" # Mac application store
+
+# Neovim + LazyVim setup
+brew "neovim"
+brew "tree-sitter-cli" # Required for lazyvim
+brew "ripgrep"
+brew "fd" # Alternative to find in CLI
+brew "lazygit" # Git UI
+brew "luarocks"
+
 # Applications
+cask "stats" # System monitor in top bar
+cask "arc" # Web browser
 cask "nikitabobko/tap/aerospace"
 cask "alfred"
 cask "betterdisplay"
 cask "bitwarden"
-cask "caffeine"
-cask "docker"
+cask "docker-desktop"
 cask "firefox"
 cask "font-hack-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-symbols-only-nerd-font"
-cask "grammarly"
-cask "insomnia"
-cask "iterm2"
 cask "jordanbaird-ice" # Cleanup top task bar
 cask "logi-options+" # Assume you're using the logi mouse
 cask "maccy"
-cask "notion"
-cask "plex"
 cask "shortcat" # App that enables mouse-free UI interaction. Cmd + shift + space
 cask "spotify"
-cask "tailscale"
 cask "visual-studio-code"
 cask "wezterm"
-cask "whatsapp"
-cask "zoom"
-cask "jetbrains-toolbox"
-# Mac app store
-mas "Trello", id: 1278508951
+cask "claude-code"
+
 # VS Code Extensions
+# TODO: Go back through these, Must be an easier way
 vscode "csantiago132.intellij-ish-darcula-theme"
 vscode "ecmel.vscode-html-css"
 vscode "k--kato.intellij-idea-keybindings"
@@ -76,6 +76,5 @@ vscode "ms-vscode.makefile-tools"
 vscode "ms-vscode.remote-explorer"
 vscode "redhat.java"
 vscode "tamasfe.even-better-toml"
-vscode "vintharas.learn-vim"
 vscode "vscodevim.vim"
 vscode "zainchen.json"

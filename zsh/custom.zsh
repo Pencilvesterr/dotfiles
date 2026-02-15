@@ -22,17 +22,32 @@ fi
 # Poetry
 export PATH="$HOME/.local/bin:$PATH"
 
-# Starship
+# Starship - defer init for faster startup
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
-eval "$(starship init zsh)"
-starship config palette $STARSHIP_THEME
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+  # Set palette only once, not on every shell startup
+  if [[ ! -f "${ZDOTDIR:-$HOME}/.starship_palette_set" ]]; then
+    starship config palette $STARSHIP_THEME &>/dev/null && touch "${ZDOTDIR:-$HOME}/.starship_palette_set" &
+  fi
+fi
 
-# Only check the cached .zcompdump file once a day for faster startup
+# Optimize compinit for faster startup - cache completions
 autoload -Uz compinit
-for dump in ~/.zcompdump(N.mh+24); do
-  compinit
-done
-compinit -C
+
+# Set the completion dump file location
+ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.zcompdump"
+
+# Only rebuild completions cache if it doesn't exist or is old
+if [[ ! -f "$ZSH_COMPDUMP" ]] || [[ $(find "$ZSH_COMPDUMP" -mtime +1 2>/dev/null) ]]; then
+  # Cache doesn't exist or is older than 1 day, rebuild it
+  compinit -d "$ZSH_COMPDUMP"
+  # Make sure it has correct permissions
+  [[ -f "$ZSH_COMPDUMP" ]] && chmod go-w "$ZSH_COMPDUMP"
+else
+  # Use cached version without security check for speed (much faster)
+  compinit -C -d "$ZSH_COMPDUMP"
+fi
 
 
 # If using git-auto-fetch plugin, sets interval to fetch changes
@@ -47,9 +62,13 @@ export ZSH_DOTENV_PROMPT=false
 [[ -d ${ZDOTDIR:-~}/.antidote ]] ||
   git clone https://github.com/mattmc3/antidote ${ZDOTDIR:-~}/.antidote
 
-# Create an amazing Zsh config using antidote plugins.
-source ${ZDOTDIR:-~}/.antidote/antidote.zsh
-antidote load
+# Cache antidote plugins for faster startup
+zsh_plugins=${ZDOTDIR:-~}/.zsh_plugins.zsh
+if [[ ! $zsh_plugins -nt ${ZDOTDIR:-~}/.zsh_plugins.txt ]]; then
+  source ${ZDOTDIR:-~}/.antidote/antidote.zsh
+  antidote bundle <${ZDOTDIR:-~}/.zsh_plugins.txt >|$zsh_plugins
+fi
+source $zsh_plugins
 
 # Plugin settings set in `plugin_settings.zsh`
 
@@ -104,3 +123,10 @@ bindkey -M vicmd 'y' vi-yank-xclip
 # Add word movement bindings so that opt + left/right work in wezterm
 bindkey "^[f" forward-word
 bindkey "^[b" backward-word
+
+# Make word-based operations stop at most punctuation (macOS-like behavior)
+# Default WORDCHARS is: *?_-.[]~=/&;!#$%^(){}<>
+WORDCHARS=''
+
+# Setup fixit, the fuck replacement
+eval "$(fixit init --name fuck zsh)"

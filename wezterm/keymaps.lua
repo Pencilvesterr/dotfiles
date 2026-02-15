@@ -172,6 +172,8 @@ key_map = {
 		mods = "CMD",
 		action = wezterm.action.DecreaseFontSize,
 	},
+	-- For claude code 
+	{key="Enter", mods="SHIFT", action=wezterm.action{SendString="\x1b\r"}},
 	-- Add copy and paste as normal. TODO: Could look into using the built in like above
 	require("command_keys").bind_super_key_to_vim("x"),
 	require("command_keys").bind_super_key_to_vim("c"),
