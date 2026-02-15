@@ -45,7 +45,7 @@ _g_print_functions() {
         printf "\033[90m%s\033[0m\n", comment
         comment = ""
       }
-      printf "\033[1;36m%s\033[0m (function)\n", func_name
+      printf "\033[1;36m%s\033[0m (branch)\n", func_name
     }
     ' "$1"
 }
