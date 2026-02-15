@@ -185,6 +185,14 @@ install_linux_cli_tools() {
         info "eza is already installed."
     fi
 
+    info "Checking for difft..."
+    if ! command -v difft &> /dev/null; then
+        info "Installing difft"
+        brew install difftastic
+    else
+        info "difft is already installed."
+    fi
+
     info "Checking for bat..."
     # Check for the command itself and the symlink target
     if ! command -v bat &> /dev/null || ! command -v batcat &> /dev/null ; then
