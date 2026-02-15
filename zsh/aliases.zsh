@@ -17,12 +17,8 @@ alias vi='vim' # Mask builtin with better default
 # Git
 # -------------------------------------------------------------------
 # List all git aliases for easy discovery
-# Git helper function - shows aliases on --help
-g() {
-    echo "🔧 Git Aliases:"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
-    # Read this file and extract git aliases with their comments
+# Git helper function - shows aliases and functions on --help
+_g_print_aliases() {
     awk '
     /^# [^-]/ { comment = substr($0, 3) }
     /^alias g.*=.*git/ {
@@ -36,7 +32,32 @@ g() {
       }
       printf "\033[1;36m%s\033[0m %s\n", alias_name, alias_command
     }
-    ' "${(%):-%x}"  # Current file path in zsh
+    ' "$1"
+}
+
+_g_print_functions() {
+    awk '
+    /^# [^-]/ { comment = substr($0, 3) }
+    /^g[a-z]+\(\)/ && !/^g\(\)/ {
+      func_name = $0
+      sub(/\(\).*/, "", func_name)
+      if (comment != "") {
+        printf "\033[90m%s\033[0m\n", comment
+        comment = ""
+      }
+      printf "\033[1;36m%s\033[0m (function)\n", func_name
+    }
+    ' "$1"
+}
+
+g() {
+    local file="${(%):-%x}"
+
+    echo "🔧 Git Aliases:"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    _g_print_aliases "$file"
+
+    _g_print_functions "$file"
 }
 # List all git aliases
 alias galiases='g'
@@ -80,7 +101,7 @@ alias gf='git fetch'
 # Show recent branch history
 alias gbranches='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''NF && !seen[$0]++'\'' | head ${1} | cat -n'
 
-# Will work to checkout main or master, even if i get it wrong
+# Will work to checkout main or master, even if I get it wrong
 gco() {
     # If the argument is 'main', try main first, then fallback to master
     if [ "$1" = "main" ]; then
