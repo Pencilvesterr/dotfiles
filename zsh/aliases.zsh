@@ -100,6 +100,14 @@ alias gcl='git clone'
 alias gf='git fetch'
 # Show recent branch history
 alias gbranches='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''NF && !seen[$0]++'\'' | head ${1} | cat -n'
+# Fetch and rebase off the origin version of a branch
+greo() {
+    if [ -z "$1" ]; then
+        echo "Usage: greo <branch-name>"
+        return 1
+    fi
+    git fetch && git rebase "origin/$1"
+}
 
 # Will work to checkout main or master, even if I get it wrong
 gco() {
