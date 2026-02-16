@@ -81,6 +81,9 @@ bindkey -M vicmd 'j' history-substring-search-down
 HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
 
+# Disable highlight on paste
+zle_highlight=('paste:none')
+
 # -- Vi mode
 # ANSI cursor escape codes:
 # \e[0 q: Reset to the default cursor style.
