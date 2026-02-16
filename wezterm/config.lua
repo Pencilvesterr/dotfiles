@@ -78,7 +78,7 @@ config = {
 	background = {
 		{
 			source = {
-				File = "/Users/" .. os.getenv("USER") .. "/.config/wezterm/dark-desert.jpg",
+				File = os.getenv("HOME") .. "/.config/wezterm/dark-desert.jpg",
 			},
 			hsb = {
 				hue = 1.0,
