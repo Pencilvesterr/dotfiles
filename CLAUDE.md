@@ -99,7 +99,7 @@ The repository supports dual configurations:
 - **Default**: Personal configuration (e.g., `git/global-config/personal.gitconfig`)
 - **Work Override**: Activated by answering "y" to "Work machine?" during `./install.sh`
   - Uses `hardlinks_config_work.conf` to override specific files
-  - Example: `zsh/work.zsh` contains machine-specific PATH configurations for Atlassian tools, pyenv, nvm, jenv
+  - Example: `zsh/work.zsh` contains machine-specific PATH configurations for Atlassian tools, nvm, jenv
 
 ### Zsh Configuration Structure
 

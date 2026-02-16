@@ -8,20 +8,7 @@
 export PATH="$PATH:/Users/mcrouch/.local/bin"
 # Required for ./jmake healthcheck
 export PATH="/opt/homebrew/opt/util-linux/bin:$PATH"
-# Add pyenv to path
-export PATH="/Users/mcrouch/.pyenv/shims:${PATH}"
 
-# Lazy-load pyenv to speed up shell startup
-function _lazy_init_pyenv() {
-  unset -f python python3 pip pip3 _lazy_init_pyenv
-  eval "$(pyenv init - --no-rehash)"
-  (pyenv rehash &) 2>/dev/null
-}
-function python()  { _lazy_init_pyenv; command python  "$@" }
-function python3() { _lazy_init_pyenv; command python3 "$@" }
-function pip()     { _lazy_init_pyenv; command pip     "$@" }
-function pip3()    { _lazy_init_pyenv; command pip3    "$@" }
-function pyenv()   { _lazy_init_pyenv; command pyenv   "$@" }
 export PATH="/Users/mcrouch/.local/bin:$PATH"
 
 # NVM is handdled with undg/zsh-nvm-lazy-load
