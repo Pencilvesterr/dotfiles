@@ -173,9 +173,10 @@ ctrl-alt-cmd-k = ['join-with up', 'mode main']
 ctrl-alt-cmd-l = ['join-with right', 'mode main']
 
 # Can get app ID by running `aerosapce list-apps`
-[[on-window-detected]]
-if.app-id = 'company.thebrowser.Browser'
-run = "move-node-to-workspace 1->Browser"
+# TODO: Temp disabling this as it was annoying when opening extensions on monitor 2
+# [[on-window-detected]]
+# if.app-id = 'company.thebrowser.Browser'
+# run = "move-node-to-workspace 1->Browser"
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
 run = "move-node-to-workspace 1->Browser"
