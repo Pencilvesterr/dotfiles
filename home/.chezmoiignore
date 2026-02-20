@@ -1,0 +1,9 @@
+# Work-only files — excluded on personal machines
+{{ if not .isWork }}
+.config/zsh/work.zsh
+Library/Application Support/Arc/private_StorableSidebar.json
+{{ end }}
+
+# nvim docs that shouldn't be deployed to the system
+.config/nvim/Cheatsheet.md
+.config/nvim/README.md

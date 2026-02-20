@@ -1,24 +1,23 @@
 #!/bin/bash
-# Pre-commit hook to ensure hardlinks are synchronized before committing
+# Check for system dotfile changes that haven't been pulled back into this repo.
+# This handles programs like htop that atomically replace their config files,
+# which would otherwise break hardlinks silently.
 
-# Get the root directory of the git repository
-REPO_ROOT=$(git rev-parse --show-toplevel)
-
-# Change to repo directory
-cd "$REPO_ROOT" || exit 1
-
-echo "🔗 Synchronizing hardlinks before commit..."
-
-
-# Delete and recreate hardlinks to ensure they're in sync
-# Delete and recreate hardlinks to ensure they're in sync
-if ./scripts/links.sh --delete --include-files | grep -q "Error:"; then
-    echo "⚠️  Warning: Some hardlinks for $config_name couldn't be deleted"
+if chezmoi status | grep -q .; then
+  chezmoi re-add
+  echo ""
+  echo "  Changes detected in system dotfiles and pulled into this repo."
+  echo "  Review the changes before committing:"
+  echo ""
+  echo "    git diff                  # see what changed"
+  echo ""
+  echo "  To keep the changes:"
+  echo "    git add -u && git commit"
+  echo ""
+  echo "  To discard the changes:"
+  echo "    chezmoi apply && git commit"
+  echo ""
+  exit 1
 fi
 
-if ./scripts/links.sh --create | grep -q "Error"; then
-    echo "⚠️  Warning: Issues creating hardlinks"
-fi
-
-echo "✅ Hardlinks synchronized"
 exit 0

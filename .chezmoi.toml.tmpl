@@ -1,0 +1,11 @@
+sourceDir = "{{ .chezmoi.homeDir }}/dev/personal/dotfiles"
+
+{{- $isWork := false }}
+{{- $envFile := joinPath .chezmoi.sourceDir ".env" }}
+{{- $workHostnamesStr := trimAll "\n " (output "bash" "-c" (printf "[ -f %q ] && . %q && printf \"%%s\" \"$WORK_HOSTNAMES\" || true" $envFile $envFile)) }}
+{{- if and $workHostnamesStr (has .chezmoi.hostname (splitList " " $workHostnamesStr)) }}
+{{-   $isWork = true }}
+{{- end }}
+
+[data]
+  isWork = {{ $isWork }}

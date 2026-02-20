@@ -1,10 +1,3 @@
-# TODO:
-- Export current vs code settings and then update sysmlinks_config.confg to install it
-- Setup NeoVim as my default editor
-- Copy relevant info from .vimrc_original_repo to my own .vimrc
-- thefuck has been deprecated. Look into (pay-respects)[https://github.com/iffse/pay-respects/] as a replacement 
-- Import the extensions and key bindings used in cursor to my VSCODE director
-
 # Dotfiles
 
 This repository contains my dotfiles, which are the config files and scripts I use to customize my development environment. These files help me maintain a consistent setup across different machines and save time when setting up new environments.
@@ -17,45 +10,74 @@ This repository contains my dotfiles, which are the config files and scripts I u
 - **Main Terminal**: [WezTerm](https://wezfurlong.org/wezterm/index.html)
 - **Shell Prompt**: [Starship](https://starship.rs/)
 - **Color Theme**: All themes are based on the [Nord color palette](https://www.nordtheme.com/docs/colors-and-palettes). Themes can be easily switched via environment variables set in `.zshenv`.
-- **Window Management**: [Aerospace](https://github.com/nikitabobko/AeroSpace) for windows tiling manager. 
+- **Window Management**: [Aerospace](https://github.com/nikitabobko/AeroSpace) for windows tiling manager.
 - **File Manager**: [Ranger](https://github.com/ranger/ranger)
 
 ## Custom Window Management
 
-I'm not a fan of the default window management solutions that macOS provides, like repeatedly pressing Cmd+Tab to switch apps or using the mouse to click and drag. To streamline my workflow, I created a custom window management solution using [Aerospace](https://github.com/nikitabobko/AeroSpace). I can efficiently manage my windows and switch apps with minimal mental overhead and maximum speed, using only my keyboard. Checkout `aerospace.toml`. It's close to the deault settings with some minor variations. 
+I'm not a fan of the default window management solutions that macOS provides, like repeatedly pressing Cmd+Tab to switch apps or using the mouse to click and drag. To streamline my workflow, I created a custom window management solution using [Aerospace](https://github.com/nikitabobko/AeroSpace). I can efficiently manage my windows and switch apps with minimal mental overhead and maximum speed, using only my keyboard. Checkout `dot_config/aerospace/aerospace.toml`.
 
 ## Setup
 
-To set up these dotfiles on your system, run:
+Dotfiles are managed with [chezmoi](https://www.chezmoi.io/). To set up on a new machine:
 
 ```bash
-./install.sh
+# Clone the repo
+git clone https://github.com/mcrouch/dotfiles ~/dev/personal/dotfiles
+
+# Run the installer
+cd ~/dev/personal/dotfiles && ./install.sh
 ```
 
-Then follow the on-screen prompts.
+Then follow the on-screen prompts. The installer handles Homebrew, apps, macOS defaults, and applies all dotfiles via chezmoi.
 
-## Uninstalling
-
-If you ever want to remove the hardlinks created by the installation script, you can use the provided hardlinks removal script:
-
-To delete all hardlinks created by the installation script, run:
+## Daily Workflow
 
 ```bash
-./scripts/links.sh --delete
+# After an app modifies its config (e.g. htop, Arc)
+chezmoi re-add
+
+# After pulling changes from another machine
+chezmoi apply
+
+# See what's out of sync between repo and system
+chezmoi status
+chezmoi diff
 ```
 
-This will remove the hardlinks but will not delete the actual configuration files, allowing you to easily revert to your previous configuration if needed.
+The pre-commit hook automatically runs `chezmoi re-add` before every commit, so changes made by apps are always captured.
 
-## Adding New Dotfiles and Software
+## Adding New Dotfiles
 
-### Dotfiles
+1. Place the config file in the appropriate subdirectory (e.g. `dot_config/htop/`)
+2. Run `chezmoi add ~/.config/htop/htoprc` to register it with chezmoi, or manually name it following chezmoi conventions:
+   - Files starting with `.` → prefix with `dot_` (e.g. `.zshrc` → `dot_zshrc`)
+   - Files needing execute permission → prefix with `executable_`
+   - Files with restricted permissions → prefix with `private_`
+   - Directories follow the same rules
+3. Add an entry to `.chezmoiignore` if the file should be excluded on certain machines (e.g. work-only)
+4. Run `chezmoi apply` to deploy
 
-When adding new dotfiles to this repository, follow these steps:
+## Work vs Personal Machines
 
-1. Place your dotfile in the appropriate location within the repository.
-2. Update the `hardlinks_config.conf` file to include the hardlink creation for your new dotfile.
-3. If necessary, update the `install.sh` script to set up the software.
+Work machine detection is hostname-based, configured in `.chezmoi.toml.tmpl`. Work machines get:
+- Work email in `.gitconfig`
+- Work-specific `.zprofile` (JetBrains Toolbox, Python PATH)
+- `work.zsh` (Atlassian tools, NVM, jenv lazy-loading)
+- Work Arc browser sidebar
 
-### Software Installation
+To add a new work machine hostname, update the `$workHostnames` list in `.chezmoi.toml.tmpl` and the `WORK_HOSTNAMES` array in `install.sh`.
 
-Software is installed using Homebrew. To add a formula or cask, update the `homebrew/Brewfile` and run `./scripts/brew_install_custom.sh`. If you need to install a specific version of a package, find its Ruby script in the commit history of an official Homebrew GitHub repository and place it in the `homebrew/custom-casks/` or `homebrew/custom-formulae/` directory, depending on whether it's a cask or formula.
+## Adding New Software
+
+Software is installed via Homebrew. Add a formula or cask to the appropriate Brewfile:
+
+- `homebrew/Brewfile` — shared across all machines
+- `homebrew/Brewfile.personal` — personal machines only
+- `homebrew/Brewfile.work` — work machines only
+
+Then install with:
+
+```bash
+brew bundle install --file=homebrew/Brewfile
+```

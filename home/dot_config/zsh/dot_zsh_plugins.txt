@@ -1,0 +1,39 @@
+#!/bin/zsh
+#
+# .zsh_plugins.txt - antidote plugins file
+# Documentation: https://getantidote.github.io/
+# kind:zsh (default) = DeAult that looks for *.plugin.zsh or *.zsh and sources them
+# kind:path = put the plugin in $PATH
+# kind:defer = don't need to load before working with the shell. Only use for syntax highlighting + autosuggestions (https://github.com/romkatv/zsh-bench#deferred-initialization)
+# kind:fpath = put the plugin in $fpath and do nothing else, used for completions
+
+# zsh-users/zsh-completions is a popular plugin for adding supplemental completions.
+
+zdharma-continuum/fast-syntax-highlighting kind:defer
+zsh-users/zsh-autosuggestions kind:defer # Inline ghosted auto-suggestions to tab
+zsh-users/zsh-history-substring-search kind:defer
+
+zsh-users/zsh-completions path:src kind:fpath
+Aloxaf/fzf-tab # Replace zsh's default completion selection menu with fzf!
+softmoth/zsh-vim-mode # Tried jeffreytse/zsh-vi-mode but it broke ctrl+r
+
+
+
+#  --- CLI Tools
+# kind:path will put the plugin folder to $PATH, make sure that's how it should be installed
+romkatv/zsh-bench kind:path # `zsh-bench` will benchmark shell script
+ajeetdsouza/zoxide # A better `cd`
+junegunn/fzf kind:path # Fuzzy finding utility
+
+# Manually added tldr through brew, alternative to man
+
+# Load the core plugins from the oh-my-zsh lib directory 
+# TODO: Late go through and only load the ones I need
+# ohmyzsh/ohmyzsh path:lib
+
+ohmyzsh/ohmyzsh path:plugins/extract # Adds `extract` for extracting all archived/compressed files you pass it
+ohmyzsh/ohmyzsh path:plugins/dotenv # Automatically load your project ENV variables from `.env` file when you `cd` into project root directory.
+ohmyzsh/ohmyzsh path:plugins/magic-enter # Enter in a git dir with do a git status, otherwise an ls
+ohmyzsh/ohmyzsh path:plugins/git-auto-fetch # Automatically fetches remotes in the background.
+
+

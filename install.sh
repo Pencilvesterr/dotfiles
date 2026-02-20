@@ -1,19 +1,38 @@
 #!/bin/bash
 set -e
-# TODO: This doesn't run the vscode-extensions.sh
 
-# Equivelant as the 'source' command
-. scripts/utils.sh
-. scripts/prerequisites.sh
-. scripts/brew-install-custom.sh
-. scripts/osx-defaults.sh
-. scripts/links.sh
-. linux/install_debian.sh
+# Get the absolute path of the directory where the script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-info "Dotfiles intallation initialized..."
-read -p "Overwrite existing dotfiles? [y/n] " overwrite_dotfiles
+. "$SCRIPT_DIR/scripts/utils.sh"
+. "$SCRIPT_DIR/scripts/prerequisites.sh"
+. "$SCRIPT_DIR/scripts/brew-install-custom.sh"
+. "$SCRIPT_DIR/scripts/osx-defaults.sh"
+. "$SCRIPT_DIR/linux/install_debian.sh"
+
+# Load .env — required before continuing
+if [ ! -f "$SCRIPT_DIR/.env" ]; then
+    error "Missing .env file. Copy .env.example to .env and fill in your values."
+    exit 1
+fi
+source "$SCRIPT_DIR/.env"
+
+if [ -z "$WORK_HOSTNAMES" ]; then
+    error "WORK_HOSTNAMES is not set in .env. See .env.example."
+    exit 1
+fi
+
+is_work_machine() {
+    local current_hostname
+    current_hostname=$(hostname)
+    for h in $WORK_HOSTNAMES; do
+        [[ "$current_hostname" == "$h" ]] && return 0
+    done
+    return 1
+}
+
+info "Dotfiles installation initialized..."
 read -p "Install apps? [y/n] " install_apps
-read -p "Work machine? [y/n] " is_work_machine
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     if [[ "$install_apps" == "y" ]]; then
@@ -30,13 +49,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         info "Installing Apps"
         info "===================="
 
-        install_brewfile "$SCRIPT_DIR/../homebrew/Brewfile"
-        if [[ "$is_work_machine" == "y" ]]; then
-            info "Installing work Brewfile"
-            install_brewfile "$SCRIPT_DIR/../homebrew/Brewfile.work"
+        install_brewfile "$SCRIPT_DIR/homebrew/Brewfile"
+        if is_work_machine; then
+            info "Work machine detected — installing work Brewfile"
+            install_brewfile "$SCRIPT_DIR/homebrew/Brewfile.work"
         else
-          info "Installing personal Brewfile"
-          install_brewfile "$SCRIPT_DIR/../homebrew/Brewfile.personal"
+            info "Personal machine — installing personal Brewfile"
+            install_brewfile "$SCRIPT_DIR/homebrew/Brewfile.personal"
         fi
     fi
 
@@ -69,25 +88,34 @@ touch ~/.hushlogin
 
 printf "\n"
 info "===================="
-info "Symbolic Links"
+info "Dotfiles (chezmoi)"
 info "===================="
 
-chmod +x ./scripts/links.sh
-if [[ "$overwrite_dotfiles" == "y" ]]; then
-    warning "Deleting existing dotfiles..."
-    ./scripts/links.sh --delete --include-files
+# Ensure chezmoi is installed
+if ! command -v chezmoi &>/dev/null; then
+    info "Installing chezmoi..."
+    brew install chezmoi
 fi
-./scripts/links.sh --create
-if [[ "$is_work_machine" == "y" ]]; then
-    info "Installing work hardlinks"
-    warning "Deleting existing work dotfiles..."
-    ./scripts/links.sh --delete --include-files --work-conf
-    ./scripts/links.sh --create --work-conf
+
+# Bootstrap chezmoi config to point at this repo, with work detection data
+mkdir -p ~/.config/chezmoi
+if [ ! -f ~/.config/chezmoi/chezmoi.toml ]; then
+    IS_WORK=false
+    is_work_machine && IS_WORK=true
+    cat > ~/.config/chezmoi/chezmoi.toml << EOF
+sourceDir = "$SCRIPT_DIR"
+
+[data]
+  isWork = $IS_WORK
+EOF
+    info "Created chezmoi config (isWork=$IS_WORK) pointing to $SCRIPT_DIR"
 fi
+
+info "Applying dotfiles with chezmoi..."
+chezmoi apply
+
 success "Dotfiles set up successfully."
 
 printf "\n"
-
-
 info "Restarting zsh to apply changes..."
 exec zsh

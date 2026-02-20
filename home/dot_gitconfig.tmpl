@@ -1,0 +1,43 @@
+[user]
+	name = Morgan Crouch
+{{- if .isWork }}
+	email = mcrouch@atlassian.com
+{{- else }}
+	email = m8crouch@gmail.com
+{{- end }}
+[push]
+	autoSetupRemote = true
+[core]
+	autocrlf = input
+{{- if .isWork }}
+	excludesfile = /Users/mcrouch/.gitignore_global
+[merge]
+	conflictStyle = zdiff3
+[trace2]
+	eventTarget = af_unix:/Users/mcrouch/.gittrace/trace.sock
+	eventBrief = true
+	eventNesting = 1
+	configparams = custom.metacommands
+{{- end }}
+[pull]
+	rebase = false
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[include]
+	path = ~/.config/difftastic/difft.gitconfig
+[rerere]
+	enabled = true
+{{- if .isWork }}
+[githooks]
+	installDir = /Users/mcrouch/.githooks
+	runner = /Users/mcrouch/.githooks/release/base-template.sh
+	cloneUrl = https://github.com/rycus86/githooks.git
+	cloneBranch = master
+[alias]
+	hooks = !"/Users/mcrouch/.githooks/bin/githooks"
+[githooks "autoupdate"]
+	enabled = true
+{{- end }}

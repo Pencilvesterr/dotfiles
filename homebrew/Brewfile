@@ -28,6 +28,7 @@ brew "difftastic" # Defaulting for git diff
 
 brew "zoxide" # Better cd
 brew "mas" # Mac application store
+brew "chezmoi" # Dotfile manager
 
 # Neovim + LazyVim setup
 brew "neovim"

@@ -4,39 +4,31 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a personal dotfiles repository for macOS and Linux development environment configuration. The repository uses **hardlinks** (not symlinks) to install configuration files to their target locations, managed through configuration files.
+This is a personal dotfiles repository for macOS and Linux development environment configuration. Dotfiles are managed with **[chezmoi](https://www.chezmoi.io/)**, which deploys config files from this repo to their system locations and can pull changes back from the system into the repo.
 
 ## Key Commands
 
-### Installation and Setup
+### Dotfile Management (chezmoi)
 
 ```bash
-# Full installation (prompts for options)
+# Deploy repo → system (run after pulling changes)
+chezmoi apply
+
+# Pull system → repo (run before committing, e.g. after htop changes settings)
+chezmoi re-add
+
+# See what's out of sync
+chezmoi status
+chezmoi diff
+
+# Full installation on a new machine
 ./install.sh
-
-# Create hardlinks from dotfiles to system locations
-./scripts/links.sh --create
-
-# Create work-specific hardlinks
-./scripts/links.sh --create --work-conf
-
-# Delete hardlinks
-./scripts/links.sh --delete
-
-# Delete hardlinks including files (use when overwriting)
-./scripts/links.sh --delete --include-files
-
-# Delete work-specific hardlinks
-./scripts/links.sh --delete --include-files --work-conf
 ```
 
 ### Package Management
 
 ```bash
 # Install packages from Brewfile
-./scripts/brew-install-custom.sh
-
-# Or install a specific Brewfile
 brew bundle install --file=homebrew/Brewfile
 brew bundle install --file=homebrew/Brewfile.work
 brew bundle install --file=homebrew/Brewfile.personal
@@ -54,98 +46,112 @@ brew bundle check --file=homebrew/Brewfile
 
 ## Architecture
 
-### Hardlink System
+### chezmoi System
 
-The core installation mechanism uses **hardlinks** and **softlinks** (symlinks) via `scripts/links.sh`:
+Dotfiles are deployed via chezmoi. The source directory IS this git repo (`~/dev/personal/dotfiles`). chezmoi is configured via `~/.config/chezmoi/chezmoi.toml`.
 
-- Configuration:
-  - `hardlinks_config.conf` - for file hardlinks (main config)
-  - `softlinks_config.conf` - for symlinks (supports directories)
-  - `hardlinks_config_work.conf` - work-specific hardlinks
-- Format: `source_path:target_path` (one per line, comments start with `#`)
-- The script expands variables like `$(pwd)` and `$HOME`
-- Creates parent directories if needed
-- Detects existing hardlinks by checking if files share the same inode
-- Softlinks can be used for directories (hardlinks cannot)
+**Source file naming conventions:**
+- Files/dirs starting with `.` → prefixed with `dot_` in source (e.g. `dot_zshrc` → `~/.zshrc`)
+- Files needing execute permission → prefixed with `executable_`
+- Files with restricted permissions → prefixed with `private_` (chezmoi adds this automatically on `re-add`)
+- Templates (work/personal differences) → suffixed with `.tmpl`
+
+**Key chezmoi files:**
+- `.chezmoi.toml.tmpl` — generates `~/.config/chezmoi/chezmoi.toml` on `chezmoi init`; encodes work machine detection by hostname
+- `.chezmoiroot` — tells chezmoi to use the `home/` subdirectory as its source root, keeping dotfiles separate from repo utilities
+- `home/.chezmoiignore` — excludes work-only files on personal machines
+- `home/.chezmoiscripts/run_once_install-git-hooks.sh` — installs the pre-commit hook on first `chezmoi apply`
+
+**Pre-commit hook:** Automatically runs `chezmoi re-add` before every commit, so changes made by apps (like htop rewriting its config) are captured before committing.
 
 ### Directory Structure
 
 ```
-├── zsh/               # Zsh configuration (split into modular files)
-├── nvim/              # NeoVim configuration (LazyVim-based)
-├── vim/               # Fallback Vim configuration
-├── wezterm/           # WezTerm terminal configuration
-├── starship/          # Starship prompt configuration
-├── aerospace/         # Aerospace window manager configuration
-├── git/               # Git configurations (difftastic, delta, lazygit)
-│   └── global-config/ # Contains personal.gitconfig (default) and work.gitconfig
-├── ranger/            # Ranger file manager configuration
-├── vscode/            # VS Code settings
-├── idea/              # IntelliJ IDEA vim plugin configuration
-├── homebrew/          # Homebrew package definitions
-│   ├── Brewfile           # Shared packages
-│   ├── Brewfile.personal  # Personal-only packages
-│   ├── Brewfile.work      # Work-only packages
-│   ├── custom-casks/      # Custom version casks
-│   └── custom-formulae/   # Custom version formulae
-├── scripts/           # Installation and utility scripts
-└── linux/             # Linux-specific installation scripts
+├── .chezmoi.toml.tmpl         # Work detection template (repo root, not in home/)
+├── .chezmoiroot               # Contains "home" — tells chezmoi to use home/ as source root
+│
+├── home/                      # chezmoi source root (all managed dotfiles live here)
+│   ├── .chezmoiignore
+│   ├── .chezmoiscripts/
+│   ├── dot_zshenv             # → ~/.zshenv
+│   ├── dot_vimrc              # → ~/.vimrc
+│   ├── dot_ideavimrc          # → ~/.ideavimrc
+│   ├── dot_gitconfig.tmpl     # → ~/.gitconfig (templated: work vs personal email)
+│   ├── dot_config/
+│   │   ├── zsh/               # Zsh config (modular files)
+│   │   │   ├── dot_zshrc      # → ~/.config/zsh/.zshrc
+│   │   │   ├── dot_zprofile.tmpl  # → ~/.config/zsh/.zprofile (templated)
+│   │   │   ├── work.zsh       # → ~/.config/zsh/work.zsh (work machines only)
+│   │   │   └── ...
+│   │   ├── nvim/              # NeoVim config (LazyVim-based)
+│   │   ├── wezterm/           # WezTerm terminal config
+│   │   ├── starship/          # Starship prompt config
+│   │   ├── aerospace/         # Aerospace window manager config
+│   │   ├── ranger/            # Ranger file manager config
+│   │   ├── htop/              # htop config
+│   │   ├── difftastic/        # Git diff tool config
+│   │   └── lazygit/           # LazyGit config
+│   ├── dot_claude/            # Claude Code settings
+│   └── Library/
+│       └── Application Support/  # macOS app configs (VS Code, Arc)
+│
+├── homebrew/                  # Brewfiles (NOT chezmoi-managed)
+│   ├── Brewfile               # Shared packages
+│   ├── Brewfile.personal      # Personal-only packages
+│   └── Brewfile.work          # Work-only packages
+├── scripts/                   # Utility scripts (NOT chezmoi-managed)
+├── aerospace/                 # Workspace setup script (NOT chezmoi-managed)
+└── linux/                     # Linux-specific install scripts
 ```
 
 ### Work vs Personal Configuration
 
-The repository supports dual configurations:
+Work machine detection is **hostname-based**, configured in `.chezmoi.toml.tmpl`. The `isWork` template variable controls:
 
-- **Default**: Personal configuration (e.g., `git/global-config/personal.gitconfig`)
-- **Work Override**: Activated by answering "y" to "Work machine?" during `./install.sh`
-  - Uses `hardlinks_config_work.conf` to override specific files
-  - Example: `zsh/work.zsh` contains machine-specific PATH configurations for Atlassian tools, nvm, jenv
+- **`.gitconfig`** — work email (`mcrouch@atlassian.com`) vs personal
+- **`.zprofile`** — JetBrains Toolbox PATH, brew shellenv, Python PATH (work only)
+- **`work.zsh`** — Atlassian tools, NVM, jenv lazy-loading (excluded on personal via `.chezmoiignore`)
+- **Arc sidebar** — work browser config (excluded on personal via `.chezmoiignore`)
+
+To add a new work machine: update `$workHostnames` in `.chezmoi.toml.tmpl` AND `WORK_HOSTNAMES` in `install.sh`.
 
 ### Zsh Configuration Structure
 
-Zsh config is split into modular files for maintainability:
+Zsh config is split into modular files sourced from `.zshrc`:
 
-- `.zshrc` - Main entry point
-- `.zshenv` - Environment variables
-- `custom.zsh` - Custom configurations
-- `plugin_settings.zsh` - Plugin-specific settings
-- `functions.zsh` - Custom functions
-- `aliases.zsh` - Command aliases
-- `work.zsh` - Work-specific settings (PATH, lazy-loaded pyenv/nvm/jenv)
-- `.zsh_plugins.txt` - Plugin list (likely for antidote or similar)
+- `dot_zshrc` — main entry point
+- `dot_zshenv` — environment variables (must live at `~/.zshenv`, sets `ZDOTDIR`)
+- `dot_zprofile.tmpl` — login shell setup (templated for work/personal)
+- `custom.zsh` — core config (Homebrew, antidote plugins, vi mode)
+- `plugin_settings.zsh` — fzf, fzf-tab settings
+- `functions.zsh` — custom functions
+- `aliases.zsh` — aliases and git functions
+- `work.zsh` — work-specific PATH, NVM, jenv (work machines only)
+- `dot_zsh_plugins.txt` — antidote plugin list
 
 ## Adding New Dotfiles
 
-1. Place the config file in the appropriate subdirectory
-2. Add an entry to the appropriate config file:
-   - For files: use `hardlinks_config.conf`
-   - For directories: use `softlinks_config.conf`
-   - For work-specific: use `hardlinks_config_work.conf`
-
-   Format:
-   ```
-   $(pwd)/path/to/source:$HOME/path/to/target
-   ```
-3. Run `./scripts/links.sh --create`
+1. Place the config file in the appropriate `home/dot_config/` subdirectory (following chezmoi naming conventions)
+2. Run `chezmoi add ~/.config/tool/file` to register it, or name it manually:
+   - Dotfiles: prefix with `dot_` (`.zshrc` → `dot_zshrc`)
+   - Executables: prefix with `executable_`
+   - Private (0600): prefix with `private_` (chezmoi adds this automatically on `re-add`)
+3. If work-only, add an exclusion to `home/.chezmoiignore` under the `{{ if not .isWork }}` block
+4. Run `chezmoi apply` to deploy
 
 ## Adding New Software
 
 1. Add the package to the appropriate Brewfile:
-   - `homebrew/Brewfile` - Shared across personal and work
-   - `homebrew/Brewfile.personal` - Personal machines only
-   - `homebrew/Brewfile.work` - Work machines only
+   - `homebrew/Brewfile` — shared across all machines
+   - `homebrew/Brewfile.personal` — personal machines only
+   - `homebrew/Brewfile.work` — work machines only
 
-2. Install with: `./scripts/brew-install-custom.sh` or `brew bundle install --file=homebrew/Brewfile`
-
-3. For specific package versions:
-   - Find the Ruby formula/cask in Homebrew's commit history
-   - Place in `homebrew/custom-casks/` or `homebrew/custom-formulae/`
+2. Install with: `brew bundle install --file=homebrew/Brewfile`
 
 ## Important Notes
 
-- The repository uses **hardlinks**, not symlinks
 - The `cd` command is aliased to use **zoxide** (use `/bin/cd` for the original command)
 - Nord color palette is used throughout all themes
-- Theme switching via environment variables in `.zshenv`
+- Theme switching via environment variables in `dot_zshenv`
 - NeoVim config is based on LazyVim
-- Git config defaults to `personal.gitconfig` unless overridden by work hardlinks
+- Git config is templated — personal email by default, work email on work machines

@@ -1,0 +1,6 @@
+gui:
+  showIcons: true
+
+git:
+  paging:
+    externalDiffCommand: difft --color=always --display=side-by-side
