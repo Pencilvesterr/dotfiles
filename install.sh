@@ -2,20 +2,20 @@
 set -e
 
 # Get the absolute path of the directory where the script is located
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-. "$SCRIPT_DIR/scripts/utils.sh"
-. "$SCRIPT_DIR/scripts/prerequisites.sh"
-. "$SCRIPT_DIR/scripts/brew-install-custom.sh"
-. "$SCRIPT_DIR/scripts/osx-defaults.sh"
-. "$SCRIPT_DIR/linux/install_debian.sh"
+. "$REPO_ROOT/scripts/utils.sh"
+. "$REPO_ROOT/scripts/prerequisites.sh"
+. "$REPO_ROOT/scripts/brew-install-custom.sh"
+. "$REPO_ROOT/scripts/osx-defaults.sh"
+. "$REPO_ROOT/linux/install_debian.sh"
 
 # Load .env — required before continuing
-if [ ! -f "$SCRIPT_DIR/.env" ]; then
+if [ ! -f "$REPO_ROOT/.env" ]; then
     error "Missing .env file. Copy .env.example to .env and fill in your values."
     exit 1
 fi
-source "$SCRIPT_DIR/.env"
+source "$REPO_ROOT/.env"
 
 if [ -z "$WORK_HOSTNAMES" ]; then
     error "WORK_HOSTNAMES is not set in .env. See .env.example."
@@ -49,13 +49,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         info "Installing Apps"
         info "===================="
 
-        install_brewfile "$SCRIPT_DIR/homebrew/Brewfile"
+        install_brewfile "$REPO_ROOT/homebrew/Brewfile"
         if is_work_machine; then
             info "Work machine detected — installing work Brewfile"
-            install_brewfile "$SCRIPT_DIR/homebrew/Brewfile.work"
+            install_brewfile "$REPO_ROOT/homebrew/Brewfile.work"
         else
             info "Personal machine — installing personal Brewfile"
-            install_brewfile "$SCRIPT_DIR/homebrew/Brewfile.personal"
+            install_brewfile "$REPO_ROOT/homebrew/Brewfile.personal"
         fi
     fi
 
@@ -103,12 +103,12 @@ if [ ! -f ~/.config/chezmoi/chezmoi.toml ]; then
     IS_WORK=false
     is_work_machine && IS_WORK=true
     cat > ~/.config/chezmoi/chezmoi.toml << EOF
-sourceDir = "$SCRIPT_DIR"
+sourceDir = "$REPO_ROOT"
 
 [data]
   isWork = $IS_WORK
 EOF
-    info "Created chezmoi config (isWork=$IS_WORK) pointing to $SCRIPT_DIR"
+    info "Created chezmoi config (isWork=$IS_WORK) pointing to $REPO_ROOT"
 fi
 
 info "Applying dotfiles with chezmoi..."
