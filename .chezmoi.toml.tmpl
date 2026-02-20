@@ -9,3 +9,6 @@ sourceDir = "{{ .chezmoi.homeDir }}/dev/personal/dotfiles"
 
 [data]
   isWork = {{ $isWork }}
+[diff]
+    command = "difft"
+    args = ["--color=always"]

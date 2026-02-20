@@ -159,10 +159,10 @@ gcou() {
 # -------------------------------------------------------------------
 # Updating built-ins
 # -------------------------------------------------------------------
-# Use zoxide instead of cd
-if command -v z &> /dev/null; then
-    alias cd=z
-fi
+## Use zoxide instead of cd
+#if command -v z &> /dev/null; then
+#    alias cd=z
+#fi
 
 alias del='echo Moving to ~/.Trash/ ...; mv -i $* ~/.Trash/'
 
