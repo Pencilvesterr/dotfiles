@@ -179,6 +179,7 @@ alias pip='pip3'
 # -------------------------------------------------------------------
 # Ranger
 alias r=". ranger"
+alias dc="docker compose"
 
 # Better ls
 alias ls="eza --all --icons=always"
