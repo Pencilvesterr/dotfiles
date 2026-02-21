@@ -100,6 +100,9 @@ set ttyfast
 
 " ------ MAPPINGS -------
 
+" macOS-style word deletion with Alt+Backspace in insert mode
+inoremap <M-BS> <C-w>
+
 " Install vim-plug if not found
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
