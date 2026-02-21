@@ -1,17 +1,12 @@
 #!/bin/bash
 
-# Get the absolute path of the directory where the script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 . $SCRIPT_DIR/utils.sh
-
-# Get the absolute path of the directory where the script is located
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 HARDLINKS_CONFIG="$SCRIPT_DIR/../hardlinks_config.conf"
 SOFTLINKS_CONFIG="$SCRIPT_DIR/../softlinks_config.conf"
-
-. $SCRIPT_DIR/utils.sh
+HARDLINKS_WORK_CONFIG="$SCRIPT_DIR/../hardlinks_config_work.conf"
 
 check_config_exists() {
     local config_file="$1"
@@ -127,7 +122,7 @@ create_softlinks() {
     done <"$config_file"
 }
 
-delete_hardlinks() {
+delete_hardlink_files() {
     local config_file="$1"
     check_config_exists "$config_file" || return
 
@@ -153,7 +148,7 @@ delete_hardlinks() {
     done <"$config_file"
 }
 
-delete_softlinks() {
+delete_softlink_files() {
     local config_file="$1"
     check_config_exists "$config_file" || return
 
@@ -179,21 +174,74 @@ delete_softlinks() {
     done <"$config_file"
 }
 
+show_diffs() {
+    local config_files=("$@")
+    local any_diffs=false
+
+    for config_file in "${config_files[@]}"; do
+        [ -f "$config_file" ] || continue
+        while IFS=: read -r source target || [ -n "$source" ]; do
+            [[ -z "$source" || -z "$target" || "$source" == \#* ]] && continue
+            source=$(eval echo "$source")
+            target=$(eval echo "$target")
+
+            [ -e "$target" ] || [ -L "$target" ] || continue
+
+            if [ -L "$target" ] && [ "$(readlink "$target")" == "$source" ]; then
+                continue
+            fi
+
+            if [ -f "$source" ] && [ -f "$target" ]; then
+                if ! diff -q "$source" "$target" > /dev/null 2>&1; then
+                    warning "Different content: $target"
+                else
+                    warning "Exists (not linked): $target"
+                fi
+            else
+                warning "Exists (not linked): $target"
+            fi
+            any_diffs=true
+        done < "$config_file"
+    done
+
+    $any_diffs
+}
+
+adopt_existing_files() {
+    local config_files=("$@")
+
+    for config_file in "${config_files[@]}"; do
+        [ -f "$config_file" ] || continue
+        while IFS=: read -r source target || [ -n "$source" ]; do
+            [[ -z "$source" || -z "$target" || "$source" == \#* ]] && continue
+            source=$(eval echo "$source")
+            target=$(eval echo "$target")
+
+            [ -e "$target" ] || [ -L "$target" ] || continue
+
+            if [ -L "$target" ] && [ "$(readlink "$target")" == "$source" ]; then
+                continue
+            fi
+
+            if [ -f "$target" ]; then
+                cp "$target" "$source"
+                rm "$target"
+                ln -s "$source" "$target"
+                success "Adopted: $target -> $source"
+            fi
+        done < "$config_file"
+    done
+}
+
 # Parse arguments
 if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
     case "$1" in
     "--create")
         if [ "$2" == "--work-conf" ]; then
-            create_hardlinks "$SCRIPT_DIR/../hardlinks_config_work.conf"
+            create_hardlinks "$HARDLINKS_WORK_CONFIG"
         else
             create_hardlinks "$HARDLINKS_CONFIG"
             create_softlinks "$SOFTLINKS_CONFIG"
-
-            # Automatically create work config links if user is mcrouch
-            if [ "$(whoami)" == "mcrouch" ]; then
-                info "Detected user 'mcrouch' - creating work config links..."
-                create_hardlinks "$SCRIPT_DIR/../hardlinks_config_work.conf"
-            fi
         fi
         ;;
     "--delete")
@@ -201,21 +249,28 @@ if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
             include_files=true
         fi
         if [ "$2" == "--work-conf" ] || [ "$3" == "--work-conf" ]; then
-            delete_hardlinks "$SCRIPT_DIR/../hardlinks_config_work.conf"
+            delete_hardlink_files "$HARDLINKS_WORK_CONFIG"
         else
-            delete_hardlinks "$HARDLINKS_CONFIG"
-            delete_softlinks "$SOFTLINKS_CONFIG"
-
-            # Automatically delete work config links if user is mcrouch
-            if [ "$(whoami)" == "mcrouch" ]; then
-                info "Detected user 'mcrouch' - deleting work config links..."
-                delete_hardlinks "$SCRIPT_DIR/../hardlinks_config_work.conf"
-            fi
+            delete_hardlink_files "$HARDLINKS_CONFIG"
+            delete_softlink_files "$SOFTLINKS_CONFIG"
+        fi
+        ;;
+    "--show-diffs")
+        if [ "$2" == "--work-conf" ]; then
+            show_diffs "$HARDLINKS_WORK_CONFIG"
+        else
+            show_diffs "$HARDLINKS_CONFIG" "$SOFTLINKS_CONFIG"
+        fi
+        ;;
+    "--adopt")
+        if [ "$2" == "--work-conf" ]; then
+            adopt_existing_files "$HARDLINKS_WORK_CONFIG"
+        else
+            adopt_existing_files "$HARDLINKS_CONFIG" "$SOFTLINKS_CONFIG"
         fi
         ;;
     "--help")
-        # Display usage/help message
-        echo "Usage: $0 [--create | --delete [--include-files] [--work-conf] | --help]"
+        echo "Usage: $0 [--create | --delete [--include-files] [--work-conf] | --show-diffs [--work-conf] | --adopt [--work-conf] | --help]"
         echo ""
         echo "Options:"
         echo "  --create              Create hard links from hardlinks_config.conf"
@@ -225,12 +280,16 @@ if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
         echo "  --delete --include-files"
         echo "                        Delete links including files"
         echo "  --delete --work-conf  Delete links from work config"
+        echo "  --show-diffs          Show target files that differ from source"
+        echo "  --show-diffs --work-conf"
+        echo "                        Show differing files in work config"
+        echo "  --adopt               Copy existing target files into repo, then replace with links"
+        echo "  --adopt --work-conf   Adopt existing files from work config"
         echo "  --help                Display this help message"
         ;;
     *)
-        # Display an error message for unknown arguments
         error "Error: Unknown argument '$1'"
-        error "Usage: $0 [--create | --delete [--include-files] [--work-conf] | --help]"
+        error "Usage: $0 [--create | --delete [--include-files] [--work-conf] | --show-diffs [--work-conf] | --adopt [--work-conf] | --help]"
         exit 1
         ;;
     esac

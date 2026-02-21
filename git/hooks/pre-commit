@@ -1,24 +1,80 @@
 #!/bin/bash
-# Pre-commit hook to ensure hardlinks are synchronized before committing
+# Check for broken symlinks in dotfile targets before committing.
+#
+# For each target in the config files:
+#   - Correct symlink              → skip (all good)
+#   - Broken, same contents        → fix the symlink, continue
+#   - Broken, differs, no git changes to repo file → adopt machine version, stage it, continue
+#   - Broken, differs, repo file has staged/unstaged changes → warn and abort
 
-# Get the root directory of the git repository
-REPO_ROOT=$(git rev-parse --show-toplevel)
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+CONFIG_FILES=(
+    "hardlinks_config.conf"
+    "softlinks_config.conf"
+    "hardlinks_config_work.conf"
+)
 
-# Change to repo directory
-cd "$REPO_ROOT" || exit 1
+FAIL=false
 
-echo "🔗 Synchronizing hardlinks before commit..."
+for config_file in "${CONFIG_FILES[@]}"; do
+    config_path="$REPO_ROOT/$config_file"
+    [ -f "$config_path" ] || continue
 
+    while IFS=: read -r source target || [ -n "$source" ]; do
+        [[ -z "$source" || -z "$target" || "$source" == \#* ]] && continue
+        source=$(eval echo "$source")
+        target=$(eval echo "$target")
 
-# Delete and recreate hardlinks to ensure they're in sync
-# Delete and recreate hardlinks to ensure they're in sync
-if ./scripts/links.sh --delete --include-files | grep -q "Error:"; then
-    echo "⚠️  Warning: Some hardlinks for $config_name couldn't be deleted"
+        # Skip if target doesn't exist (not yet linked, not our problem here)
+        [ -e "$target" ] || [ -L "$target" ] || continue
+
+        # Skip if already a correct symlink
+        if [ -L "$target" ] && [ "$(readlink "$target")" == "$source" ]; then
+            continue
+        fi
+
+        # Skip if source doesn't exist as a file
+        [ -f "$source" ] || continue
+
+        # Target exists but is not the correct symlink — determine how to handle it
+        rel_source="${source#$REPO_ROOT/}"
+
+        if diff -q "$source" "$target" > /dev/null 2>&1; then
+            # Contents are identical — just fix the symlink
+            rm "$target"
+            ln -s "$source" "$target"
+            echo "==> Fixed symlink (same contents): $target"
+
+        elif git diff --quiet "$rel_source" 2>/dev/null && git diff --cached --quiet "$rel_source" 2>/dev/null; then
+            # Contents differ, but repo file has no staged or unstaged changes
+            # → adopt the machine's version into the repo
+            cp "$target" "$source"
+            rm "$target"
+            ln -s "$source" "$target"
+            git add "$rel_source"
+            echo "==> Adopted machine version and staged: $rel_source"
+            echo "    (symlink fixed: $target)"
+
+        else
+            # Contents differ AND the repo file has changes — conflict
+            echo ""
+            echo "  CONFLICT: $target"
+            echo "  The file on your machine differs from the repo version,"
+            echo "  and the repo file also has staged or unstaged changes."
+            echo ""
+            echo "  Options:"
+            echo "    Keep machine version:  cp '$target' '$source' && git add '$rel_source'"
+            echo "    Keep repo version:     rm '$target' && ln -s '$source' '$target'"
+            echo ""
+            FAIL=true
+        fi
+
+    done < "$config_path"
+done
+
+if $FAIL; then
+    echo "Commit aborted. Resolve the conflicts above and try again."
+    exit 1
 fi
 
-if ./scripts/links.sh --create | grep -q "Error"; then
-    echo "⚠️  Warning: Issues creating hardlinks"
-fi
-
-echo "✅ Hardlinks synchronized"
 exit 0
