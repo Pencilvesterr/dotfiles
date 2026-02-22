@@ -1,7 +1,15 @@
-#!/bin/zsh                                                                                                                                             
+#!/bin/zsh
 #
 # .zprofile - Zsh file loaded on login.
 #
+
+#
+# Browser
+#
+
+if [[ "$OSTYPE" == darwin* ]]; then
+  export BROWSER="${BROWSER:-open}"
+fi
 
 #
 # Editors
@@ -20,22 +28,12 @@ typeset -gU path fpath
 
 # Set the list of directories that zsh searches for commands.
 path=(
-│ $HOME/{,s}bin(N)
-│ /opt/{homebrew,local}/{,s}bin(N)
-│ /usr/local/{,s}bin(N)
-│ $path
+  $HOME/{,s}bin(N)
+  /opt/{homebrew,local}/{,s}bin(N)
+  /usr/local/{,s}bin(N)
+  $path
 )
 
-# Added by Toolbox App
-export PATH="$PATH:/Users/mcrouch/Library/Application Support/JetBrains/Toolbox/scripts"
-
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# TODO: Why did i do this? 
-# Setting PATH for Python 3.12
-# The original version is saved in .zprofile.pysave
-PATH="/Library/Frameworks/Python.framework/Versions/3.12/bin:${PATH}"
-export PATH
-
-
-
+# Added by OrbStack: command-line tools and integration
+# This won't be added again if you remove it.
+source ~/.orbstack/shell/init.zsh 2>/dev/null || :
