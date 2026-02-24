@@ -9,6 +9,9 @@ set -e
 . scripts/links.sh
 . linux/install_debian.sh
 
+SOFTLINKS_CONFIG="$SCRIPT_DIR/../softlinks_config.conf"
+SOFTLINKS_WORK_CONFIG="$SCRIPT_DIR/../softlinks_config_work.conf"
+
 # Load environment variables from .env if present
 if [ -f ".env" ]; then
     . .env
@@ -34,11 +37,14 @@ prompt_user_options() {
     info "Checking existing dotfiles..."
     if [[ "$is_work_machine" == "y" ]]; then
         info "Comparing with work dotfiles..."
-        if ./scripts/links.sh --show-diffs --work-conf; then printf "\n"; fi
+        ./scripts/links.sh --show-diffs --work-conf || _diffs_exit=$?
     else
         info "Comparing with personal dotfiles..."
-        if ./scripts/links.sh --show-diffs; then printf "\n"; fi
+        ./scripts/links.sh --show-diffs || _diffs_exit=$?
     fi
+    _diffs_exit="${_diffs_exit:-0}"
+    [ "$_diffs_exit" -eq 0 ] && printf "\n"
+    [ "$_diffs_exit" -gt 1 ] && exit "$_diffs_exit"
 
 
     read -p "Overwrite existing dotfiles? [y/n] " overwrite_dotfiles
@@ -117,24 +123,40 @@ setup_links() {
     chmod +x ./scripts/links.sh
     if [[ "$overwrite_dotfiles" == "y" ]]; then
         warning "Deleting existing dotfiles..."
-        ./scripts/links.sh --delete --include-files
+        ./scripts/links.sh --delete --include-files "$SOFTLINKS_CONFIG"
     else
         if [[ "$is_work_machine" != "y" ]]; then
             info "Adopting existing files into repo..."
-            ./scripts/links.sh --adopt
+            ./scripts/links.sh --adopt "$SOFTLINKS_CONFIG"
         fi
     fi
-    ./scripts/links.sh --create
+    ./scripts/links.sh --create "$SOFTLINKS_CONFIG"
     if [[ "$is_work_machine" == "y" ]]; then
         if [[ "$overwrite_dotfiles" == "y" ]]; then
             warning "Deleting existing work dotfiles..."
-            ./scripts/links.sh --delete --include-files --work-conf
+            ./scripts/links.sh --delete --include-files "$SOFTLINKS_WORK_CONFIG"
         else
             info "Adopting existing work files into repo..."
-            ./scripts/links.sh --adopt --work-conf
+            ./scripts/links.sh --adopt "$SOFTLINKS_WORK_CONFIG"
         fi
-        ./scripts/links.sh --create --work-conf
+        ./scripts/links.sh --create "$SOFTLINKS_WORK_CONFIG"
     fi
+
+    # Link the correct .gitconfig based on machine type
+    if [[ "$is_work_machine" == "y" ]]; then
+        gitconfig_source="$(pwd)/git/global-config/work.gitconfig"
+    else
+        gitconfig_source="$(pwd)/git/global-config/personal.gitconfig"
+    fi
+    gitconfig_target="$HOME/.gitconfig"
+    if [ -f "$gitconfig_target" ] && [ ! -L "$gitconfig_target" ] && [[ "$overwrite_dotfiles" != "y" ]]; then
+        info "Adopting existing $gitconfig_target..."
+        cp "$gitconfig_target" "$gitconfig_source"
+        rm "$gitconfig_target"
+        success "Adopted: $gitconfig_target -> $gitconfig_source"
+    fi
+    ln -sf "$gitconfig_source" "$gitconfig_target"
+    success "Linked: $gitconfig_target -> $gitconfig_source"
 }
 
 info "Dotfiles installation initialized..."
