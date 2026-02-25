@@ -50,7 +50,7 @@ key-mapping.preset = 'qwerty'
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 on-focus-changed = "move-mouse window-lazy-center"
 
-exec-on-workspace-change = ['/bin/bash', '-c', '~/.config/aerospace/move-apps-to-workspace.sh']
+exec-on-workspace-change = ['/bin/bash', '-c', '$HOME/.config/aerospace/move-apps-to-workspace.sh']
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
