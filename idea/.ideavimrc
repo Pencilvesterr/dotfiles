@@ -300,6 +300,7 @@ let g:WhichKeyDesc_leader_d = "<leader>d debug"
 let g:WhichKeyDesc_leader_f = "<leader>f file/find"
 let g:WhichKeyDesc_leader_g = "<leader>g git"
 let g:WhichKeyDesc_leader_s = "<leader>s search"
+let g:WhichKeyDesc_leader_r = "<leader>r run"
 let g:WhichKeyDesc_leader_t = "<leader>t test"
 let g:WhichKeyDesc_leader_u = "<leader>u ui"
 let g:WhichKeyDesc_leader_w = "<leader>w window"
@@ -364,6 +365,18 @@ nmap <leader>cr <Action>(RenameElement)
 
 let g:WhichKeyDesc_source_action = "<leader>cA Source Action"
 nmap <leader>cA <Action>(ShowIntentionActions)
+
+let g:WhichKeyDesc_extract_method = "<leader>cm Extract Method"
+nmap <leader>cm <Action>(ExtractMethod)
+
+let g:WhichKeyDesc_introduce_variable = "<leader>cv Introduce Variable"
+nmap <leader>cv <Action>(IntroduceVariable)
+
+let g:WhichKeyDesc_introduce_field = "<leader>ci Introduce Field"
+nmap <leader>ci <Action>(IntroduceField)
+
+let g:WhichKeyDesc_change_signature = "<leader>cs Change Signature"
+nmap <leader>cs <Action>(ChangeSignature)
 
 " ========================================
 " Git (LazyVim style)
@@ -469,8 +482,23 @@ nmap <leader>to <Action>(ActivateRunToolWindow)
 let g:WhichKeyDesc_test_nearest = "<leader>tr Run Nearest"
 nmap <leader>tr <Action>(RunClass)
 
-let g:WhichKeyDesc_test_file = "<leader>tt Run File"
-nmap <leader>tt <Action>(RunClass)
+let g:WhichKeyDesc_test_file = "<leader>tt Run File (top-level class)"
+nmap <leader>tt mzgg<Action>(RunClass)`z
+
+let g:WhichKeyDesc_run_context = "<leader>tc Run context"
+nmap <leader>tc <Action>(ContextRun)
+
+let g:WhichKeyDesc_choose = "<leader>tx Choose run config"
+nmap <leader>tx <Action>(chooseRunConfiguration)
+
+let g:WhichKeyDesc_stop = "<leader>ts Stop"
+nmap <leader>ts <Action>(Stop)
+
+let g:WhichKeyDesc_debug_context = "<leader>tg Debug context"
+nmap <leader>tg <Action>(ContextDebug)
+
+let g:WhichKeyDesc_debug = "<leader>tD Debug"
+nmap <leader>tD <Action>(Debug)
 
 " ========================================
 " UI toggles (LazyVim style)
@@ -621,48 +649,11 @@ nmap <leader>am <Action>(ShowIntentionActions)
 let g:WhichKeyDesc_action_search = "<leader>as Open command modal"
 nmap <leader>as <Action>(SearchEverywhere)
 
-" Run commands (from original with LazyVim organization)
-let g:WhichKeyDesc_run_prefix = "<leader>r Run + Refactor"
-let g:WhichKeyDesc_run_context = "<leader>rc Run context"
-nmap <leader>rc <Action>(ContextRun)
-
-let g:WhichKeyDesc_choose = "<leader>rx Choose run config"
-nmap <leader>rx <Action>(chooseRunConfiguration)
-
-let g:WhichKeyDesc_rerun = "<leader>rr Rerun"
-nmap <leader>rr <Action>(Run)
-
-let g:WhichKeyDesc_stop = "<leader>rs Stop"
-nmap <leader>rs <Action>(Stop)
-
-let g:WhichKeyDesc_debug_context = "<leader>rg Debug context"
-nmap <leader>rg <Action>(ContextDebug)
-
-let g:WhichKeyDesc_debug = "<leader>rd Debug"
-nmap <leader>rd <Action>(Debug)
+" Run commands
+let g:WhichKeyDesc_run_prefix = "<leader>r run"
 
 let g:WhichKeyDesc_reload_vimrc = "<leader>rv Reload ideavimrc"
 nmap <leader>rv <Action>(IdeaVim.ReloadVimRc.reload)
-
-" Refactoring (from original)
-let g:WhichKeyDesc_refactoring = "<leader>rf  Refactoring menu"
-let g:WhichKeyDesc_refactoring_rename = "<leader>rfn Rename element"
-nmap <leader>rfn <Action>(RenameElement)
-
-let g:WhichKeyDesc_refactoring_method = "<leader>rfm Extract method"
-nmap <leader>rfm <Action>(ExtractMethod)
-
-let g:WhichKeyDesc_refactoring_variable = "<leader>rfv Introduce variable"
-nmap <leader>rfv <Action>(IntroduceVariable)
-
-let g:WhichKeyDesc_refactoring_field = "<leader>rff Introduce field"
-nmap <leader>rff <Action>(IntroduceField)
-
-let g:WhichKeyDesc_refactoring_signature = "<leader>rfs Change signature"
-nmap <leader>rfs <Action>(ChangeSignature)
-
-let g:WhichKeyDesc_refactoring_all = "<leader>rfr Open refactorings list"
-nmap <leader>rfr <Action>(Refactorings.QuickListPopupAction)
 
 " Show the method signature (from original)
 let g:WhichKeyDesc_show_quick_signature = "<leader>q Show quick method doc"
