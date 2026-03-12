@@ -75,8 +75,21 @@ map <leader><space> :let @/=''<cr> " clear search
 
 "make % vim match < > signs
 setglobal matchpairs+=<:>
-" This makes clipboard and yanking the same
-" set clipboard+=unnamed
+" Use clipboard for yanking+pasting, avoid using clipboard when deleting.
+set clipboard=unnamed
+" Deleting goes to null register
+nnoremap d ""d
+nnoremap dd ""dd
+vnoremap d ""d
+nnoremap x ""x
+vnoremap x ""x
+nnoremap C ""C
+vnoremap C ""C
+nnoremap c ""c
+vnoremap c ""c
+" Paste without overwriting clipboard (visual mode)
+xnoremap p "_dP
+xnoremap P "_dP
 
 " TODO: This is no longer needed but leaving it in incase it is
 " Change the shape of the cursor in normal and insert mode
