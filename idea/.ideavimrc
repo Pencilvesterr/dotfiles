@@ -100,6 +100,9 @@ set textobj-entire  " Entire file text objects (ag, ig)
 
 " Which-Key plugin
 set which-key
+" disable the timeout for which-key
+set notimeout
+let g:WhichKey_DefaultDelay = 100
 let g:WhichKey_FontSize = 16
 let g:WhichKey_CommandColor = "#41ead4"
 let g:WhichKey_PrefixColor = "#f335b2"
@@ -626,7 +629,7 @@ nmap gS <Action>(GotoSuperMethod)
 
 " Folding (from original)
 let g:WhichKeyDesc_fold = "<leader>z Folding"
-let g:WhichKeyDesc_fold_region = "<leader>zc Collapse region"
+let g:WhichKeyDesc_fold_region = "<leader>zc Collapse region recursively"
 nmap <leader>zc <Action>(CollapseRegionRecursively)
 
 let g:WhichKeyDesc_fold_all_region = "<leader>zC Collapse all regions"
@@ -635,7 +638,7 @@ nmap <leader>zC <Action>(CollapseAllRegions)
 let g:WhichKeyDesc_unfold_all = "<leader>zE Expand all regions"
 nmap <leader>zE <Action>(ExpandAllRegions)
 
-let g:WhichKeyDesc_unfold_region = "<leader>ze Expand region"
+let g:WhichKeyDesc_unfold_region = "<leader>ze Expand region recursively"
 nmap <leader>ze <Action>(ExpandRegionRecursively)
 
 let g:WhichKeyDesc_fold_toggle = "<leader>zz Toggle expand/collapse"
