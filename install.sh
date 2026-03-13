@@ -159,12 +159,26 @@ setup_links() {
     success "Linked: $gitconfig_target -> $gitconfig_source"
 }
 
+setup_managed_files() {
+    printf "\n"
+    info "===================="
+    info "Managed Files"
+    info "===================="
+
+    if [[ "$overwrite_dotfiles" != "y" ]]; then
+        info "Adopting existing managed files into repo..."
+        ./scripts/sync.sh pull
+    fi
+    ./scripts/sync.sh push
+}
+
 info "Dotfiles installation initialized..."
 prompt_user_options
 install_platform_apps
 apply_platform_defaults
 setup_terminal
 setup_links
+setup_managed_files
 success "Dotfiles set up successfully."
 
 printf "\n"
