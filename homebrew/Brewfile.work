@@ -12,4 +12,4 @@ brew "terraform"
 cask "postman"
 cask "aldente"
 # Notifications in centre https://github.com/NotWadeGrimridge/PingPlace
-cask "pingplace", args: { no_quarantine: true }
+cask "notwadegrimridge/brew/pingplace"

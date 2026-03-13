@@ -66,6 +66,22 @@ apply_osx_system_defaults() {
     # Disable hot corners in bottom right (br)
     defaults write com.apple.dock wvous-br-corner -int 0
     killall Dock
+
+    # Show battery percentage in menu bar
+    defaults write com.apple.controlcenter BatteryShowPercentage -bool true
+
+    # Show sound icon in menu bar
+    defaults write com.apple.controlcenter "NSStatusItem Visible Sound" -bool true
+
+    # Disable Cmd+Space Spotlight shortcut (frees it up for Alfred)
+    # Hotkey 64 = Spotlight search (Cmd+Space), 65 = Spotlight window (Cmd+Option+Space)
+    SPOTLIGHT_PLIST="$HOME/Library/Preferences/com.apple.symbolichotkeys.plist"
+    /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:64:enabled bool false" "$SPOTLIGHT_PLIST" 2>/dev/null \
+        || /usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:64:enabled bool false" "$SPOTLIGHT_PLIST"
+    /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:65:enabled bool false" "$SPOTLIGHT_PLIST" 2>/dev/null \
+        || /usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:65:enabled bool false" "$SPOTLIGHT_PLIST"
+    # Apply hotkey changes without requiring logout
+    /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
 }
 
 if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
