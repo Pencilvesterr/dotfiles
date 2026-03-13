@@ -5,7 +5,7 @@ set -e
 . scripts/utils.sh
 . scripts/prerequisites.sh
 . scripts/brew-install-custom.sh
-. scripts/osx-defaults.sh
+. mac_config/osx-defaults.sh
 . scripts/links.sh
 . linux/install_debian.sh
 

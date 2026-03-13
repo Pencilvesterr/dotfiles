@@ -3,7 +3,7 @@
 # Get the absolute path of the directory where the script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-. "$SCRIPT_DIR"/utils.sh
+. "$SCRIPT_DIR"/../scripts/utils.sh
 
 register_keyboard_shortcuts() {
     # Register CTRL+/ keyboard shortcut to avoid system beep when pressed
@@ -63,6 +63,9 @@ apply_osx_system_defaults() {
     defaults write com.apple.dock "minimize-to-application" -bool false
     defaults write com.apple.dock tilesize -float 45
 
+    # Disable click on desktop to show desktop (Sonoma+)
+    defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
+
     # Disable hot corners in bottom right (br)
     defaults write com.apple.dock wvous-br-corner -int 0
     killall Dock
@@ -84,7 +87,17 @@ apply_osx_system_defaults() {
     /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
 }
 
+remap_capslock_to_escape() {
+    info "Remapping Caps Lock to Escape..."
+    # Persisted natively via macOS modifier key preferences (same storage as System Settings).
+    # HID usage values: Caps Lock = 0x700000039 (30064771129), Escape = 0x700000029 (30064771113)
+    # The key "-1--1-0" applies to all keyboards. Takes effect after logout/login.
+    defaults write -g com.apple.keyboard.modifiermapping.-1--1-0 -array \
+        '<dict><key>HIDKeyboardModifierMappingDst</key><integer>30064771113</integer><key>HIDKeyboardModifierMappingSrc</key><integer>30064771129</integer></dict>'
+}
+
 if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
     register_keyboard_shortcuts
     apply_osx_system_defaults
+    remap_capslock_to_escape
 fi
