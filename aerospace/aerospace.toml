@@ -16,8 +16,12 @@ after-login-command = []
 #   'exec-and-forget borders active_color=0xffda680f inactive_color=0xff494d64 width=10.0'
 # ]
 
-after-startup-command = []
-
+#after-startup-command = []
+after-startup-command = [
+    # JankyBorders has a built-in detection of already running process,
+    # so it won't be run twice on AeroSpace restart
+    'exec-and-forget brew services restart borders && borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=10.0'
+]
 # # Start AeroSpace at login
 start-at-login = true
 
@@ -28,7 +32,7 @@ enable-normalization-opposite-orientation-for-nested-containers = false
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
 # The 'accordion-padding' specifies the size of accordion padding
 # You can set 0 to disable the padding feature
-accordion-padding = 40
+accordion-padding = 20
 
 # Possible values: tiles|accordion
 default-root-container-layout = 'accordion'
@@ -60,12 +64,12 @@ exec-on-workspace-change = ['/bin/bash', '-c', '$HOME/.config/aerospace/move-app
 #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
 #                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
-inner.horizontal = 10
-inner.vertical = 10
-outer.left = 5
-outer.bottom = 5
-outer.top = 5
-outer.right = 5
+inner.horizontal = [{ monitor."built-in" = 5}, 10]
+inner.vertical = [{ monitor."built-in" = 5 }, 5]
+outer.left = [{monitor."built-in" = 5}, 5]
+outer.bottom = [{ monitor."built-in" = 5}, 5]
+outer.top = [{ monitor."built-in" = 5}, 5]
+outer.right = [{ monitor."built-in" = 5}, 5]
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -180,7 +184,6 @@ ctrl-alt-cmd-l = ['join-with right', 'mode main']
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
 run = "move-node-to-workspace 1->Browser"
-
 [[on-window-detected]]
 if.app-id = 'com.jetbrains.pycharm'
 run = "move-node-to-workspace 2->Code"
@@ -228,3 +231,12 @@ run = "move-node-to-workspace 9->Zoom+Postman"
 [[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
 run = "move-node-to-workspace 0->Slack"
+
+# Floating apps
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = "layout floating"
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ActivityMonitor'
+run = "layout floating"
