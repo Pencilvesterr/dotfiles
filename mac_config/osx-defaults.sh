@@ -76,6 +76,9 @@ apply_osx_system_defaults() {
     # Show sound icon in menu bar
     defaults write com.apple.controlcenter "NSStatusItem Visible Sound" -bool true
 
+    # Use F1-F12 as standard function keys (require Fn for special functions)
+    defaults write -g com.apple.keyboard.fnState -bool true
+
     # Disable Cmd+Space Spotlight shortcut (frees it up for Alfred)
     # Hotkey 64 = Spotlight search (Cmd+Space), 65 = Spotlight window (Cmd+Option+Space)
     SPOTLIGHT_PLIST="$HOME/Library/Preferences/com.apple.symbolichotkeys.plist"
@@ -88,6 +91,7 @@ apply_osx_system_defaults() {
 }
 
 remap_capslock_to_escape() {
+    # TODO: This didn't work when i last tried it
     info "Remapping Caps Lock to Escape..."
     # Persisted natively via macOS modifier key preferences (same storage as System Settings).
     # HID usage values: Caps Lock = 0x700000039 (30064771129), Escape = 0x700000029 (30064771113)

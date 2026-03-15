@@ -391,5 +391,6 @@
   },
   "atlascode.jira.enabled": true,
   "atlascode.bitbucket.enabled": false,
-  "git.openRepositoryInParentFolders": "always"
+  "git.openRepositoryInParentFolders": "always",
+  "claudeCode.preferredLocation": "panel"
 }
