@@ -12,32 +12,13 @@ set -e
 SOFTLINKS_CONFIG="$SCRIPT_DIR/../softlinks_config.conf"
 SOFTLINKS_WORK_CONFIG="$SCRIPT_DIR/../softlinks_config_work.conf"
 
-# Load environment variables from .env if present
-if [ ! -f ".env" ]; then
-    error ".env file not found. Create one with WORK_HOSTNAMES defined."
-    exit 1
-fi
-. .env
-
-# WORK_HOSTNAMES should be a space-separated list defined in .env
-# e.g. WORK_HOSTNAMES="hostname1 hostname2"
-if [ -z "${WORK_HOSTNAMES:-}" ]; then
-    error "WORK_HOSTNAMES is not set in .env. Define it as a space-separated list of work hostnames."
-    exit 1
-fi
-read -ra WORK_HOSTNAMES <<< "$WORK_HOSTNAMES"
 
 prompt_user_options() {
-    # Auto-detect work machine by hostname
-    CURRENT_HOSTNAME=$(hostname -s)
-    is_work_machine="n"
-    for wh in "${WORK_HOSTNAMES[@]}"; do
-        if [ "$CURRENT_HOSTNAME" == "$wh" ]; then
-            is_work_machine="y"
-            info "Work machine detected (hostname: $CURRENT_HOSTNAME)"
-            break
-        fi
-    done
+    if detect_work_machine; then
+        is_work_machine="y"
+    else
+        is_work_machine="n"
+    fi
 
     printf "\n"
     info "Checking existing dotfiles..."
