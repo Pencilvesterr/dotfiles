@@ -8,11 +8,19 @@
 #   - Broken, differs, repo file has staged/unstaged changes → warn and abort
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
+REPO_DIR="$REPO_ROOT"
+. "$REPO_ROOT/scripts/utils.sh"
+
 CONFIG_FILES=(
     "hardlinks_config.conf"
     "softlinks_config.conf"
     "hardlinks_config_work.conf"
 )
+
+SYNC_CONFIG_FILES=("$REPO_ROOT/sync_config.conf")
+if detect_work_machine 2>/dev/null; then
+    SYNC_CONFIG_FILES+=("$REPO_ROOT/sync_config_work.conf")
+fi
 
 FAIL=false
 
@@ -70,6 +78,48 @@ for config_file in "${CONFIG_FILES[@]}"; do
         fi
 
     done < "$config_path"
+done
+
+for sync_config in "${SYNC_CONFIG_FILES[@]}"; do
+    [ -f "$sync_config" ] || continue
+
+    while IFS=: read -r source target || [ -n "$source" ]; do
+        [[ -z "$source" || -z "$target" || "$source" == \#* ]] && continue
+        source=$(eval echo "$source")
+        target=$(eval echo "$target")
+
+        # Skip if system file doesn't exist
+        [ -e "$target" ] || continue
+
+        # Skip if repo file doesn't exist
+        [ -f "$source" ] || continue
+
+        # Skip if contents are identical
+        diff -q "$source" "$target" > /dev/null 2>&1 && continue
+
+        rel_source="${source#$REPO_ROOT/}"
+
+        if git diff --quiet "$rel_source" 2>/dev/null && git diff --cached --quiet "$rel_source" 2>/dev/null; then
+            # System file differs, repo file has no staged/unstaged changes — pull and stage
+            cp "$target" "$source"
+            git add "$rel_source"
+            echo "==> Pulled system version and staged: $rel_source"
+            echo "    (from: $target)"
+        else
+            # Contents differ AND repo file has changes — conflict
+            echo ""
+            echo "  CONFLICT: $target"
+            echo "  The system file differs from the repo version,"
+            echo "  and the repo file also has staged or unstaged changes."
+            echo ""
+            echo "  Options:"
+            echo "    Keep system version:  cp '$target' '$source' && git add '$rel_source'"
+            echo "    Keep repo version:    cp '$source' '$target'"
+            echo ""
+            FAIL=true
+        fi
+
+    done < "$sync_config"
 done
 
 if $FAIL; then
