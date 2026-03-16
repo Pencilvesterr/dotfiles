@@ -4,10 +4,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 . $SCRIPT_DIR/utils.sh
 
-HARDLINKS_CONFIG="$SCRIPT_DIR/../hardlinks_config.conf"
-SOFTLINKS_CONFIG="$SCRIPT_DIR/../softlinks_config.conf"
-HARDLINKS_WORK_CONFIG="$SCRIPT_DIR/../hardlinks_config_work.conf"
-
 check_config_exists() {
     local config_file="$1"
     # Check if configuration file exists
@@ -194,6 +190,11 @@ show_diffs() {
             if [ -f "$source" ] && [ -f "$target" ]; then
                 if ! diff -q "$source" "$target" > /dev/null 2>&1; then
                     warning "Different content: $target"
+                    # If the source also has uncommitted repo changes, this is a conflict
+                    if ! git -C "$SCRIPT_DIR" diff --quiet HEAD -- "$source" 2>/dev/null; then
+                        error "Conflict: '$source' has uncommitted changes in the repo and '$target' on this machine also differs. Resolve before proceeding."
+                        exit 2
+                    fi
                 else
                     warning "Exists (not linked): $target"
                 fi
@@ -207,7 +208,7 @@ show_diffs() {
     $any_diffs
 }
 
-adopt_existing_files() {
+adopt_existing_files_and_soft_link() {
     local config_files=("$@")
 
     for config_file in "${config_files[@]}"; do
@@ -237,59 +238,49 @@ adopt_existing_files() {
 if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
     case "$1" in
     "--create")
-        if [ "$2" == "--work-conf" ]; then
-            create_hardlinks "$HARDLINKS_WORK_CONFIG"
-        else
-            create_hardlinks "$HARDLINKS_CONFIG"
-            create_softlinks "$SOFTLINKS_CONFIG"
-        fi
+        create_softlinks "$2"
         ;;
     "--delete")
-        if [ "$2" == "--include-files" ]; then
-            include_files=true
-        fi
-        if [ "$2" == "--work-conf" ] || [ "$3" == "--work-conf" ]; then
-            delete_hardlink_files "$HARDLINKS_WORK_CONFIG"
-        else
-            delete_hardlink_files "$HARDLINKS_CONFIG"
-            delete_softlink_files "$SOFTLINKS_CONFIG"
-        fi
+        shift
+        include_files=false
+        conf_file=""
+        while [[ $# -gt 0 ]]; do
+            case "$1" in
+                "--include-files") include_files=true ;;
+                *) conf_file="$1" ;;
+            esac
+            shift
+        done
+        delete_softlink_files "$conf_file"
         ;;
     "--show-diffs")
-        if [ "$2" == "--work-conf" ]; then
-            show_diffs "$HARDLINKS_WORK_CONFIG"
-        else
-            show_diffs "$HARDLINKS_CONFIG" "$SOFTLINKS_CONFIG"
-        fi
+        shift
+        show_diffs "$@"
         ;;
     "--adopt")
-        if [ "$2" == "--work-conf" ]; then
-            adopt_existing_files "$HARDLINKS_WORK_CONFIG"
-        else
-            adopt_existing_files "$HARDLINKS_CONFIG" "$SOFTLINKS_CONFIG"
-        fi
+        shift
+        adopt_existing_files_and_soft_link "$@"
         ;;
     "--help")
-        echo "Usage: $0 [--create | --delete [--include-files] [--work-conf] | --show-diffs [--work-conf] | --adopt [--work-conf] | --help]"
+        echo "Usage: $0 [--create [conf_file] | --delete [--include-files] [conf_file] | --show-diffs [conf_files...] | --adopt [conf_files...] | --help]"
         echo ""
         echo "Options:"
         echo "  --create              Create hard links from hardlinks_config.conf"
         echo "                        and soft links from softlinks_config.conf"
-        echo "  --create --work-conf  Create hard links from hardlinks_config_work.conf"
+        echo "  --create <conf_file>  Create soft links from the specified conf file only"
         echo "  --delete              Delete links from both config files"
         echo "  --delete --include-files"
         echo "                        Delete links including files"
-        echo "  --delete --work-conf  Delete links from work config"
-        echo "  --show-diffs          Show target files that differ from source"
-        echo "  --show-diffs --work-conf"
-        echo "                        Show differing files in work config"
-        echo "  --adopt               Copy existing target files into repo, then replace with links"
-        echo "  --adopt --work-conf   Adopt existing files from work config"
+        echo "  --delete <conf_file>  Delete links from the specified conf file only"
+        echo "  --show-diffs [conf_files...]"
+        echo "                        Show target files that differ from source"
+        echo "  --adopt [conf_files...]"
+        echo "                        Copy existing target files into repo, then replace with links"
         echo "  --help                Display this help message"
         ;;
     *)
         error "Error: Unknown argument '$1'"
-        error "Usage: $0 [--create | --delete [--include-files] [--work-conf] | --show-diffs [--work-conf] | --adopt [--work-conf] | --help]"
+        error "Usage: $0 [--create [conf_file] | --delete [--include-files] [conf_file] | --show-diffs [conf_files...] | --adopt [conf_files...] | --help]"
         exit 1
         ;;
     esac

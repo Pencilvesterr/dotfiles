@@ -77,8 +77,10 @@ alias gcofzf='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''NF &&
 
 alias ga='git add'
 alias gp='git pull'
+alias yoink="git pull"
 alias gpo='git pull origin'
 alias gpu='git push'
+alias yeet="git push"
 alias gl='git log --all --decorate --oneline --graph'
 # Pretty log graph
 alias glog='git log --graph --oneline --all'

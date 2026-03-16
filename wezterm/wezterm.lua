@@ -7,8 +7,7 @@ local themes = {
 	nord = "Nord (Gogh)",
 	onedark = "One Dark (Gogh)",
 }
-local success, stdout, stderr = wezterm.run_child_process({ os.getenv("SHELL"), "-c", "printenv WEZTERM_THEME" })
-local selected_theme = stdout:gsub("%s+", "") -- Remove all whitespace characters including newline
+local selected_theme = os.getenv("WEZTERM_THEME") or "nord"
 config.color_scheme = themes[selected_theme]
 
 return config

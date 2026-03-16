@@ -3,7 +3,7 @@
 # Get the absolute path of the directory where the script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-. "$SCRIPT_DIR"/utils.sh
+. "$SCRIPT_DIR"/../scripts/utils.sh
 
 register_keyboard_shortcuts() {
     # Register CTRL+/ keyboard shortcut to avoid system beep when pressed
@@ -63,12 +63,45 @@ apply_osx_system_defaults() {
     defaults write com.apple.dock "minimize-to-application" -bool false
     defaults write com.apple.dock tilesize -float 45
 
+    # Disable click on desktop to show desktop (Sonoma+)
+    defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
+
     # Disable hot corners in bottom right (br)
     defaults write com.apple.dock wvous-br-corner -int 0
     killall Dock
+
+    # Show battery percentage in menu bar
+    defaults write com.apple.controlcenter BatteryShowPercentage -bool true
+
+    # Show sound icon in menu bar
+    defaults write com.apple.controlcenter "NSStatusItem Visible Sound" -bool true
+
+    # Use F1-F12 as standard function keys (require Fn for special functions)
+    defaults write -g com.apple.keyboard.fnState -bool true
+
+    # Disable Cmd+Space Spotlight shortcut (frees it up for Alfred)
+    # Hotkey 64 = Spotlight search (Cmd+Space), 65 = Spotlight window (Cmd+Option+Space)
+    SPOTLIGHT_PLIST="$HOME/Library/Preferences/com.apple.symbolichotkeys.plist"
+    /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:64:enabled bool false" "$SPOTLIGHT_PLIST" 2>/dev/null \
+        || /usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:64:enabled bool false" "$SPOTLIGHT_PLIST"
+    /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:65:enabled bool false" "$SPOTLIGHT_PLIST" 2>/dev/null \
+        || /usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:65:enabled bool false" "$SPOTLIGHT_PLIST"
+    # Apply hotkey changes without requiring logout
+    /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+}
+
+remap_capslock_to_escape() {
+    # TODO: This didn't work when i last tried it
+    info "Remapping Caps Lock to Escape..."
+    # Persisted natively via macOS modifier key preferences (same storage as System Settings).
+    # HID usage values: Caps Lock = 0x700000039 (30064771129), Escape = 0x700000029 (30064771113)
+    # The key "-1--1-0" applies to all keyboards. Takes effect after logout/login.
+    defaults write -g com.apple.keyboard.modifiermapping.-1--1-0 -array \
+        '<dict><key>HIDKeyboardModifierMappingDst</key><integer>30064771113</integer><key>HIDKeyboardModifierMappingSrc</key><integer>30064771129</integer></dict>'
 }
 
 if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
     register_keyboard_shortcuts
     apply_osx_system_defaults
+    remap_capslock_to_escape
 fi

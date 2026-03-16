@@ -25,9 +25,12 @@ brew "tldr"
 brew "tree" # Adds the 'tree' cli command
 brew "vim"
 brew "difftastic" # Defaulting for git diff
-
 brew "zoxide" # Better cd
 brew "mas" # Mac application store
+
+# Add borders when working with aerospace
+tap "FelixKratz/formulae"
+brew "FelixKratz/formulae/borders"
 
 # Neovim + LazyVim setup
 brew "neovim"
