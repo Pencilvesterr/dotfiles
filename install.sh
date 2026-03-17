@@ -6,6 +6,7 @@ REPO_DIR="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 . "$REPO_DIR/scripts/utils.sh"
 . "$REPO_DIR/scripts/prerequisites.sh"
 . "$REPO_DIR/scripts/brew-install-custom.sh"
+. "$REPO_DIR/scripts/non-homebrew-install.sh"
 . "$REPO_DIR/mac_config/osx-defaults.sh"
 . "$REPO_DIR/linux/install_debian.sh"
 
@@ -48,6 +49,7 @@ install_platform_apps() {
 
             install_xcode
             install_homebrew
+            install_non_homebrew
 
             printf "\n"
             info "===================="
@@ -69,8 +71,10 @@ install_platform_apps() {
             info "===================="
             info "Installing Ubuntu Apps"
             info "===================="
+            # TODO: Want to migrate this to brew too
             install_linux_cli_tools
             install_linux_apps
+            install_non_homebrew
         fi
     fi
 }

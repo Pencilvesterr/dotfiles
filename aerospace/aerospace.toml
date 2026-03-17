@@ -1,5 +1,8 @@
 # Place a copy of this config to ~/.aerospace.toml
-# After that, you can edit ~/.aerospace.toml to your liking
+
+# Config version for compatibility and deprecations
+# Fallback value (if you omit the key): config-version = 1
+config-version = 2
 
 # You can use it to add commands that run after login to macOS user session.
 # 'start-at-login' needs to be 'true' for 'after-login-command' to work
@@ -35,7 +38,7 @@ enable-normalization-opposite-orientation-for-nested-containers = false
 accordion-padding = 20
 
 # Possible values: tiles|accordion
-default-root-container-layout = 'accordion'
+default-root-container-layout = 'tiles'
 
 # Possible values: horizontal|vertical|auto
 # 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
@@ -64,8 +67,8 @@ exec-on-workspace-change = ['/bin/bash', '-c', '$HOME/.config/aerospace/move-app
 #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
 #                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
-inner.horizontal = [{ monitor."built-in" = 5}, 10]
-inner.vertical = [{ monitor."built-in" = 5 }, 5]
+inner.horizontal = [{ monitor."built-in" = 5}, 12]
+inner.vertical = [{ monitor."built-in" = 5 }, 12]
 outer.left = [{monitor."built-in" = 5}, 5]
 outer.bottom = [{ monitor."built-in" = 5}, 5]
 outer.top = [{ monitor."built-in" = 5}, 5]

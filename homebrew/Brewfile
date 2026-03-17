@@ -59,7 +59,6 @@ cask "shortcat" # App that enables mouse-free UI interaction. Cmd + shift + spac
 cask "spotify"
 cask "visual-studio-code"
 cask "wezterm"
-cask "claude-code"
 
 # VS Code Extensions
 # TODO: Go back through these, Must be an easier way
