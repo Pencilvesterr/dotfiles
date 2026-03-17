@@ -1,52 +1,33 @@
 #!/bin/bash
 set -e
 
-# Equivelant as the 'source' command
-. scripts/utils.sh
-. scripts/prerequisites.sh
-. scripts/brew-install-custom.sh
-. mac_config/osx-defaults.sh
-. scripts/links.sh
-. linux/install_debian.sh
+REPO_DIR="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 
-SOFTLINKS_CONFIG="$SCRIPT_DIR/../softlinks_config.conf"
-SOFTLINKS_WORK_CONFIG="$SCRIPT_DIR/../softlinks_config_work.conf"
+. "$REPO_DIR/scripts/utils.sh"
+. "$REPO_DIR/scripts/prerequisites.sh"
+. "$REPO_DIR/scripts/brew-install-custom.sh"
+. "$REPO_DIR/mac_config/osx-defaults.sh"
+. "$REPO_DIR/linux/install_debian.sh"
 
-# Load environment variables from .env if present
-if [ ! -f ".env" ]; then
-    error ".env file not found. Create one with WORK_HOSTNAMES defined."
-    exit 1
-fi
-. .env
+SOFTLINKS_CONFIG="$REPO_DIR/softlinks_config.conf"
+SOFTLINKS_WORK_CONFIG="$REPO_DIR/softlinks_config_work.conf"
 
-# WORK_HOSTNAMES should be a space-separated list defined in .env
-# e.g. WORK_HOSTNAMES="hostname1 hostname2"
-if [ -z "${WORK_HOSTNAMES:-}" ]; then
-    error "WORK_HOSTNAMES is not set in .env. Define it as a space-separated list of work hostnames."
-    exit 1
-fi
-read -ra WORK_HOSTNAMES <<< "$WORK_HOSTNAMES"
 
 prompt_user_options() {
-    # Auto-detect work machine by hostname
-    CURRENT_HOSTNAME=$(hostname -s)
-    is_work_machine="n"
-    for wh in "${WORK_HOSTNAMES[@]}"; do
-        if [ "$CURRENT_HOSTNAME" == "$wh" ]; then
-            is_work_machine="y"
-            info "Work machine detected (hostname: $CURRENT_HOSTNAME)"
-            break
-        fi
-    done
+    if detect_work_machine; then
+        is_work_machine="y"
+    else
+        is_work_machine="n"
+    fi
 
     printf "\n"
     info "Checking existing dotfiles..."
     if [[ "$is_work_machine" == "y" ]]; then
         info "Comparing with work dotfiles..."
-        ./scripts/links.sh --show-diffs --work-conf || _diffs_exit=$?
+        ./scripts/links.sh --show-diffs "$SOFTLINKS_CONFIG" "$SOFTLINKS_WORK_CONFIG" || _diffs_exit=$?
     else
         info "Comparing with personal dotfiles..."
-        ./scripts/links.sh --show-diffs || _diffs_exit=$?
+        ./scripts/links.sh --show-diffs "$SOFTLINKS_CONFIG" || _diffs_exit=$?
     fi
     _diffs_exit="${_diffs_exit:-0}"
     [ "$_diffs_exit" -eq 0 ] && printf "\n"
@@ -73,13 +54,13 @@ install_platform_apps() {
             info "Installing Apps"
             info "===================="
 
-            install_brewfile "$SCRIPT_DIR/../homebrew/Brewfile"
+            install_brewfile "$REPO_DIR/homebrew/Brewfile"
             if [[ "$is_work_machine" == "y" ]]; then
                 info "Installing work Brewfile"
-                install_brewfile "$SCRIPT_DIR/../homebrew/Brewfile.work"
+                install_brewfile "$REPO_DIR/homebrew/Brewfile.work"
             else
                 info "Installing personal Brewfile"
-                install_brewfile "$SCRIPT_DIR/../homebrew/Brewfile.personal"
+                install_brewfile "$REPO_DIR/homebrew/Brewfile.personal"
             fi
         fi
     else
@@ -147,22 +128,6 @@ setup_links() {
         fi
         ./scripts/links.sh --create "$SOFTLINKS_WORK_CONFIG"
     fi
-
-    # Link the correct .gitconfig based on machine type
-    if [[ "$is_work_machine" == "y" ]]; then
-        gitconfig_source="$(pwd)/git/global-config/work.gitconfig"
-    else
-        gitconfig_source="$(pwd)/git/global-config/personal.gitconfig"
-    fi
-    gitconfig_target="$HOME/.gitconfig"
-    if [ -f "$gitconfig_target" ] && [ ! -L "$gitconfig_target" ] && [[ "$overwrite_dotfiles" != "y" ]]; then
-        info "Adopting existing $gitconfig_target..."
-        cp "$gitconfig_target" "$gitconfig_source"
-        rm "$gitconfig_target"
-        success "Adopted: $gitconfig_target -> $gitconfig_source"
-    fi
-    ln -sf "$gitconfig_source" "$gitconfig_target"
-    success "Linked: $gitconfig_target -> $gitconfig_source"
 }
 
 setup_managed_files() {

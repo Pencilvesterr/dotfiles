@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a personal dotfiles repository for macOS and Linux development environment configuration. The repository uses **hardlinks** (not symlinks) to install configuration files to their target locations, managed through configuration files.
+This is a personal dotfiles repository for macOS and Linux development environment configuration. The repository uses **symlinks** to install configuration files to their target locations, managed through configuration files.
 
 ## Key Commands
 
@@ -14,20 +14,17 @@ This is a personal dotfiles repository for macOS and Linux development environme
 # Full installation (prompts for options)
 ./install.sh
 
-# Create hardlinks from dotfiles to system locations
-./scripts/links.sh --create
+# Create symlinks from a config file
+./scripts/links.sh --create softlinks_config.conf
 
-# Create work-specific hardlinks
-./scripts/links.sh --create --work-conf
+# Create work-specific symlinks
+./scripts/links.sh --create softlinks_config_work.conf
 
-# Delete hardlinks
-./scripts/links.sh --delete
+# Delete symlinks
+./scripts/links.sh --delete softlinks_config.conf
 
-# Delete hardlinks including files (use when overwriting)
-./scripts/links.sh --delete --include-files
-
-# Delete work-specific hardlinks
-./scripts/links.sh --delete --include-files --work-conf
+# Delete symlinks including target files (use when overwriting)
+./scripts/links.sh --delete --include-files softlinks_config.conf
 ```
 
 ### Package Management
@@ -54,19 +51,17 @@ brew bundle check --file=homebrew/Brewfile
 
 ## Architecture
 
-### Hardlink System
+### Symlink System
 
-The core installation mechanism uses **hardlinks** and **softlinks** (symlinks) via `scripts/links.sh`:
+The core installation mechanism uses **symlinks** via `scripts/links.sh`:
 
 - Configuration:
-  - `hardlinks_config.conf` - for file hardlinks (main config)
-  - `softlinks_config.conf` - for symlinks (supports directories)
-  - `hardlinks_config_work.conf` - work-specific hardlinks
+  - `softlinks_config.conf` - main symlink config (files and directories)
+  - `softlinks_config_work.conf` - work-specific symlinks
 - Format: `source_path:target_path` (one per line, comments start with `#`)
 - The script expands variables like `$(pwd)` and `$HOME`
 - Creates parent directories if needed
-- Detects existing hardlinks by checking if files share the same inode
-- Softlinks can be used for directories (hardlinks cannot)
+- Existing symlinks pointing elsewhere are automatically updated
 
 ### Directory Structure
 
@@ -98,7 +93,7 @@ The repository supports dual configurations:
 
 - **Default**: Personal configuration (e.g., `git/global-config/personal.gitconfig`)
 - **Work Override**: Activated by answering "y" to "Work machine?" during `./install.sh`
-  - Uses `hardlinks_config_work.conf` to override specific files
+  - Uses `softlinks_config_work.conf` to override specific files
   - Example: `zsh/work.zsh` contains machine-specific PATH configurations for Atlassian tools, nvm, jenv
 
 ### Zsh Configuration Structure
@@ -118,15 +113,14 @@ Zsh config is split into modular files for maintainability:
 
 1. Place the config file in the appropriate subdirectory
 2. Add an entry to the appropriate config file:
-   - For files: use `hardlinks_config.conf`
-   - For directories: use `softlinks_config.conf`
-   - For work-specific: use `hardlinks_config_work.conf`
+   - `softlinks_config.conf` - shared across personal and work
+   - `softlinks_config_work.conf` - work-specific overrides
 
    Format:
    ```
    $(pwd)/path/to/source:$HOME/path/to/target
    ```
-3. Run `./scripts/links.sh --create`
+3. Run `./scripts/links.sh --create softlinks_config.conf`
 
 ## Adding New Software
 
@@ -143,9 +137,9 @@ Zsh config is split into modular files for maintainability:
 
 ## Important Notes
 
-- The repository uses **hardlinks**, not symlinks
+- The repository uses **symlinks** to link config files
 - The `cd` command is aliased to use **zoxide** (use `/bin/cd` for the original command)
 - Nord color palette is used throughout all themes
 - Theme switching via environment variables in `.zshenv`
 - NeoVim config is based on LazyVim
-- Git config defaults to `personal.gitconfig` unless overridden by work hardlinks
+- Git config defaults to `personal.gitconfig` unless overridden by `softlinks_config_work.conf`

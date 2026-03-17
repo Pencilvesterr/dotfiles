@@ -19,22 +19,8 @@ info "Starting sync script..."
 # cd to repo root so $(pwd) in config files resolves correctly
 cd "$REPO_DIR" || exit 1
 
-# Detect work machine using the same mechanism as install.sh
-if [ -f "$REPO_DIR/.env" ]; then
-    . "$REPO_DIR/.env"
-fi
-read -ra WORK_HOSTNAMES <<< "${WORK_HOSTNAMES:-}"
-is_work_machine="n"
-for wh in "${WORK_HOSTNAMES[@]}"; do
-    if [ "$(hostname -s)" == "$wh" ]; then
-        is_work_machine="y"
-        info "Work machine detected: $(hostname -s)"
-        break
-    fi
-done
-
 DEFAULT_CONFIGS=("$REPO_DIR/sync_config.conf")
-if [ "$is_work_machine" == "y" ]; then
+if detect_work_machine; then
     DEFAULT_CONFIGS+=("$REPO_DIR/sync_config_work.conf")
 fi
 

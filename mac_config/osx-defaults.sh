@@ -70,6 +70,10 @@ apply_osx_system_defaults() {
     defaults write com.apple.dock wvous-br-corner -int 0
     killall Dock
 
+    # Disable full screen on second monitor for aerospace
+    # https://nikitabobko.github.io/AeroSpace/guide#a-note-on-displays-have-separate-spaces
+    defaults write com.apple.spaces spans-displays -bool true && killall SystemUIServer
+
     # Show battery percentage in menu bar
     defaults write com.apple.controlcenter BatteryShowPercentage -bool true
 

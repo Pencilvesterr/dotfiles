@@ -2,11 +2,10 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-. $SCRIPT_DIR/utils.sh
+. "$SCRIPT_DIR/utils.sh"
 
 check_config_exists() {
     local config_file="$1"
-    # Check if configuration file exists
     if [ ! -f "$config_file" ]; then
         warning "Configuration file not found: $config_file (skipping)"
         return 1
@@ -14,68 +13,12 @@ check_config_exists() {
     return 0
 }
 
-create_hardlinks() {
+create_links() {
     local config_file="$1"
     check_config_exists "$config_file" || return
 
-    info "Creating hard links from $(basename "$config_file")..."
+    info "Creating links from $(basename "$config_file")..."
 
-    # Read dotfile links from the config file
-    while IFS=: read -r source target || [ -n "$source" ]; do
-
-        # Skip empty or invalid lines in the config file
-        if [[ -z "$source" || -z "$target" || "$source" == \#* ]]; then
-            continue
-        fi
-
-        # Evaluate variables
-        source=$(eval echo "$source")
-        target=$(eval echo "$target")
-
-        # Check if the source file exists
-        if [ ! -e "$source" ]; then
-            error "Error: Source file '$source' not found. Skipping link creation for '$target'."
-            continue
-        fi
-
-        # Check if source is a directory (hard links don't work for directories)
-        if [ -d "$source" ]; then
-            error "Error: Cannot create hard link for directory '$source'. Skipping."
-            continue
-        fi
-
-        # Check if the hard link already exists
-        if [ -f "$target" ]; then
-            # Check if it's already the same inode (already hard linked)
-            if [ "$source" -ef "$target" ]; then
-                warning "Hard link already exists: $target"
-            else
-                warning "File already exists: $target"
-            fi
-        else
-            # Extract the directory portion of the target path
-            target_dir=$(dirname "$target")
-
-            # Check if the target directory exists, and if not, create it
-            if [ ! -d "$target_dir" ]; then
-                mkdir -p "$target_dir"
-                info "Created directory: $target_dir"
-            fi
-
-            # Create the hard link
-            ln "$source" "$target"
-            success "Created hard link: $target"
-        fi
-    done <"$config_file"
-}
-
-create_softlinks() {
-    local config_file="$1"
-    check_config_exists "$config_file" || return
-
-    info "Creating soft links from $(basename "$config_file")..."
-
-    # Read dotfile links from the config file
     while IFS=: read -r source target || [ -n "$source" ]; do
 
         # Skip empty or invalid lines in the config file
@@ -93,62 +36,37 @@ create_softlinks() {
             continue
         fi
 
-        # Check if the soft link already exists
         if [ -e "$target" ] || [ -L "$target" ]; then
-            # Check if it's already a symlink pointing to the right place
             if [ -L "$target" ] && [ "$(readlink "$target")" == "$source" ]; then
-                warning "Soft link already exists: $target -> $source"
+                # Already correctly linked — nothing to do
+                warning "Link already exists: $target -> $source"
+            elif [ -L "$target" ]; then
+                # Symlink exists but points somewhere else (e.g. personal.gitconfig was linked
+                # first, now work config is overriding it with work.gitconfig) — update it.
+                ln -sf "$source" "$target"
+                success "Updated link: $target -> $source"
             else
+                # Regular file or directory — leave it alone to avoid data loss
                 warning "File/directory already exists: $target"
             fi
         else
-            # Extract the directory portion of the target path
             target_dir=$(dirname "$target")
-
-            # Check if the target directory exists, and if not, create it
             if [ ! -d "$target_dir" ]; then
                 mkdir -p "$target_dir"
                 info "Created directory: $target_dir"
             fi
 
-            # Create the soft link
             ln -s "$source" "$target"
-            success "Created soft link: $target -> $source"
+            success "Created link: $target -> $source"
         fi
     done <"$config_file"
 }
 
-delete_hardlink_files() {
+delete_links() {
     local config_file="$1"
     check_config_exists "$config_file" || return
 
-    info "Deleting hard links from $(basename "$config_file")..."
-    while IFS=: read -r _ target || [ -n "$target" ]; do
-
-        # Skip empty and invalid lines
-        if [[ -z "$target" ]]; then
-            continue
-        fi
-
-        # Evaluate variables
-        target=$(eval echo "$target")
-
-        # Check if the file exists
-        if [ -f "$target" ] || { [ "$include_files" == true ] && [ -f "$target" ]; }; then
-            # Remove the file
-            rm -rf "$target"
-            success "Deleted: $target"
-        else
-            warning "Not found: $target"
-        fi
-    done <"$config_file"
-}
-
-delete_softlink_files() {
-    local config_file="$1"
-    check_config_exists "$config_file" || return
-
-    info "Deleting soft links from $(basename "$config_file")..."
+    info "Deleting links from $(basename "$config_file")..."
     while IFS=: read -r _ target || [ -n "$target" ]; do
 
         # Skip empty and invalid lines
@@ -161,7 +79,6 @@ delete_softlink_files() {
 
         # Check if the target exists (could be file, directory, or broken symlink)
         if [ -e "$target" ] || [ -L "$target" ]; then
-            # Remove the symlink or directory
             rm -rf "$target"
             success "Deleted: $target"
         else
@@ -208,7 +125,7 @@ show_diffs() {
     $any_diffs
 }
 
-adopt_existing_files_and_soft_link() {
+adopt_existing_files() {
     local config_files=("$@")
 
     for config_file in "${config_files[@]}"; do
@@ -238,7 +155,7 @@ adopt_existing_files_and_soft_link() {
 if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
     case "$1" in
     "--create")
-        create_softlinks "$2"
+        create_links "$2"
         ;;
     "--delete")
         shift
@@ -251,7 +168,7 @@ if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
             esac
             shift
         done
-        delete_softlink_files "$conf_file"
+        delete_links "$conf_file"
         ;;
     "--show-diffs")
         shift
@@ -259,28 +176,25 @@ if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
         ;;
     "--adopt")
         shift
-        adopt_existing_files_and_soft_link "$@"
+        adopt_existing_files "$@"
         ;;
     "--help")
-        echo "Usage: $0 [--create [conf_file] | --delete [--include-files] [conf_file] | --show-diffs [conf_files...] | --adopt [conf_files...] | --help]"
+        echo "Usage: $0 [--create <conf_file> | --delete [--include-files] <conf_file> | --show-diffs <conf_files...> | --adopt <conf_files...> | --help]"
         echo ""
         echo "Options:"
-        echo "  --create              Create hard links from hardlinks_config.conf"
-        echo "                        and soft links from softlinks_config.conf"
-        echo "  --create <conf_file>  Create soft links from the specified conf file only"
-        echo "  --delete              Delete links from both config files"
-        echo "  --delete --include-files"
-        echo "                        Delete links including files"
-        echo "  --delete <conf_file>  Delete links from the specified conf file only"
-        echo "  --show-diffs [conf_files...]"
+        echo "  --create <conf_file>  Create symlinks from the specified config file"
+        echo "  --delete <conf_file>  Delete links from the specified config file"
+        echo "  --delete --include-files <conf_file>"
+        echo "                        Delete links including target files"
+        echo "  --show-diffs <conf_files...>"
         echo "                        Show target files that differ from source"
-        echo "  --adopt [conf_files...]"
-        echo "                        Copy existing target files into repo, then replace with links"
+        echo "  --adopt <conf_files...>"
+        echo "                        Copy existing target files into repo, then replace with symlinks"
         echo "  --help                Display this help message"
         ;;
     *)
         error "Error: Unknown argument '$1'"
-        error "Usage: $0 [--create [conf_file] | --delete [--include-files] [conf_file] | --show-diffs [conf_files...] | --adopt [conf_files...] | --help]"
+        error "Usage: $0 [--create <conf_file> | --delete [--include-files] <conf_file> | --show-diffs <conf_files...> | --adopt <conf_files...> | --help]"
         exit 1
         ;;
     esac

@@ -8,11 +8,17 @@
 #   - Broken, differs, repo file has staged/unstaged changes → warn and abort
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
+REPO_DIR="$REPO_ROOT"
+. "$REPO_ROOT/scripts/utils.sh"
+
 CONFIG_FILES=(
-    "hardlinks_config.conf"
     "softlinks_config.conf"
-    "hardlinks_config_work.conf"
 )
+
+SYNC_CONFIG_FILES=("$REPO_ROOT/sync_config.conf")
+if detect_work_machine 2>/dev/null; then
+    SYNC_CONFIG_FILES+=("$REPO_ROOT/sync_config_work.conf")
+fi
 
 FAIL=false
 
@@ -70,6 +76,34 @@ for config_file in "${CONFIG_FILES[@]}"; do
         fi
 
     done < "$config_path"
+done
+
+for sync_config in "${SYNC_CONFIG_FILES[@]}"; do
+    [ -f "$sync_config" ] || continue
+
+    while IFS=: read -r source target || [ -n "$source" ]; do
+        [[ -z "$source" || -z "$target" || "$source" == \#* ]] && continue
+        source=$(eval echo "$source")
+        target=$(eval echo "$target")
+
+        # Skip if system file doesn't exist
+        [ -e "$target" ] || continue
+
+        # Skip if repo file doesn't exist
+        [ -f "$source" ] || continue
+
+        # Skip if contents are identical
+        diff -q "$source" "$target" > /dev/null 2>&1 && continue
+
+        rel_source="${source#$REPO_ROOT/}"
+
+        # Always pull the system version — sync files are owned by the app, not the repo
+        cp "$target" "$source"
+        git add "$rel_source"
+        echo "==> Pulled system version and staged: $rel_source"
+        echo "    (from: $target)"
+
+    done < "$sync_config"
 done
 
 if $FAIL; then

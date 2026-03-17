@@ -8,6 +8,7 @@ mas "Amphetamine", id: 937984704
 brew "gradle"
 brew "uv"
 brew "terraform"
+brew "nvm"
 
 cask "postman"
 cask "aldente"
