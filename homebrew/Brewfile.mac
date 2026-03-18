@@ -1,0 +1,37 @@
+# macOS-only entries (casks, mas, vscode extensions, mac-only formulae)
+
+# Sources
+tap "felixkratz/formulae"
+tap "eugene-babichenko/fixit"
+
+# macOS-only CLI
+brew "eugene-babichenko/fixit/fixit" # The fuck replacement
+brew "terminal-notifier"
+brew "mas" # Mac application store
+brew "gnu-tar" # Provides the ability to tar files
+brew "jenv"
+brew "mvnvm" # Maven for Java
+
+# Add borders when working with aerospace
+tap "FelixKratz/formulae"
+brew "FelixKratz/formulae/borders"
+
+# Applications
+cask "stats" # System monitor in top bar
+cask "arc" # Web browser
+cask "nikitabobko/tap/aerospace"
+cask "alfred"
+cask "betterdisplay"
+cask "bitwarden"
+cask "docker-desktop"
+cask "firefox"
+cask "font-hack-nerd-font"
+cask "font-jetbrains-mono-nerd-font"
+cask "font-symbols-only-nerd-font"
+cask "jordanbaird-ice" # Cleanup top task bar
+cask "logi-options+" # Assume you're using the logi mouse
+cask "maccy"
+cask "shortcat" # App that enables mouse-free UI interaction. Cmd + shift + space
+cask "spotify"
+cask "visual-studio-code"
+cask "wezterm"

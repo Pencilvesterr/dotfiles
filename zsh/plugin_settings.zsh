@@ -31,6 +31,9 @@ zstyle ':fzf-tab:*' switch-group '<' '>'
 # Cache fzf config for faster startup
 if command -v fzf >/dev/null 2>&1; then
   source <(fzf --zsh)
+  # Explicitly bind ^R in vi keymaps since zsh-vim-mode overrides it
+  bindkey '^R' fzf-history-widget
+  bindkey -M vicmd '^R' fzf-history-widget
 fi
 
 

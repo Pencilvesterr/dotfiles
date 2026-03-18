@@ -20,5 +20,8 @@ setopt HIST_IGNORE_ALL_DUPS
 # Work
 [ -f "$HOME/.config/zsh/work.zsh" ] && source "$HOME/.config/zsh/work.zsh"
 
+# Linux
+[[ "$(uname)" == "Linux" ]] && [ -f "$HOME/.config/zsh/linux.zsh" ] && source "$HOME/.config/zsh/linux.zsh"
+
 # > End of code to profile
 # zprof

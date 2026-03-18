@@ -57,6 +57,7 @@ install_platform_apps() {
             info "===================="
 
             install_brewfile "$REPO_DIR/homebrew/Brewfile"
+            install_brewfile "$REPO_DIR/homebrew/Brewfile.mac"
             if [[ "$is_work_machine" == "y" ]]; then
                 info "Installing work Brewfile"
                 install_brewfile "$REPO_DIR/homebrew/Brewfile.work"
@@ -69,12 +70,26 @@ install_platform_apps() {
         if [[ "$install_apps" == "y" ]]; then
             printf "\n"
             info "===================="
-            info "Installing Ubuntu Apps"
+            info "Setting Up Prerequisites"
             info "===================="
-            # TODO: Want to migrate this to brew too
+
+            install_linux_prerequisites
+            install_homebrew
+
+            printf "\n"
+            info "===================="
+            info "Installing Apps"
+            info "===================="
+
+            install_brewfile "$REPO_DIR/homebrew/Brewfile"
+
+            printf "\n"
+            info "===================="
+            info "Installing Linux-specific Apps"
+            info "===================="
+
             install_linux_cli_tools
             install_linux_apps
-            install_non_homebrew
         fi
     fi
 }
