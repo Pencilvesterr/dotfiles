@@ -1,5 +1,6 @@
 local wezterm = require("wezterm")
 local key_map = require("keymaps")
+local servers = require("servers")
 local config = {}
 
 if wezterm.config_builder then
@@ -47,6 +48,7 @@ config = {
 		bottom = 0,
 	},
 
+	ssh_domains = servers.ssh_domains,
 	keys = key_map,
 	mouse_bindings = {
 		{

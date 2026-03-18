@@ -71,6 +71,11 @@ sync_config() {
             info "Created directory: $to_dir"
         fi
 
+        if [ "$(realpath "$from")" = "$(realpath "$to" 2>/dev/null)" ]; then
+            info "Skipping (same file): $from"
+            continue
+        fi
+
         cp -r "$from" "$to"
         success "$direction: $from -> $to"
 
