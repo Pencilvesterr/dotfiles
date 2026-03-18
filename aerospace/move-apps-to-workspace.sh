@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-# Log file for debugging AeroSpace execution
-
 # Aerospace workspace app movement script
 # Automatically moves specific apps to the current workspace when switching
 
@@ -14,10 +12,19 @@ get_apps_for_workspace() {
         echo "Slack|WhatsApp"
         ;;
     *"Zoom+Postman"*)
-        echo "Postman|zoom.us"
+        echo "zoom.us"
+        ;;
+    *"Postman"*)
+        echo "Postman"
         ;;
     *"Zoom"*)
         echo "zoom.us"
+        ;;
+    *"Bitwarden"*)
+        echo "Bitwarden"
+        ;;
+    *"Mail"*)
+        echo "Mail"
         ;;
     *"Code"*)
         echo "Code|Cursor|IntelliJ IDEA"

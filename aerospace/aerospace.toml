@@ -35,7 +35,7 @@ enable-normalization-opposite-orientation-for-nested-containers = false
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
 # The 'accordion-padding' specifies the size of accordion padding
 # You can set 0 to disable the padding feature
-accordion-padding = 20
+accordion-padding = 30
 
 # Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
@@ -127,10 +127,13 @@ alt-3 = 'workspace 3->Terminal'
 alt-4 = 'workspace 4->Zoom+Postman' 
 alt-5 = 'workspace 5->Slack' 
 alt-6 = 'workspace 6->Chrome'
-alt-7 = 'workspace 7->Spotify' 
-alt-8 = 'workspace 8->Terminal' 
+alt-7 = 'workspace 7->Spotify'
+alt-8 = 'workspace 8->Terminal'
 alt-9 = 'workspace 9->Zoom+Postman'
 alt-0 = 'workspace 0->Slack'
+alt-b = 'workspace B->Bitwarden'
+alt-m = 'workspace M->Mail'
+alt-p = 'workspace P->Postman'
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 ctrl-alt-1 = ['move-node-to-workspace 1->Browser']
 ctrl-alt-2 = ['move-node-to-workspace 2->Code']
@@ -142,6 +145,9 @@ ctrl-alt-7 = ['move-node-to-workspace 7->Spotify']
 ctrl-alt-8 = ['move-node-to-workspace 8->Terminal']
 ctrl-alt-9 = ['move-node-to-workspace 9->Zoom+Postman']
 ctrl-alt-0 = ['move-node-to-workspace 0->Slack']
+ctrl-alt-b = ['move-node-to-workspace B->Bitwarden']
+ctrl-alt-m = ['move-node-to-workspace M->Mail']
+ctrl-alt-p = ['move-node-to-workspace P->Postman']
 ctrl-alt-enter = "fullscreen"
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
@@ -163,6 +169,9 @@ ctrl-alt-semicolon = 'mode service'
 '8->Terminal' = 'secondary'
 '9->Zoom+Postman' = 'secondary'
 '0->Slack' = 'secondary'
+'B->Bitwarden' = 'main'
+'M->Mail' = 'main'
+'P->Postman' = 'main'
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
@@ -179,7 +188,9 @@ ctrl-alt-cmd-j = ['join-with down', 'mode main']
 ctrl-alt-cmd-k = ['join-with up', 'mode main']
 ctrl-alt-cmd-l = ['join-with right', 'mode main']
 
+# These are called when these apps are detected by AeroSpace to move them to the right workspace.
 # Can get app ID by running `aerosapce list-apps`
+
 # TODO: Temp disabling this as it was annoying when opening extensions on monitor 2
 # [[on-window-detected]]
 # if.app-id = 'company.thebrowser.Browser'
@@ -212,7 +223,7 @@ run = "move-node-to-workspace 3->Terminal"
 
 [[on-window-detected]]
 if.app-id = 'com.postmanlabs.mac'
-run = "move-node-to-workspace 4->Zoom+Postman"
+run = "move-node-to-workspace P->Postman"
 
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
@@ -243,3 +254,11 @@ run = "layout floating"
 [[on-window-detected]]
 if.app-id = 'com.apple.ActivityMonitor'
 run = "layout floating"
+
+[[on-window-detected]]
+if.app-id = 'com.bitwarden.desktop'
+run = "move-node-to-workspace B->Bitwarden"
+
+[[on-window-detected]]
+if.app-id = 'com.apple.mail'
+run = "move-node-to-workspace M->Mail"
