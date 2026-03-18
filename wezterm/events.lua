@@ -1,6 +1,84 @@
 local wezterm = require("wezterm")
 local mux = wezterm.mux
 
+-- Background override for SSH/mux panes. Swaps the default dark overlay (#282c35) for a
+-- warm reddish-brown tint over the same wallpaper, making remote windows visually distinct
+-- without changing the terminal color scheme or font rendering.
+local SSH_BACKGROUND = {
+  {
+    source = {
+      File = os.getenv("HOME") .. "/.config/wezterm/dark-desert.jpg",
+    },
+    hsb = {
+      hue = 1.0,
+      saturation = 1.02,
+      brightness = 0.25,
+    },
+    attachment = { Parallax = 0.3 },
+    width = "100%",
+    height = "100%",
+    opacity = 0.80,
+  },
+  {
+    source = {
+      Color = "#2c2418",  -- muted dark orange, similar intensity to the default #282c35
+    },
+    width = "100%",
+    height = "100%",
+    opacity = 0.60,
+  },
+}
+
+-- Prefix the window title with the SSH domain name when the active pane is remote,
+-- so the host is visible in the OS window title and the dock/taskbar.
+wezterm.on("format-window-title", function(tab)
+  local pane = tab.active_pane
+  local domain = pane.domain_name
+
+  if domain ~= "local" then
+    return string.format("[%s] %s", domain, pane.title)
+  end
+
+  return pane.title
+end)
+
+-- Show mux latency in the right status bar when the remote pane is slow to respond.
+-- "Tardy" means the mux server hasn't replied within the expected window, which typically
+-- indicates lag on an SSH or remote mux connection. The elapsed time is shown so you can
+-- tell at a glance how long the pane has been unresponsive. The status is cleared when
+-- the connection is healthy.
+--
+-- Also overrides the window background when the active pane is remote, giving an
+-- immediate whole-window visual cue that you're working on a non-local machine.
+wezterm.on("update-status", function(window, pane)
+  -- Both get_metadata() and get_domain_name() can fail during mux connection
+  -- before the pane is registered — bail out early and wait for the next tick.
+  local ok, meta = pcall(function() return pane:get_metadata() end)
+  if not ok then return end
+  meta = meta or {}
+
+  local ok2, domain = pcall(function() return pane:get_domain_name() end)
+  if not ok2 then return end
+
+  local overrides = window:get_config_overrides() or {}
+
+  -- Apply the warm background overlay when the active pane is on a remote domain,
+  -- and revert to nil (default from config.lua) when local.
+  if domain ~= "local" then
+    overrides.background = SSH_BACKGROUND
+  else
+    overrides.background = nil
+  end
+  window:set_config_overrides(overrides)
+
+  if meta.is_tardy then
+    local secs = meta.since_last_response_ms / 1000.0
+    window:set_right_status(string.format("tardy: %5.1fs⏳", secs))
+  else
+    window:set_right_status("")
+  end
+end)
+
 wezterm.on("gui-startup", function()
   local _, _, window = mux.spawn_window({})
   -- window:gui_window():maximize()
