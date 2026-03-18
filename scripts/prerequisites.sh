@@ -15,14 +15,30 @@ install_xcode() {
     fi
 }
 
+install_linux_prerequisites() {
+    info "Installing Linux prerequisites for Homebrew..."
+    sudo apt-get update
+    sudo apt-get install -y build-essential procps curl file git
+}
+
 install_homebrew() {
     info "Installing Homebrew..."
-    export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+    fi
     if hash brew &>/dev/null; then
         warning "Homebrew already installed"
     else
-        sudo --validate
-        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            sudo --validate
+        fi
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+    # Ensure brew is on PATH for the rest of this script session
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    else
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     fi
 }
 
