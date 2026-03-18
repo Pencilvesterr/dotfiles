@@ -16,4 +16,6 @@
   path = ~/.config/difftastic/difft.gitconfig
 [rerere]
 	enabled = true
+[includeIf "gitdir:~/dev/atlassian/"]
+	path = ~/.gitconfig_work
 
