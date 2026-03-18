@@ -5,46 +5,69 @@
       {
         "id": "5",
         "type": "git-branch",
-        "color": "magenta"
+        "color": "ansi256:235",
+        "backgroundColor": "ansi256:75"
       },
       {
         "id": "7",
         "type": "git-changes",
-        "color": "yellow"
+        "color": "ansi256:251",
+        "backgroundColor": "ansi256:237"
       }
     ],
     [
       {
         "id": "b67af33f-d299-4f86-8bef-a2107d4e7f7d",
-        "type": "model"
+        "type": "model",
+        "color": "ansi256:235",
+        "backgroundColor": "ansi256:75"
       },
       {
         "id": "8b6d26bf-fb3c-4424-b9e7-d9b011bf2a4b",
-        "type": "thinking-effort"
+        "type": "thinking-effort",
+        "color": "ansi256:251",
+        "backgroundColor": "ansi256:237"
       },
       {
         "id": "aa8ab6f4-c02c-4332-bb8b-d387e6147693",
-        "type": "context-bar"
+        "type": "context-percentage-usable",
+        "color": "ansi256:235",
+        "backgroundColor": "ansi256:114"
+      },
+      {
+        "id": "a3025567-f271-4f7d-92ae-505a7ae71554",
+        "type": "total-speed",
+        "backgroundColor": "bgYellow",
+        "metadata": {
+          "windowSeconds": "60"
+        }
       }
     ],
     [
       {
         "id": "96b08936-df57-46ec-a956-e72d683935a4",
-        "type": "reset-timer"
+        "type": "reset-timer",
+        "color": "ansi256:235",
+        "backgroundColor": "ansi256:75"
       },
       {
         "id": "1257d7ff-9766-4a87-b7ee-b8c225677138",
-        "type": "session-usage"
+        "type": "session-usage",
+        "color": "ansi256:251",
+        "backgroundColor": "ansi256:237"
       },
       {
         "id": "6ae0c4e7-a30b-43c9-be8c-ba7368ec4699",
-        "type": "weekly-usage"
+        "type": "weekly-usage",
+        "color": "ansi256:235",
+        "backgroundColor": "ansi256:114"
       }
     ]
   ],
   "flexMode": "full-minus-40",
   "compactThreshold": 60,
   "colorLevel": 2,
+  "defaultPadding": " ",
   "inheritSeparatorColors": false,
   "globalBold": false,
   "powerline": {
@@ -56,9 +79,10 @@
       false
     ],
     "startCaps": [],
-    "endCaps": [],
-    "autoAlign": true,
-    "theme": "onedark"
-  },
-  "defaultPadding": " "
+    "endCaps": [
+      ""
+    ],
+    "theme": "onedark",
+    "autoAlign": true
+  }
 }
