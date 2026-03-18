@@ -126,7 +126,7 @@ alt-2 = 'workspace 2->Code'
 alt-3 = 'workspace 3->Terminal' 
 alt-4 = 'workspace 4->Zoom+Postman' 
 alt-5 = 'workspace 5->Slack' 
-alt-6 = 'workspace 6->Chrome'
+alt-6 = 'workspace 6->Browser'
 alt-7 = 'workspace 7->Spotify'
 alt-8 = 'workspace 8->Terminal'
 alt-9 = 'workspace 9->Zoom+Postman'
@@ -140,7 +140,7 @@ ctrl-alt-2 = ['move-node-to-workspace 2->Code']
 ctrl-alt-3 = ['move-node-to-workspace 3->Terminal']
 ctrl-alt-4 = ['move-node-to-workspace 4->Zoom+Postman']
 ctrl-alt-5 = ['move-node-to-workspace 5->Slack']
-ctrl-alt-6 = ['move-node-to-workspace 6->Chrome']
+ctrl-alt-6 = ['move-node-to-workspace 6->Browser']
 ctrl-alt-7 = ['move-node-to-workspace 7->Spotify']
 ctrl-alt-8 = ['move-node-to-workspace 8->Terminal']
 ctrl-alt-9 = ['move-node-to-workspace 9->Zoom+Postman']
@@ -164,7 +164,7 @@ ctrl-alt-semicolon = 'mode service'
 '3->Terminal' = 'main'
 '4->Zoom+Postman' = 'main'
 '5->Slack' = 'main'
-'6->Chrome' = 'secondary'
+'6->Browser' = 'secondary'
 '7->Spotify' = 'secondary'
 '8->Terminal' = 'secondary'
 '9->Zoom+Postman' = 'secondary'
@@ -190,6 +190,15 @@ ctrl-alt-cmd-l = ['join-with right', 'mode main']
 
 # These are called when these apps are detected by AeroSpace to move them to the right workspace.
 # Can get app ID by running `aerosapce list-apps`
+#┌───────────┬─────────────────────────────┬──────────────────────────────────────┐
+#│           │     on-window-detected      │      move-apps-to-workspace.sh       │
+#├───────────┼─────────────────────────────┼──────────────────────────────────────┤
+#│ Trigger   │ New window opens            │ You switch workspaces                │
+#├───────────┼─────────────────────────────┼──────────────────────────────────────┤
+#│ Direction │ Window → assigned workspace │ Existing windows → current workspace │
+#├───────────┼─────────────────────────────┼──────────────────────────────────────┤
+#│ Use case  │ Routing newly launched apps │ Corralling already-running apps      │
+#└───────────┴─────────────────────────────┴──────────────────────────────────────┘
 
 # TODO: Temp disabling this as it was annoying when opening extensions on monitor 2
 # [[on-window-detected]]
