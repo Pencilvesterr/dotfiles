@@ -23,25 +23,12 @@ warning() {
 }
 
 # Detect if the current machine is a work machine.
-# Reads WORK_HOSTNAMES from REPO_DIR/.env (space-separated list).
-# Returns 0 if work machine, 1 if not. Exits 1 if WORK_HOSTNAMES is unset.
+# Returns 0 if the current user is 'mcrouch', 1 otherwise.
 # Usage: if detect_work_machine; then ...; fi
 detect_work_machine() {
-    local repo_dir="${REPO_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
-    if [ -f "$repo_dir/.env" ]; then
-        . "$repo_dir/.env"
+    if [ "$(whoami)" = "mcrouch" ]; then
+        info "Work machine detected: $(whoami)"
+        return 0
     fi
-    if [ -z "${WORK_HOSTNAMES:-}" ]; then
-        error "WORK_HOSTNAMES is not set. Define it as a space-separated list in $repo_dir/.env"
-        exit 1
-    fi
-    local _wh
-    read -ra _work_hostnames <<< "$WORK_HOSTNAMES"
-    for _wh in "${_work_hostnames[@]}"; do
-        if [ "$(hostname -s)" == "$_wh" ]; then
-            info "Work machine detected: $(hostname -s)"
-            return 0
-        fi
-    done
     return 1
 }
