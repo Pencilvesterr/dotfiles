@@ -105,7 +105,13 @@ echo -ne '\e[6 q' # Use beam shape cursor on startup
 # Yank to the system clipboard
 function vi-yank-xclip {
   zle vi-yank
-  echo "$CUTBUFFER" | pbcopy -i
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "$CUTBUFFER" | pbcopy
+  elif command -v xclip >/dev/null 2>&1; then
+    echo "$CUTBUFFER" | xclip -selection clipboard
+  elif command -v xsel >/dev/null 2>&1; then
+    echo "$CUTBUFFER" | xsel --clipboard --input
+  fi
 }
 
 zle -N vi-yank-xclip

@@ -27,7 +27,7 @@ warning() {
 # Usage: if detect_work_machine; then ...; fi
 detect_work_machine() {
     if [ "$(whoami)" = "mcrouch" ]; then
-        info "Work machine detected: $(whoami)"
+        info "Work machine detected"
         return 0
     fi
     return 1

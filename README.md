@@ -1,10 +1,3 @@
-# TODO:
-- Export current vs code settings and then update sysmlinks_config.confg to install it
-- Setup NeoVim as my default editor
-- Copy relevant info from .vimrc_original_repo to my own .vimrc
-- thefuck has been deprecated. Look into (pay-respects)[https://github.com/iffse/pay-respects/] as a replacement 
-- Import the extensions and key bindings used in cursor to my VSCODE director
-
 # Dotfiles
 
 This repository contains my dotfiles, which are the config files and scripts I use to customize my development environment. These files help me maintain a consistent setup across different machines and save time when setting up new environments.
@@ -56,4 +49,4 @@ When adding new dotfiles to this repository, follow these steps:
 
 ### Software Installation
 
-Software is installed using Homebrew. To add a formula or cask, update the `homebrew/Brewfile` and run `./scripts/brew_install_custom.sh`. If you need to install a specific version of a package, find its Ruby script in the commit history of an official Homebrew GitHub repository and place it in the `homebrew/custom-casks/` or `homebrew/custom-formulae/` directory, depending on whether it's a cask or formula.
+Software is installed using Homebrew. To add a formula or cask, update the `homebrew/Brewfile` and run `./scripts/brew-install-custom.sh`. If you need to install a specific version of a package, find its Ruby script in the commit history of an official Homebrew GitHub repository and place it in the `homebrew/custom-casks/` or `homebrew/custom-formulae/` directory, depending on whether it's a cask or formula.

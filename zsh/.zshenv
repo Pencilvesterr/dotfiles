@@ -6,9 +6,6 @@
 # This should be done with the setup script in the READM
 # And this file should only ever set environment variables
 
-# Secrets
-[ -f "$HOME/.env" ] && source "$HOME/.env"
-
 # Themes (onedark or nord)
 export NVIM_THEME="nord"
 export STARSHIP_THEME="nord"
@@ -19,9 +16,14 @@ export LANG="en_AU.UTF-8" # Sets default locale for all categories
 export LC_ALL="en_AU.UTF-8" # Overrides all other locale settings
 export LC_CTYPE="en_AU.UTF-8" # Controls character classification and case conversion
 
-# Use vim as default editor. Change to nvim oneday, currently too heavy for pi server
-export EDITOR="vim"
-export VISUAL="vim"
+# Use nvim as default editor, falling back to vim if not available
+if command -v nvim >/dev/null 2>&1; then
+  export EDITOR="nvim"
+  export VISUAL="nvim"
+else
+  export EDITOR="vim"
+  export VISUAL="vim"
+fi
 
 # Add /usr/local/bin to the beginning of the PATH environment variable.
 # This ensures that executables in /usr/local/bin are found before other directories in the PATH.

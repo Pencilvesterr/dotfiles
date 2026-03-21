@@ -21,7 +21,8 @@
 [rerere]
 	enabled = true
 
-# Work specific
+# Work specific - kept here because work tooling auto-manages these
+# sections when it detects them in the global .gitconfig
 [trace2]
 	eventTarget = af_unix:/Users/mcrouch/.gittrace/trace.sock
 	eventBrief = true
@@ -38,6 +39,6 @@
 [alias]
 	hooks = !"/Users/mcrouch/.githooks/bin/githooks"
 
-# Set to use workemail in this directory for commits
+# Set to use work email in this directory for commits
 [includeIf "gitdir:~/dev/atlassian/"]
 	path = ~/.gitconfig_work

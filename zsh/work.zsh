@@ -4,8 +4,7 @@
 # -------------------------------------------------------------------
 # Updating PATH
 # -------------------------------------------------------------------
-# Created by `pipx` on 2024-02-26 20:44:52
-export PATH="$PATH:/Users/mcrouch/.local/bin"
+export PATH="$PATH:$HOME/.local/bin"
 # Required for ./jmake healthcheck
 export PATH="/opt/homebrew/opt/util-linux/bin:$PATH"
 

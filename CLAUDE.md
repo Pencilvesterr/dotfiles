@@ -56,7 +56,8 @@ brew bundle check --file=homebrew/Brewfile
 The core installation mechanism uses **symlinks** via `scripts/links.sh`:
 
 - Configuration:
-  - `softlinks_config.conf` - main symlink config (files and directories)
+  - `softlinks_config.conf` - main symlink config (cross-platform)
+  - `softlinks_config_mac.conf` - macOS-only symlinks (VS Code, Aerospace)
   - `softlinks_config_work.conf` - work-specific symlinks
 - Format: `source_path:target_path` (one per line, comments start with `#`)
 - The script expands variables like `$(pwd)` and `$HOME`
@@ -104,7 +105,6 @@ Zsh config is split into modular files for maintainability:
 - `.zshenv` - Environment variables
 - `custom.zsh` - Custom configurations
 - `plugin_settings.zsh` - Plugin-specific settings
-- `functions.zsh` - Custom functions
 - `aliases.zsh` - Command aliases
 - `work.zsh` - Work-specific settings (PATH, lazy-loaded pyenv/nvm/jenv)
 - `.zsh_plugins.txt` - Plugin list (likely for antidote or similar)
@@ -113,7 +113,8 @@ Zsh config is split into modular files for maintainability:
 
 1. Place the config file in the appropriate subdirectory
 2. Add an entry to the appropriate config file:
-   - `softlinks_config.conf` - shared across personal and work
+   - `softlinks_config.conf` - shared across personal and work (cross-platform)
+   - `softlinks_config_mac.conf` - macOS-only configs
    - `softlinks_config_work.conf` - work-specific overrides
 
    Format:
