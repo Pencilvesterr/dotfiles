@@ -7,6 +7,8 @@
 	autocrlf = input
 [merge]
 	conflictStyle = zdiff3
+[diff]
+    external = difft
 [pull]
 	rebase = true
 [filter "lfs"]
@@ -32,6 +34,7 @@
 	cloneBranch = master
 [githooks "autoupdate"]
 	enabled = true
+	lastrun = 1773881418
 [alias]
 	hooks = !"/Users/mcrouch/.githooks/bin/githooks"
 
