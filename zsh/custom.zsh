@@ -1,3 +1,11 @@
+# History
+HISTFILE="${ZDOTDIR:-$HOME}/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt HIST_IGNORE_ALL_DUPS
+setopt APPEND_HISTORY
+setopt SHARE_HISTORY
+
 # OS Specific config
 if [[ "$OSTYPE" == "darwin"* ]]; then
   # Homebrew

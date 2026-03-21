@@ -1,6 +1,4 @@
 # zsh Options
-setopt HIST_IGNORE_ALL_DUPS
-
 # > Start of code to profile
 # zmodload zsh/zprof
 
