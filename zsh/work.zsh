@@ -8,20 +8,21 @@ export PATH="$PATH:$HOME/.local/bin"
 # Required for ./jmake healthcheck
 export PATH="/opt/homebrew/opt/util-linux/bin:$PATH"
 
-export PATH="/Users/mcrouch/.local/bin:$PATH"
-
-# NVM is handdled with undg/zsh-nvm-lazy-load
-# is handled with lazy-loading
-export NVM_DIR="$HOME/.config/nvm"
-
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use # This loads nvm, --no-use i think makes lazy?
-
 # Seems to be something to do with Atlassian dev boxes?
-export PATH="/Users/mcrouch/.orbit/bin:$PATH"
 
+# Setting up atlas
+export PATH="/opt/atlassian/bin:$PATH"
 
+# -------------------------------------------------------------------
+# NVM - installed via homebrew
+# -------------------------------------------------------------------
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# -------------------------------------------------------------------
 # jenv - Background lazy loading for fast startup
+# -------------------------------------------------------------------
 # Strategy: Set JAVA_HOME immediately, then full init in background
 # This ensures scripts like ./jmake work immediately while keeping startup fast
 
@@ -63,14 +64,3 @@ fi
 
 # Start full jenv initialization in background immediately (non-blocking)
 { _jenv_do_init } &!
-
-# Added by work automatically?
-export PATH="/Users/mcrouch/.orbit/bin:$PATH"
-
-# Setting up atlas
-export PATH="/opt/atlassian/bin:$PATH"
-
-export NVM_DIR="$HOME/.nvm"
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-

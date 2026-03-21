@@ -11,6 +11,7 @@ REPO_DIR="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 . "$REPO_DIR/linux/install_debian.sh"
 
 SOFTLINKS_CONFIG="$REPO_DIR/softlinks_config.conf"
+SOFTLINKS_MAC_CONFIG="$REPO_DIR/softlinks_config_mac.conf"
 SOFTLINKS_WORK_CONFIG="$REPO_DIR/softlinks_config_work.conf"
 
 
@@ -23,13 +24,17 @@ prompt_user_options() {
 
     printf "\n"
     info "Checking existing dotfiles..."
+    local diff_configs=("$SOFTLINKS_CONFIG")
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        diff_configs+=("$SOFTLINKS_MAC_CONFIG")
+    fi
     if [[ "$is_work_machine" == "y" ]]; then
+        diff_configs+=("$SOFTLINKS_WORK_CONFIG")
         info "Comparing with work dotfiles..."
-        ./scripts/links.sh --show-diffs "$SOFTLINKS_CONFIG" "$SOFTLINKS_WORK_CONFIG" || _diffs_exit=$?
     else
         info "Comparing with personal dotfiles..."
-        ./scripts/links.sh --show-diffs "$SOFTLINKS_CONFIG" || _diffs_exit=$?
     fi
+    ./scripts/links.sh --show-diffs "${diff_configs[@]}" || _diffs_exit=$?
     _diffs_exit="${_diffs_exit:-0}"
     [ "$_diffs_exit" -eq 0 ] && printf "\n"
     [ "$_diffs_exit" -gt 1 ] && exit "$_diffs_exit"
@@ -127,26 +132,26 @@ setup_links() {
     info "===================="
 
     chmod +x ./scripts/links.sh
-    if [[ "$overwrite_dotfiles" == "y" ]]; then
-        warning "Deleting existing dotfiles..."
-        ./scripts/links.sh --delete --include-files "$SOFTLINKS_CONFIG"
-    else
-        if [[ "$is_work_machine" != "y" ]]; then
-            info "Adopting existing files into repo..."
-            ./scripts/links.sh --adopt "$SOFTLINKS_CONFIG"
-        fi
+
+    # Collect all applicable config files
+    local configs=("$SOFTLINKS_CONFIG")
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        configs+=("$SOFTLINKS_MAC_CONFIG")
     fi
-    ./scripts/links.sh --create "$SOFTLINKS_CONFIG"
     if [[ "$is_work_machine" == "y" ]]; then
-        if [[ "$overwrite_dotfiles" == "y" ]]; then
-            warning "Deleting existing work dotfiles..."
-            ./scripts/links.sh --delete --include-files "$SOFTLINKS_WORK_CONFIG"
-        else
-            info "Adopting existing work files into repo..."
-            ./scripts/links.sh --adopt "$SOFTLINKS_WORK_CONFIG"
-        fi
-        ./scripts/links.sh --create "$SOFTLINKS_WORK_CONFIG"
+        configs+=("$SOFTLINKS_WORK_CONFIG")
     fi
+
+    for config in "${configs[@]}"; do
+        if [[ "$overwrite_dotfiles" == "y" ]]; then
+            warning "Deleting existing dotfiles from $(basename "$config")..."
+            ./scripts/links.sh --delete --include-files "$config"
+        else
+            info "Adopting existing files from $(basename "$config")..."
+            ./scripts/links.sh --adopt "$config"
+        fi
+        ./scripts/links.sh --create "$config"
+    done
 }
 
 setup_local_overrides() {
