@@ -3,6 +3,11 @@
   "lines": [
     [
       {
+        "id": "f99a453b-1e81-431f-b2d8-c0ae06c45427",
+        "type": "git-root-dir",
+        "backgroundColor": "bgBrightGreen"
+      },
+      {
         "id": "5",
         "type": "git-branch",
         "color": "ansi256:235",
@@ -17,30 +22,19 @@
     ],
     [
       {
-        "id": "b67af33f-d299-4f86-8bef-a2107d4e7f7d",
+        "id": "4cdd6d2e-7df9-4bf2-b04e-58b7691319a8",
         "type": "model",
-        "color": "ansi256:235",
-        "backgroundColor": "ansi256:75"
+        "backgroundColor": "bgCyan"
       },
       {
-        "id": "8b6d26bf-fb3c-4424-b9e7-d9b011bf2a4b",
+        "id": "1fcccdfc-bfa6-4719-a856-b9f3a4568a92",
         "type": "thinking-effort",
-        "color": "ansi256:251",
-        "backgroundColor": "ansi256:237"
+        "backgroundColor": "bgBrightWhite"
       },
       {
-        "id": "aa8ab6f4-c02c-4332-bb8b-d387e6147693",
+        "id": "b4fed78f-9a7c-4b94-91ae-6afdaabf0f7c",
         "type": "context-percentage-usable",
-        "color": "ansi256:235",
-        "backgroundColor": "ansi256:114"
-      },
-      {
-        "id": "a3025567-f271-4f7d-92ae-505a7ae71554",
-        "type": "total-speed",
-        "backgroundColor": "bgYellow",
-        "metadata": {
-          "windowSeconds": "60"
-        }
+        "backgroundColor": "bgBlue"
       }
     ],
     [
