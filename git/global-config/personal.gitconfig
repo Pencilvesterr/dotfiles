@@ -42,3 +42,7 @@
 # Set to use work email in this directory for commits
 [includeIf "gitdir:~/dev/atlassian/"]
 	path = ~/.gitconfig_work
+# Linux only - macOS uses osxkeychain by default (set by Homebrew's Git) so this
+# path won't exist on macOS and git will silently fall back to osxkeychain
+[credential]
+	helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
