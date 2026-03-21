@@ -147,6 +147,16 @@ setup_links() {
     fi
 }
 
+setup_local_overrides() {
+    printf "\n"
+    info "===================="
+    info "Local Overrides"
+    info "===================="
+
+    info "Marking zsh/local.zsh as skip-worktree (local changes will not be tracked)..."
+    git -C "$REPO_DIR" update-index --skip-worktree zsh/local.zsh
+}
+
 setup_managed_files() {
     printf "\n"
     info "===================="
@@ -166,6 +176,7 @@ install_platform_apps
 apply_platform_defaults
 setup_terminal
 setup_links
+setup_local_overrides
 setup_managed_files
 success "Dotfiles set up successfully."
 

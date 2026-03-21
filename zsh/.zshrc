@@ -23,5 +23,8 @@ setopt HIST_IGNORE_ALL_DUPS
 # Linux
 [[ "$(uname)" == "Linux" ]] && [ -f "$HOME/.config/zsh/linux.zsh" ] && source "$HOME/.config/zsh/linux.zsh"
 
+# Local machine-specific config (not tracked in git)
+[ -f "$HOME/.config/zsh/local.zsh" ] && source "$HOME/.config/zsh/local.zsh"
+
 # > End of code to profile
 # zprof
