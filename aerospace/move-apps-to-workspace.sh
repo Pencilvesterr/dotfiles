@@ -1,10 +1,9 @@
 #!/bin/bash
 set -e
 
-# Log file for debugging AeroSpace execution
-
 # Aerospace workspace app movement script
-# Automatically moves specific apps to the current workspace when switching
+# Automatically moves specific apps to the current workspace when switching into a workspace
+# Used for apps that are used in other workspaces frequently, but should be moved to the current workspace when switching into it
 
 # Configuration: Get apps for workspace using case statement
 # Note,ordering  matters. Last one will be on top
@@ -14,10 +13,22 @@ get_apps_for_workspace() {
         echo "Slack|WhatsApp"
         ;;
     *"Zoom+Postman"*)
-        echo "Postman|zoom.us"
+        echo "zoom.us"
+        ;;
+    *"Postman"*)
+        echo "Postman"
         ;;
     *"Zoom"*)
         echo "zoom.us"
+        ;;
+    *"Bitwarden"*)
+        echo "Bitwarden"
+        ;;
+    *"Browser"*)
+        echo "Arc:skip_if_present+new_window"
+        ;;
+    *"Mail"*)
+        echo "Mail"
         ;;
     *"Code"*)
         echo "Code|Cursor|IntelliJ IDEA"
@@ -35,8 +46,27 @@ get_apps_for_workspace() {
 move_app_to_workspace() {
     local app_identifier="$1"
     local current_workspace="$2"
+    local flags="${3:-}"
+    local skip_if_present="false"
+    local new_window="false"
+    [[ "$flags" == *"skip_if_present"* ]] && skip_if_present="true"
+    [[ "$flags" == *"new_window"* ]] && new_window="true"
 
     echo "$(date): Checking app: $app_identifier for workspace: $current_workspace"
+
+    if [[ "$skip_if_present" == "true" ]]; then
+        if aerospace list-windows --workspace "$current_workspace" 2>/dev/null | grep -q "$app_identifier"; then
+            echo "$(date): $app_identifier already in $current_workspace, skipping"
+            return 0
+        fi
+    fi
+
+    if [[ "$new_window" == "true" ]]; then
+        echo "$(date): Opening new window for $app_identifier"
+        osascript -e "tell application \"$app_identifier\" to make new window" 2>/dev/null || \
+            open -a "$app_identifier"
+        return 0
+    fi
 
     # Check if app exists globally
     if ! aerospace list-windows --all | grep -q "$app_identifier"; then
@@ -44,17 +74,11 @@ move_app_to_workspace() {
         return 0 # App not running, skip silently
     fi
 
-    # Note: We'll move all windows of this app, even if some are already in the workspace
-
     echo "$(date): Moving $app_identifier to $current_workspace"
-
-    # Move all windows of this app to current workspace
-    echo "$(date): Searching for all windows of: $app_identifier"
 
     # First, get all matching window IDs into an array
     local window_ids=()
     while IFS= read -r window_line; do
-        # Check if this window line contains our app identifier
         if echo "$window_line" | grep -q "$app_identifier"; then
             local window_id
             window_id=$(echo "$window_line" | awk '{print $1}')
@@ -102,11 +126,15 @@ main() {
 
     # Move each configured app (pipe-separated for multiple apps)
     IFS='|' read -ra app_list <<<"$apps"
-    for app in "${app_list[@]}"; do
+    for app_entry in "${app_list[@]}"; do
+        app="${app_entry%%:*}"
+        flags="${app_entry#*:}"
+        [[ "$flags" == "$app" ]] && flags=""  # no colon present
+
         echo "$(date): Processing app: '$app'"
         echo "DEBUG: Processing app: '$app'"
         if [[ -n "$app" ]]; then
-            move_app_to_workspace "$app" "$current_workspace"
+            move_app_to_workspace "$app" "$current_workspace" "$flags"
             echo "$(date): Finished processing $app"
         fi
     done

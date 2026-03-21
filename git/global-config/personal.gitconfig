@@ -5,15 +5,36 @@
 	autoSetupRemote = true
 [core]
 	autocrlf = input
+[merge]
+	conflictStyle = zdiff3
 [pull]
-	rebase = false
+	rebase = true
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
 [include]
-  path = ~/.config/difftastic/difft.gitconfig
+	path = ~/.config/difftastic/difft.gitconfig
 [rerere]
 	enabled = true
 
+# Work specific
+[trace2]
+	eventTarget = af_unix:/Users/mcrouch/.gittrace/trace.sock
+	eventBrief = true
+	eventNesting = 1
+	configparams = custom.metacommands
+[githooks]
+	installDir = /Users/mcrouch/.githooks
+	runner = /Users/mcrouch/.githooks/release/base-template.sh
+	cloneUrl = https://github.com/rycus86/githooks.git
+	cloneBranch = master
+[githooks "autoupdate"]
+	enabled = true
+[alias]
+	hooks = !"/Users/mcrouch/.githooks/bin/githooks"
+
+# Set to use workemail in this directory for commits
+[includeIf "gitdir:~/dev/atlassian/"]
+	path = ~/.gitconfig_work
