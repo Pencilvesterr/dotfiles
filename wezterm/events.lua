@@ -29,16 +29,76 @@ local SSH_BACKGROUND = {
   },
 }
 
--- Prefix the tab title with the SSH domain name when the pane is remote.
-wezterm.on("format-tab-title", function(tab)
-  local pane = tab.active_pane
-  local domain = pane.domain_name
+-- Process name → nerd font icon mapping
+local PROCESS_ICONS = {
+  nvim    = wezterm.nerdfonts.custom_vim,
+  vim     = wezterm.nerdfonts.custom_vim,
+  zsh     = wezterm.nerdfonts.dev_terminal,
+  bash    = wezterm.nerdfonts.dev_terminal,
+  fish    = wezterm.nerdfonts.dev_terminal,
+  ssh     = wezterm.nerdfonts.md_server_network,
+  git     = wezterm.nerdfonts.dev_git,
+  python  = wezterm.nerdfonts.dev_python,
+  python3 = wezterm.nerdfonts.dev_python,
+  node    = wezterm.nerdfonts.dev_nodejs_small,
+  docker  = wezterm.nerdfonts.dev_docker,
+  lua     = wezterm.nerdfonts.seti_lua,
+  lazygit = wezterm.nerdfonts.dev_git,
+  htop    = wezterm.nerdfonts.md_chart_line,
+  btop    = wezterm.nerdfonts.md_chart_line,
+}
 
+local function get_process_icon(pane)
+  local proc = pane.foreground_process_name or ""
+  local name = proc:match("([^/\\]+)$") or ""
+  return PROCESS_ICONS[name:lower()] or wezterm.nerdfonts.md_console_line
+end
+
+-- Powerline separators (requires a nerd font or WezTerm's built-in symbol font)
+local LEFT_ARROW  = wezterm.nerdfonts.pl_right_hard_divider  --
+local RIGHT_ARROW = wezterm.nerdfonts.pl_left_hard_divider   --
+
+wezterm.on("format-tab-title", function(tab, _, _, _, _, max_width)
+  local pane   = tab.active_pane
+  local domain = pane.domain_name
+  local icon   = get_process_icon(pane)
+  local index  = tab.tab_index + 1
+
+  -- Build the visible title
+  local title = pane.title
   if domain ~= "local" then
-    return string.format("[%s] %s", domain, pane.title)
+    title = string.format("[%s] %s", domain, title)
   end
 
-  return pane.title
+  -- Truncate if needed (leave room for index, icon, separators, spaces)
+  local overhead = #tostring(index) + 5  -- " N: I title "
+  local budget   = max_width - overhead
+  if #title > budget then
+    title = title:sub(1, budget - 1) .. "…"
+  end
+
+  local label  = string.format(" %d: %s %s ", index, icon, title)
+  local is_active = tab.is_active
+
+  local bg      = is_active and "#88C0D0" or "#2E3440"
+  local fg      = is_active and "#2E3440" or "#6B7A8D"
+  local edge_bg = "#1a1e26"
+
+  return wezterm.format({
+    { Attribute = { Intensity = is_active and "Bold" or "Normal" } },
+    -- Left powerline arrow
+    { Background = { Color = edge_bg } },
+    { Foreground = { Color = bg } },
+    { Text = LEFT_ARROW },
+    -- Tab label
+    { Background = { Color = bg } },
+    { Foreground = { Color = fg } },
+    { Text = label },
+    -- Right powerline arrow
+    { Background = { Color = edge_bg } },
+    { Foreground = { Color = bg } },
+    { Text = RIGHT_ARROW },
+  })
 end)
 
 -- Prefix the window title with the SSH domain name when the active pane is remote,

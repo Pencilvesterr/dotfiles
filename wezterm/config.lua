@@ -21,10 +21,27 @@ config = {
 	tab_max_width = 50,
 	colors = {
 		tab_bar = {
+			background = "#1a1e26",
 			active_tab = {
-				-- I use a solarized dark theme; this gives a teal background to the active tab
-				fg_color = "#073642",
-				bg_color = "#2aa198",
+				bg_color = "#88C0D0",
+				fg_color = "#2E3440",
+				intensity = "Bold",
+			},
+			inactive_tab = {
+				bg_color = "#2E3440",
+				fg_color = "#6B7A8D",
+			},
+			inactive_tab_hover = {
+				bg_color = "#3B4252",
+				fg_color = "#D8DEE9",
+			},
+			new_tab = {
+				bg_color = "#1a1e26",
+				fg_color = "#4C566A",
+			},
+			new_tab_hover = {
+				bg_color = "#2E3440",
+				fg_color = "#88C0D0",
 			},
 		},
 	},
@@ -36,7 +53,7 @@ config = {
 	exit_behavior_messaging = "Brief",
 	adjust_window_size_when_changing_font_size = false,
 	enable_tab_bar = true,
-	use_fancy_tab_bar = true,
+	use_fancy_tab_bar = false,
 	window_decorations = "TITLE | RESIZE",
 	check_for_updates = false,
 	font_size = 12.5,
