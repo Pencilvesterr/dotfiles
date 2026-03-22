@@ -29,6 +29,18 @@ local SSH_BACKGROUND = {
   },
 }
 
+-- Prefix the tab title with the SSH domain name when the pane is remote.
+wezterm.on("format-tab-title", function(tab)
+  local pane = tab.active_pane
+  local domain = pane.domain_name
+
+  if domain ~= "local" then
+    return string.format("[%s] %s", domain, pane.title)
+  end
+
+  return pane.title
+end)
+
 -- Prefix the window title with the SSH domain name when the active pane is remote,
 -- so the host is visible in the OS window title and the dock/taskbar.
 wezterm.on("format-window-title", function(tab)
