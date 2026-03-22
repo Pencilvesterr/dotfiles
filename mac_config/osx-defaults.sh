@@ -86,6 +86,15 @@ apply_osx_system_defaults() {
     # Disable Cmd+Space Spotlight shortcut (frees it up for Alfred)
     # Hotkey 64 = Spotlight search (Cmd+Space), 65 = Spotlight window (Cmd+Option+Space)
     SPOTLIGHT_PLIST="$HOME/Library/Preferences/com.apple.symbolichotkeys.plist"
+
+    # Disable Mission Control / Spaces CTRL+Arrow shortcuts so terminal pane
+    # resize bindings (CTRL+Arrow) reach WezTerm instead of being swallowed by macOS.
+    # Hotkey IDs: 32 = Mission Control (^↑), 33 = App Exposé (^↓),
+    #             79 = Move left a space (^←), 80 = Move right a space (^→)
+    for HOTKEY_ID in 32 33 79 80; do
+        /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:${HOTKEY_ID}:enabled bool false" "$SPOTLIGHT_PLIST" 2>/dev/null \
+            || /usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:${HOTKEY_ID}:enabled bool false" "$SPOTLIGHT_PLIST"
+    done
     /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:64:enabled bool false" "$SPOTLIGHT_PLIST" 2>/dev/null \
         || /usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:64:enabled bool false" "$SPOTLIGHT_PLIST"
     /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:65:enabled bool false" "$SPOTLIGHT_PLIST" 2>/dev/null \
