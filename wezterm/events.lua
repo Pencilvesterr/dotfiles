@@ -62,6 +62,44 @@ end)
 --
 -- Also overrides the window background when the active pane is remote, giving an
 -- immediate whole-window visual cue that you're working on a non-local machine.
+-- Derive leader hints directly from the keymap definitions so they stay in sync.
+-- Any keymap entry with mods = "LEADER" and a description field is included.
+local LEADER_HINTS = (function()
+  local hints = {}
+  for _, map in ipairs(require("keymaps")) do
+    if map.mods == "LEADER" and map.description then
+      local display_key = map.key == "Space" and "SPC" or map.key
+      table.insert(hints, { display_key, map.description })
+    end
+  end
+  return hints
+end)()
+
+local function leader_status()
+  local parts = {
+    { Attribute = { Intensity = "Bold" } },
+    { Foreground = { Color = "#ECEFF4" } },
+    { Background = { Color = "#5E81AC" } },
+    { Text = " LEADER " },
+    { Foreground = { Color = "#D8DEE9" } },
+    { Background = { Color = "#2E3440" } },
+    { Text = " " },
+  }
+  for i, hint in ipairs(LEADER_HINTS) do
+    table.insert(parts, { Foreground = { Color = "#EBCB8B" } })
+    table.insert(parts, { Background = { Color = "#2E3440" } })
+    table.insert(parts, { Text = hint[1] })
+    table.insert(parts, { Foreground = { Color = "#D8DEE9" } })
+    table.insert(parts, { Text = ":" .. hint[2] })
+    if i < #LEADER_HINTS then
+      table.insert(parts, { Foreground = { Color = "#4C566A" } })
+      table.insert(parts, { Text = "  " })
+    end
+  end
+  table.insert(parts, { Text = " " })
+  return wezterm.format(parts)
+end
+
 wezterm.on("update-status", function(window, pane)
   -- Both get_metadata() and get_domain_name() can fail during mux connection
   -- before the pane is registered — bail out early and wait for the next tick.
@@ -74,12 +112,12 @@ wezterm.on("update-status", function(window, pane)
 
   local overrides = window:get_config_overrides() or {}
 
-  -- Apply the warm background overlay when the active pane is on a remote domain,
-  -- and revert to nil (default from config.lua) when local.
-  local new_bg = domain ~= "local" and SSH_BACKGROUND or nil
+  local leader_active = window:leader_is_active()
+
   -- Only call set_config_overrides when the background actually needs to change,
   -- to avoid a read-modify-write race that wipes transient overrides (e.g. the
   -- flash_selection colors set by CMD+C) on every status tick.
+  local new_bg = domain ~= "local" and SSH_BACKGROUND or nil
   if overrides.background ~= new_bg then
     overrides.background = new_bg
     window:set_config_overrides(overrides)
@@ -90,6 +128,12 @@ wezterm.on("update-status", function(window, pane)
     window:set_right_status(string.format("tardy: %5.1fs⏳", secs))
   else
     window:set_right_status("")
+  end
+
+  if leader_active then
+    window:set_left_status(leader_status())
+  else
+    window:set_left_status("")
   end
 end)
 

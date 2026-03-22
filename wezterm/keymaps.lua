@@ -56,6 +56,7 @@ key_map = {
 	{
 		mods = "LEADER",
 		key = "d",
+		description = "close",
 		action = wezterm.action.CloseCurrentPane({ confirm = false }),
 	},
 	{
@@ -90,29 +91,34 @@ key_map = {
 	{
 		mods = "LEADER",
 		key = "v",
+		description = "vsplit",
 		action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
 	},
 	{
 		mods = "LEADER",
 		key = "s",
+		description = "hsplit",
 		action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }),
 	},
 	-- Maximise current pane
 	{
 		mods = "LEADER",
 		key = "m",
+		description = "maximize",
 		action = wezterm.action.TogglePaneZoomState,
 	},
 	-- rotate panes
 	{
 		mods = "LEADER",
 		key = "Space",
+		description = "rotate",
 		action = wezterm.action.RotatePanes("Clockwise"),
 	},
 	-- show the pane selection mode, but have it swap the active and selected panes
 	{
 		mods = "LEADER",
 		key = "x",
+		description = "swap",
 		action = wezterm.action.PaneSelect({
 			mode = "SwapWithActive",
 		}),
@@ -183,6 +189,7 @@ key_map = {
 	{
 		mods = "LEADER",
 		key = "c",
+		description = "ssh",
 		action = wezterm.action_callback(function(window, pane)
 			local servers = require("servers")
 			local choices = {}
