@@ -13,7 +13,7 @@ config = {
 	default_cursor_style = "SteadyBar",
 	automatically_reload_config = true,
 	window_close_confirmation = "NeverPrompt",
-	hide_tab_bar_if_only_one_tab = true,
+	hide_tab_bar_if_only_one_tab = false,
 	macos_window_background_blur = 35,
 	-- Tab management
 	tab_bar_at_bottom = false, -- Make it look like tabs, with better GUI controls
@@ -93,7 +93,7 @@ config = {
 				saturation = 1.02,
 				brightness = 0.25,
 			},
-			attachment = { Parallax = 0.3 },
+			attachment = "Fixed",
 			width = "100%",
 			height = "100%",
 			opacity = 0.80,
