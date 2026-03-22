@@ -614,11 +614,6 @@ nmap gK <Action>(ParameterInfo)
 let g:WhichKeyDesc_goto_test = "gt Goto Test"
 nmap gt <Action>(GotoTest)
 
-let g:WhichKeyDesc_go_back = "gf Go Back"
-nmap gf <Action>(Back)
-
-let g:WhichKeyDesc_go_forward = "gb Go Forward"
-nmap gb <Action>(Forward)
 
 let g:WhichKeyDesc_goto_super = "gS Goto Super Method (Interface/Parent)"
 nmap gS <Action>(GotoSuperMethod)
