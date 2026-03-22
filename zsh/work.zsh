@@ -14,11 +14,44 @@ export PATH="/opt/homebrew/opt/util-linux/bin:$PATH"
 export PATH="/opt/atlassian/bin:$PATH"
 
 # -------------------------------------------------------------------
-# NVM - installed via homebrew
+# NVM - installed via homebrew, lazy loaded for fast startup
 # -------------------------------------------------------------------
 export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+typeset -g _NVM_LOADED=0
+
+_nvm_do_init() {
+  if (( _NVM_LOADED )); then
+    return 0
+  fi
+  _NVM_LOADED=1
+
+  # Remove wrapper functions - no longer needed after init
+  unfunction nvm node npm npx yarn pnpm ninit 2>/dev/null
+
+  # Load nvm (must run in current shell, cannot be backgrounded)
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+}
+
+# Wrapper functions for immediate use (trigger init on first call)
+nvm()   { _nvm_do_init; nvm   "$@" }
+node()  { _nvm_do_init; command node  "$@" }
+npm()   { _nvm_do_init; command npm   "$@" }
+npx()   { _nvm_do_init; command npx   "$@" }
+yarn()  { _nvm_do_init; command yarn  "$@" }
+pnpm()  { _nvm_do_init; command pnpm  "$@" }
+ninit() { _nvm_do_init; echo "✓ nvm initialized" }
+
+# Set node PATH immediately for scripts that need node without triggering full init
+# Only works if default alias points directly to a version (not an lts/* alias)
+if [[ -s "$NVM_DIR/alias/default" ]]; then
+  _nvm_default=$(< "$NVM_DIR/alias/default")
+  if [[ "$_nvm_default" == v* ]] && [[ -d "$NVM_DIR/versions/node/$_nvm_default" ]]; then
+    export PATH="$NVM_DIR/versions/node/$_nvm_default/bin:$PATH"
+  fi
+  unset _nvm_default
+fi
 
 # -------------------------------------------------------------------
 # jenv - Background lazy loading for fast startup

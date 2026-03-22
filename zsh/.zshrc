@@ -2,7 +2,6 @@
 # > Start of code to profile
 # zmodload zsh/zprof
 
-
 # Custom zsh (.zshrc equivalent)
 [ -f "$HOME/.config/zsh/custom.zsh" ] && source "$HOME/.config/zsh/custom.zsh"
 
