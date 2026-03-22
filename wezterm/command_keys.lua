@@ -11,23 +11,16 @@ local super_vim_keys_map = {
 }
 
 local function flash_selection(win)
-	local effective = win:effective_config()
-	local orig_fg = effective.colors and effective.colors.selection_fg
-	local orig_bg = effective.colors and effective.colors.selection_bg
-
-	win:set_config_overrides({
-		colors = {
-			selection_fg = "#282c35",
-			selection_bg = "#a3be8c",
-		},
-	})
+	local overrides = win:get_config_overrides() or {}
+	overrides.colors = {
+		selection_fg = "#282c35",
+		selection_bg = "#a3be8c",
+	}
+	win:set_config_overrides(overrides)
 	wezterm.time.call_after(0.15, function()
-		win:set_config_overrides({
-			colors = {
-				selection_fg = orig_fg,
-				selection_bg = orig_bg,
-			},
-		})
+		local cur = win:get_config_overrides() or {}
+		cur.colors = nil
+		win:set_config_overrides(cur)
 	end)
 end
 

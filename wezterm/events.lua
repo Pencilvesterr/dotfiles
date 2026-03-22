@@ -76,12 +76,14 @@ wezterm.on("update-status", function(window, pane)
 
   -- Apply the warm background overlay when the active pane is on a remote domain,
   -- and revert to nil (default from config.lua) when local.
-  if domain ~= "local" then
-    overrides.background = SSH_BACKGROUND
-  else
-    overrides.background = nil
+  local new_bg = domain ~= "local" and SSH_BACKGROUND or nil
+  -- Only call set_config_overrides when the background actually needs to change,
+  -- to avoid a read-modify-write race that wipes transient overrides (e.g. the
+  -- flash_selection colors set by CMD+C) on every status tick.
+  if overrides.background ~= new_bg then
+    overrides.background = new_bg
+    window:set_config_overrides(overrides)
   end
-  window:set_config_overrides(overrides)
 
   if meta.is_tardy then
     local secs = meta.since_last_response_ms / 1000.0
