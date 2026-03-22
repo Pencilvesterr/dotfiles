@@ -174,6 +174,33 @@ key_map = {
 	},
 	-- For claude code 
 	{key="Enter", mods="SHIFT", action=wezterm.action{SendString="\x1b\r"}},
+	-- List SSH domains and attach the selected one in a new window
+	{
+		mods = "LEADER",
+		key = "c",
+		action = wezterm.action_callback(function(window, pane)
+			local servers = require("servers")
+			local choices = {}
+			for _, domain in ipairs(servers.ssh_domains) do
+				table.insert(choices, { label = domain.name, id = domain.name })
+			end
+			window:perform_action(
+				wezterm.action.InputSelector({
+					title = "Connect to SSH Domain",
+					choices = choices,
+					action = wezterm.action_callback(function(win, p, id, _)
+						if id then
+							win:perform_action(wezterm.action.SpawnCommandInNewWindow({
+								domain = { DomainName = id },
+							}), p)
+						end
+					end),
+				}),
+				pane
+			)
+		end),
+	},
+
 	-- Add copy and paste as normal. TODO: Could look into using the built in like above
 	require("command_keys").bind_super_key_to_vim("x"),
 	require("command_keys").bind_super_key_to_vim("c"),

@@ -41,6 +41,12 @@ config = {
 	check_for_updates = false,
 	font_size = 12.5,
 	font = wezterm.font("JetBrains Mono", { weight = "Bold" }),
+	inactive_pane_hsb = {
+		hue = 0.9,
+		saturation = 0.9,
+		brightness = 0.8,
+	},
+
 	window_padding = {
 		left = 10,
 		right = 10,
