@@ -32,7 +32,7 @@ config = {
 	switch_to_last_active_tab_when_closing_tab = true,
 
 	-- Exit code behaviour
-	exit_behavior = "Hold",
+	exit_behavior = "CloseOnCleanExit",
 	exit_behavior_messaging = "Brief",
 	adjust_window_size_when_changing_font_size = false,
 	enable_tab_bar = true,
@@ -42,9 +42,9 @@ config = {
 	font_size = 12.5,
 	font = wezterm.font("JetBrains Mono", { weight = "Bold" }),
 	inactive_pane_hsb = {
-		hue = 0.9,
-		saturation = 0.9,
-		brightness = 0.8,
+		hue = 0.95,
+		saturation = 0.95,
+		brightness = 0.7,
 	},
 
 	window_padding = {
