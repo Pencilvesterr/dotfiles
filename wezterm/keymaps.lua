@@ -56,7 +56,12 @@ key_map = {
 	{
 		mods = "LEADER",
 		key = "d",
-		action = wezterm.action.CloseCurrentPane({ confirm = true }),
+		action = wezterm.action.CloseCurrentPane({ confirm = false }),
+	},
+	{
+		mods = "CMD",
+		key = "d",
+		action = wezterm.action.CloseCurrentPane({ confirm = false }),
 	},
 
 	-- Shortcut for opening a temrinal window
