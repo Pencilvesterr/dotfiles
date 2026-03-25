@@ -20,6 +20,7 @@ brew "FelixKratz/formulae/borders"
 cask "stats" # System monitor in top bar
 cask "arc" # Web browser
 cask "nikitabobko/tap/aerospace"
+cask "gifcapture"
 cask "alfred"
 cask "betterdisplay"
 cask "bitwarden"

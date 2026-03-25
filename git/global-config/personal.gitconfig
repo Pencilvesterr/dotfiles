@@ -35,9 +35,9 @@
 	cloneBranch = master
 [githooks "autoupdate"]
 	enabled = true
-	lastrun = 1773881418
+	lastrun = 1774329367
 [alias]
-	hooks = !"/Users/mcrouch/.githooks/bin/githooks"
+	hooks = !\"/Users/mcrouch/.githooks/bin/githooks\"
 
 # Set to use work email in this directory for commits
 [includeIf "gitdir:~/dev/atlassian/"]
