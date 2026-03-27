@@ -17,6 +17,11 @@ vim.keymap.set({ "n", "v" }, "c", '"_c')
 
 vim.keymap.del("n", "<c-/>")
 
+-- Toggle zoom (match IdeaVim <leader>uu "hide all windows" intent)
+vim.keymap.set("n", "<leader>uu", function()
+  Snacks.toggle.zoom():toggle()
+end, { desc = "Toggle Zoom" })
+
 -- Close current buffer
 vim.keymap.set("n", "<leader><delete>", function()
   Snacks.bufdelete()
