@@ -34,11 +34,14 @@
       "Edit(**/.env.*)"
     ]
   },
+  "model": "sonnet",
   "statusLine": {
     "type": "command",
     "command": "npx -y ccstatusline@latest",
     "padding": 0
   },
   "effortLevel": "medium",
-  "model": "sonnet"
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true
+  }
 }
