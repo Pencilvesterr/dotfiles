@@ -97,6 +97,8 @@ alias gb='git branch'
 alias gcob='git checkout -b'
 alias grh='git reset --hard'
 alias grhu='git reset --hard @{u}'
+# TODO: See if this is useful? Can just use grh
+alias grho='git reset --hard origin/'
 alias grs='git reset --soft'
 alias gcl='git clone'
 alias gf='git fetch'
