@@ -4,7 +4,9 @@
       "Read",
       "Bash",
       "WebFetch",
-      "WebSearch"
+      "WebSearch",
+      "Glob",
+      "Grep"
     ],
     "deny": [
       "Read(~/.ssh/**)",
@@ -20,7 +22,6 @@
       "Bash(git checkout *)",
       "Bash(git clean *)",
       "Bash(git branch -D *)",
-      "Bash(git push --force *)",
       "Bash(git rebase *)",
       "Bash(sudo *)",
       "Bash(kill *)",
@@ -28,8 +29,6 @@
       "Bash(pkill *)",
       "Bash(chmod *)",
       "Bash(chown *)",
-      "Read(**/.env)",
-      "Read(**/.env.*)",
       "Edit(**/.env)",
       "Edit(**/.env.*)"
     ]
@@ -41,7 +40,5 @@
     "padding": 0
   },
   "effortLevel": "medium",
-  "enabledPlugins": {
-    "superpowers@claude-plugins-official": true
-  }
+  "model": "sonnet"
 }
