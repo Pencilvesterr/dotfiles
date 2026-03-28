@@ -13,6 +13,22 @@ export PATH="/opt/homebrew/opt/util-linux/bin:$PATH"
 # Setting up atlas
 export PATH="/opt/atlassian/bin:$PATH"
 
+# Helper function for jira git worktrees
+# TODO: Reevaluate if this is used 
+gwj() {
+  # Create a work tree in a directory matching a branch name
+  if [ -z "$1" ]; then
+    echo "Usage: gwj <branch-name>"
+    return 1
+  fi
+  local branch_name="$1"
+  git worktree add -b issue/$branch_name ../$branch_name
+  cd ../$branch_name
+  ./jmake idea	--sparse # setup ide settings in the new tree
+  cd -
+}
+
+
 # -------------------------------------------------------------------
 # NVM - installed via homebrew, lazy loaded for fast startup
 # -------------------------------------------------------------------
