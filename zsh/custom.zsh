@@ -13,6 +13,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   export HOMEBREW_NO_AUTO_UPDATE=1
 fi
 
+# Setup direnv
+eval "$(direnv hook zsh)"
 
 
 # Poetry
