@@ -35,7 +35,7 @@
 	cloneBranch = master
 [githooks "autoupdate"]
 	enabled = true
-	lastrun = 1774578797
+	lastrun = 1774849781
 [alias]
 	hooks = !\"/Users/mcrouch/.githooks/bin/githooks\"
 
