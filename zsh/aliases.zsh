@@ -76,14 +76,14 @@ alias gdfzf='git diff --name-only | fzf -m --print0 | xargs -0 -o -t git diff'
 alias gcofzf='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''NF && !seen[$0]++'\'' | fzf | xargs -r git checkout'
 
 alias ga='git add'
+# Copying lazygit
 alias gp='git pull'
+alias gP='git push'
 alias yoink="git pull"
-alias gpo='git pull origin'
-alias gpu='git push'
 alias yeet="git push"
 alias gl='git log --all --decorate --oneline --graph'
 # Pretty log graph
-alias glog='git log --graph --oneline --all'
+alias glog='git log --graph --pretty=format:'\''%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'\'' --abbrev-commit'
 alias gs='git status'
 # Git status short format
 alias gss="git status -s"
