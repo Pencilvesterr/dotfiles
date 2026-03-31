@@ -149,15 +149,29 @@ gcou() {
         echo "Usage: gcou <branch-name>"
         return 1
     fi
-    # Confirm that they want to do this, as it will discard local changes
-    echo "⚠️  This will discard any local changes on branch '$1' and reset it to match 'origin/$1'. Are you sure? (y/N)"
-    read -r response
-    if [[ ! "$response" =~ ^[Yy]$ ]]; then
-        echo "Aborting."
-        return 1
+    git fetch
+    # Check if the branch has local changes (uncommitted or unpushed commits) that would be lost
+    local has_changes=false
+    if git rev-parse --verify "$1" &>/dev/null; then
+        # Branch exists locally — check for uncommitted changes or commits not on origin
+        if ! git diff --quiet "$1" 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
+            has_changes=true
+        elif git rev-parse --verify "origin/$1" &>/dev/null; then
+            local unpushed
+            unpushed=$(git rev-list "origin/$1".."$1" --count 2>/dev/null)
+            [[ "$unpushed" -gt 0 ]] && has_changes=true
+        fi
     fi
-    echo
-    git fetch && git checkout "$1" && git reset --hard "origin/$1"
+    if [[ "$has_changes" == true ]]; then
+        echo "⚠️  This will discard local changes on branch '$1' and reset it to match 'origin/$1'. Are you sure? (y/N)"
+        read -r response
+        if [[ ! "$response" =~ ^[Yy]$ ]]; then
+            echo "Aborting."
+            return 1
+        fi
+        echo
+    fi
+    git checkout "$1" && git reset --hard "origin/$1"
 }
 
 # -------------------------------------------------------------------
