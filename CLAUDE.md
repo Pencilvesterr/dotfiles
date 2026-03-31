@@ -34,12 +34,12 @@ This is a personal dotfiles repository for macOS and Linux development environme
 ./scripts/brew-install-custom.sh
 
 # Or install a specific Brewfile
-brew bundle install --file=homebrew/Brewfile
-brew bundle install --file=homebrew/Brewfile.work
-brew bundle install --file=homebrew/Brewfile.personal
+brew bundle install --file=homebrew/Brewfile.terminal
+brew bundle install --file=homebrew/Brewfile.mac_work
+brew bundle install --file=homebrew/Brewfile.mac_personal
 
 # Check if Brewfile dependencies are satisfied
-brew bundle check --file=homebrew/Brewfile
+brew bundle check --file=homebrew/Brewfile.terminal
 ```
 
 ### Aerospace Window Management
@@ -79,7 +79,7 @@ The core installation mechanism uses **symlinks** via `scripts/links.sh`:
 ├── vscode/            # VS Code settings
 ├── idea/              # IntelliJ IDEA vim plugin configuration
 ├── homebrew/          # Homebrew package definitions
-│   ├── Brewfile           # Shared packages
+│   ├── Brewfile.terminal  # CLI tools
 │   ├── Brewfile.personal  # Personal-only packages
 │   ├── Brewfile.work      # Work-only packages
 │   ├── custom-casks/      # Custom version casks
@@ -126,11 +126,11 @@ Zsh config is split into modular files for maintainability:
 ## Adding New Software
 
 1. Add the package to the appropriate Brewfile:
-   - `homebrew/Brewfile` - Shared across personal and work
+   - `homebrew/Brewfile.terminal` - Shared across personal and work
    - `homebrew/Brewfile.personal` - Personal machines only
    - `homebrew/Brewfile.work` - Work machines only
 
-2. Install with: `./scripts/brew-install-custom.sh` or `brew bundle install --file=homebrew/Brewfile`
+2. Install with: `./scripts/brew-install-custom.sh` or `brew bundle install --file=homebrew/Brewfile.terminal`
 
 3. For specific package versions:
    - Find the Ruby formula/cask in Homebrew's commit history

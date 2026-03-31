@@ -6,7 +6,6 @@ brew "fzf"
 brew "git"
 brew "git-lfs"
 brew "node"
-brew "poetry"
 brew "pre-commit"
 brew "htop" # show cpu usage in terminal
 brew "ranger" # r to navigate the file system

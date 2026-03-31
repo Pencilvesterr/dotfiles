@@ -9,6 +9,7 @@ brew "gradle"
 brew "uv"
 brew "terraform"
 brew "nvm"
+brew "poetry"
 
 cask "postman"
 cask "aldente"

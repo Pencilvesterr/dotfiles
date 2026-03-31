@@ -61,7 +61,7 @@ install_platform_apps() {
             info "Installing Apps"
             info "===================="
 
-            install_brewfile "$REPO_DIR/homebrew/Brewfile"
+            install_brewfile "$REPO_DIR/homebrew/Brewfile.terminal"
             install_brewfile "$REPO_DIR/homebrew/Brewfile.mac"
             if [[ "$is_work_machine" == "y" ]]; then
                 info "Installing work Brewfile"
@@ -83,10 +83,10 @@ install_platform_apps() {
 
             printf "\n"
             info "===================="
-            info "Installing Apps"
+            info "Installing CLI tools"
             info "===================="
 
-            install_brewfile "$REPO_DIR/homebrew/Brewfile"
+            install_brewfile "$REPO_DIR/homebrew/Brewfile.terminal"
 
             printf "\n"
             info "===================="

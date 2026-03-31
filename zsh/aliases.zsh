@@ -177,11 +177,6 @@ gcou() {
 # -------------------------------------------------------------------
 # Updating built-ins
 # -------------------------------------------------------------------
-## Use zoxide instead of cd
-#if command -v z &> /dev/null; then
-#    alias cd=z
-#fi
-
 alias del='echo Moving to ~/.Trash/ ...; mv -i $* ~/.Trash/'
 
 # Safe options, this could be dangerous for other apps that aren't expecting these
