@@ -54,6 +54,9 @@ else
   compinit -C -d "$ZSH_COMPDUMP"
 fi
 
+# Start zoxide
+eval "$(zoxide init zsh)"
+
 
 # If using git-auto-fetch plugin, sets interval to fetch changes
 export GIT_AUTO_FETCH_INTERVAL=1200 # in seconds
