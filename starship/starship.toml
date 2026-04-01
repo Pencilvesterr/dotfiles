@@ -115,7 +115,7 @@ $character"""
 # === Settings
 
 add_newline = true
-command_timeout = 200
+command_timeout = 500
 palette = "nord"
 
 # === Colour
@@ -224,6 +224,7 @@ format = '[$symbol]($style)'
 
 [cmd_duration]
 min_time = 200
+show_milliseconds=true
 style = 'fg:gray'
 format = '[$duration]($style)'
 
