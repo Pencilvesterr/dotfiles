@@ -54,7 +54,7 @@ else
   compinit -C -d "$ZSH_COMPDUMP"
 fi
 
-# Start zoxide
+# Start zoxide, needs to come after compinit for completion to work
 eval "$(zoxide init zsh)"
 
 
