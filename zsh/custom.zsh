@@ -11,6 +11,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   # Homebrew
   eval "$(/opt/homebrew/bin/brew shellenv)"
   export HOMEBREW_NO_AUTO_UPDATE=1
+else
+  # Homebrew on Linux
+  if [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  elif [[ -x "$HOME/.linuxbrew/bin/brew" ]]; then
+    eval "$($HOME/.linuxbrew/bin/brew shellenv)"
+  fi
 fi
 
 # Setup direnv
@@ -67,12 +74,9 @@ if [[ ! $zsh_plugins -nt ${ZDOTDIR:-~}/.zsh_plugins.txt ]]; then
 fi
 source $zsh_plugins
 
-# Plugin settings set in `plugin_settings.zsh`
-
-
 # Fix history search key bindings for partial search
-bindkey '^[[A' history-substring-search-up 
-bindkey '^[[B' history-substring-search-down 
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
 HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1

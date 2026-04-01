@@ -103,19 +103,25 @@ install_platform_apps() {
 
         install_brewfile "$REPO_DIR/homebrew/Brewfile.terminal"
 
+        printf "\n"
+        info "===================="
+        info "Installing Linux-specific non-brew CLI tools"
+        info "===================="
+        install_linux_cli_tools
+
         if [[ "$terminal_only" == "y" ]]; then return; fi
 
         printf "\n"
         info "===================="
         info "Installing Linux-specific Apps"
         info "===================="
-
-        install_linux_cli_tools
         install_linux_apps
     fi
 }
 
 apply_platform_defaults() {
+    if [[ "$terminal_only" == "y" ]]; then return; fi
+
     if [[ "$OSTYPE" == "darwin"* ]]; then
         printf "\n"
         info "===================="
