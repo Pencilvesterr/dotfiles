@@ -56,14 +56,13 @@ export ZSH_DOTENV_PROMPT=false
 # Source zstyles you might use with antidote.
 [[ -e ${ZDOTDIR:-~}/.zstyles ]] && source ${ZDOTDIR:-~}/.zstyles
 
-# Clone antidote if necessary.
-[[ -d ${ZDOTDIR:-~}/.antidote ]] ||
-  git clone https://github.com/mattmc3/antidote ${ZDOTDIR:-~}/.antidote
+# Load antidote binary
+source $(brew --prefix)/opt/antidote/share/antidote/antidote.zsh
 
 # Cache antidote plugins for faster startup
 zsh_plugins=${ZDOTDIR:-~}/.zsh_plugins.zsh
 if [[ ! $zsh_plugins -nt ${ZDOTDIR:-~}/.zsh_plugins.txt ]]; then
-  source ${ZDOTDIR:-~}/.antidote/antidote.zsh
+  echo "Caching antidote plugins for faster startup..."
   antidote bundle <${ZDOTDIR:-~}/.zsh_plugins.txt >|$zsh_plugins
 fi
 source $zsh_plugins

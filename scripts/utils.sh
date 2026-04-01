@@ -26,7 +26,7 @@ warning() {
 # Returns 0 if the current user is 'mcrouch', 1 otherwise.
 # Usage: if detect_work_machine; then ...; fi
 detect_work_machine() {
-    if [ "$(whoami)" = "mcrouch" ]; then
+    if command -v atlas &> /dev/null; then
         info "Work machine detected"
         return 0
     fi

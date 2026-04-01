@@ -14,12 +14,25 @@ SOFTLINKS_CONFIG="$REPO_DIR/softlinks_config.conf"
 SOFTLINKS_MAC_CONFIG="$REPO_DIR/softlinks_config_mac.conf"
 SOFTLINKS_WORK_CONFIG="$REPO_DIR/softlinks_config_work.conf"
 
+terminal_only="n"
+for arg in "$@"; do
+    case "$arg" in
+        --terminal-only) terminal_only="y" ;;
+    esac
+done
 
 prompt_user_options() {
     if detect_work_machine; then
         is_work_machine="y"
     else
         is_work_machine="n"
+    fi
+
+    if [[ "$terminal_only" == "y" ]]; then
+        overwrite_dotfiles="y"
+        install_apps="y"
+        info "Terminal-only mode: overwriting dotfiles and installing Brewfile.terminal only."
+        return
     fi
 
     printf "\n"
@@ -45,57 +58,60 @@ prompt_user_options() {
 }
 
 install_platform_apps() {
+    if [[ "$install_apps" != "y" ]]; then return; fi
+
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        if [[ "$install_apps" == "y" ]]; then
-            printf "\n"
-            info "===================="
-            info "Setting Up Prerequisites"
-            info "===================="
+        printf "\n"
+        info "===================="
+        info "Setting Up Prerequisites"
+        info "===================="
 
-            install_xcode
-            install_homebrew
-            install_non_homebrew
+        install_xcode
+        install_homebrew
+        install_non_homebrew
 
-            printf "\n"
-            info "===================="
-            info "Installing Apps"
-            info "===================="
+        printf "\n"
+        info "===================="
+        info "Installing Apps"
+        info "===================="
 
-            install_brewfile "$REPO_DIR/homebrew/Brewfile.terminal"
-            install_brewfile "$REPO_DIR/homebrew/Brewfile.mac"
-            if [[ "$is_work_machine" == "y" ]]; then
-                info "Installing work Brewfile"
-                install_brewfile "$REPO_DIR/homebrew/Brewfile.work"
-            else
-                info "Installing personal Brewfile"
-                install_brewfile "$REPO_DIR/homebrew/Brewfile.personal"
-            fi
+        install_brewfile "$REPO_DIR/homebrew/Brewfile.terminal"
+
+        if [[ "$terminal_only" == "y" ]]; then return; fi
+
+        install_brewfile "$REPO_DIR/homebrew/Brewfile.mac"
+        if [[ "$is_work_machine" == "y" ]]; then
+            info "Installing work Brewfile"
+            install_brewfile "$REPO_DIR/homebrew/Brewfile.mac_work"
+        else
+            info "Installing personal Brewfile"
+            install_brewfile "$REPO_DIR/homebrew/Brewfile.mac_personal"
         fi
     else
-        if [[ "$install_apps" == "y" ]]; then
-            printf "\n"
-            info "===================="
-            info "Setting Up Prerequisites"
-            info "===================="
+        printf "\n"
+        info "===================="
+        info "Setting Up Prerequisites"
+        info "===================="
 
-            install_linux_prerequisites
-            install_homebrew
+        install_linux_prerequisites
+        install_homebrew
 
-            printf "\n"
-            info "===================="
-            info "Installing CLI tools"
-            info "===================="
+        printf "\n"
+        info "===================="
+        info "Installing CLI tools"
+        info "===================="
 
-            install_brewfile "$REPO_DIR/homebrew/Brewfile.terminal"
+        install_brewfile "$REPO_DIR/homebrew/Brewfile.terminal"
 
-            printf "\n"
-            info "===================="
-            info "Installing Linux-specific Apps"
-            info "===================="
+        if [[ "$terminal_only" == "y" ]]; then return; fi
 
-            install_linux_cli_tools
-            install_linux_apps
-        fi
+        printf "\n"
+        info "===================="
+        info "Installing Linux-specific Apps"
+        info "===================="
+
+        install_linux_cli_tools
+        install_linux_apps
     fi
 }
 
