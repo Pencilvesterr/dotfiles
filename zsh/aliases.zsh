@@ -144,23 +144,19 @@ gco() {
 }
 # Checkout and reset branch to origin, useful for quickly syncing with remote
 gcou() {
-    # verify a sting has been given as a param
+    # verify a string has been given as a param
     if [ -z "$1" ]; then
         echo "Usage: gcou <branch-name>"
         return 1
     fi
-    git fetch
-    # Check if the branch has local changes (uncommitted or unpushed commits) that would be lost
+    # Check for changes that would be lost on reset (uses stale remote refs — fetch happens below)
     local has_changes=false
-    if git rev-parse --verify "$1" &>/dev/null; then
-        # Branch exists locally — check for uncommitted changes or commits not on origin
-        if ! git diff --quiet "$1" 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
-            has_changes=true
-        elif git rev-parse --verify "origin/$1" &>/dev/null; then
-            local unpushed
-            unpushed=$(git rev-list "origin/$1".."$1" --count 2>/dev/null)
-            [[ "$unpushed" -gt 0 ]] && has_changes=true
-        fi
+    if ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
+        has_changes=true
+    elif [[ "$(git branch --show-current)" == "$1" ]] && git rev-parse --verify "origin/$1" &>/dev/null; then
+        local unpushed
+        unpushed=$(git rev-list "origin/$1".."$1" --count 2>/dev/null)
+        [[ "$unpushed" -gt 0 ]] && has_changes=true
     fi
     if [[ "$has_changes" == true ]]; then
         echo "⚠️  This will discard local changes on branch '$1' and reset it to match 'origin/$1'. Are you sure? (y/N)"
@@ -171,7 +167,7 @@ gcou() {
         fi
         echo
     fi
-    git checkout "$1" && git reset --hard "origin/$1"
+    git fetch && git checkout "$1" && git reset --hard "origin/$1"
 }
 
 # -------------------------------------------------------------------
