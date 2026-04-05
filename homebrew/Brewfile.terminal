@@ -4,11 +4,9 @@ brew "coreutils"
 brew "eza" # Modern, maintained replacement for ls
 brew "fzf"
 brew "git-lfs"
-brew "node"
 brew "pre-commit"
 brew "htop" # show cpu usage in terminal
 brew "ranger" # r to navigate the file system
-brew "ripgrep"
 brew "speedtest-cli"
 brew "starship" # Zsh theme
 brew "tldr"
@@ -18,10 +16,12 @@ brew "difftastic" # Defaulting for git diff
 brew "zoxide" # Better cd
 brew "antidote" # Zsh plugin manager
 brew "direnv" # Allows you to setup .envrc for sourcing env values in a dir
+brew "fd" # `fd` - Modern "find" command for finding files/directories
+brew "ripgrep" # `rg` - Modern grep command for finding text in files
+
 
 # Neovim + LazyVim setup
 brew "neovim"
-brew "tree-sitter-cli" # Required for lazyvim
-brew "fd" # Alternative to find in CLI
+brew "tree-sitter-cli" # Required for lazyvim, possibly outdated?
 brew "lazygit" # Git UI
 brew "luarocks"
