@@ -64,6 +64,11 @@ key_map = {
 		key = "d",
 		action = wezterm.action.CloseCurrentPane({ confirm = false }),
 	},
+	{
+		mods = "CMD",
+		key = "w",
+		action = wezterm.action.CloseCurrentTab({ confirm = false }),
+	},
 
 	-- Shortcut for opening a temrinal window
 	{
@@ -170,6 +175,13 @@ key_map = {
 		key = "s",
 		mods = "CMD",
 		action = wezterm.action({ SendString = "\x1b:w\n" }),
+	},
+
+	-- Clear terminal
+	{
+		key = "k",
+		mods = "CMD",
+		action = wezterm.action.ClearScrollback("ScrollbackAndViewport"),
 	},
 
 	-- Font Zoom
