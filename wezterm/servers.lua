@@ -7,8 +7,13 @@ M.ssh_domains = {
 		username = "morgan",
 	},
 	{
+		name = "desktop-server",
+		remote_address = "192.168.1.245",
+		username = "morgan",
+	},
+	{
 		name = "devenv_work",
-		remote_address = "10.70.174.63",
+		remote_address = "devenv",
 		username = "ubuntu",
 		ssh_option = {
 			identityfile = "~/.cache/atlassian/remote-dev-env/ssh/id_rsa_rde",
