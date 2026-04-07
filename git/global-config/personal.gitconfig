@@ -20,25 +20,3 @@
 	path = ~/.config/difftastic/difft.gitconfig
 [rerere]
 	enabled = true
-
-# Work specific - kept here because work tooling auto-manages these
-# sections when it detects them in the global .gitconfig
-[trace2]
-	eventTarget = af_unix:/Users/mcrouch/.gittrace/trace.sock
-	eventBrief = true
-	eventNesting = 1
-	configparams = custom.metacommands
-[githooks]
-	installDir = /Users/mcrouch/.githooks
-	runner = /Users/mcrouch/.githooks/release/base-template.sh
-	cloneUrl = https://github.com/rycus86/githooks.git
-	cloneBranch = master
-[githooks "autoupdate"]
-	enabled = true
-	lastrun = 1775005587
-[alias]
-	hooks = !\"/Users/mcrouch/.githooks/bin/githooks\"
-
-# Set to use work email in this directory for commits
-[includeIf "gitdir:~/dev/atlassian/"]
-	path = ~/.gitconfig_work
