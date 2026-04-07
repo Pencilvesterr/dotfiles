@@ -2,7 +2,7 @@
   //
   // === Appearance ===
   //
-  "workbench.colorTheme": "Default Dark Modern",
+  "workbench.colorTheme": "Dark Modern",
   "workbench.iconTheme": "vscode-icons",
   "vsicons.presets.foldersAllDefaultIcon": true,
   "vsicons.presets.hideExplorerArrows": true,
