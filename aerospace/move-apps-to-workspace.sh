@@ -10,7 +10,10 @@ set -e
 get_apps_for_workspace() {
     case "$1" in
     *"Slack"*)
-        echo "Slack|WhatsApp"
+        echo "Slack"
+        ;;
+    *"WhatsApp"*)
+        echo "WhatsApp"
         ;;
     *"Zoom+Postman"*)
         echo "zoom.us"
