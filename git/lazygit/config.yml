@@ -1,5 +1,7 @@
 gui:
   showIcons: true
+os:
+  editPreset: nvim
 git:
   pagers:
     - externalDiffCommand: difft --color=always --display=side-by-side
