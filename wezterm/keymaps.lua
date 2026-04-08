@@ -172,6 +172,13 @@ key_map = {
 		action = wezterm.action({ SendString = "\x1b:w\n" }),
 	},
 
+	-- CMD+K to clear scrollback (like macOS terminal)
+	{
+		key = "k",
+		mods = "CMD",
+		action = wezterm.action.ClearScrollback("ScrollbackAndViewport"),
+	},
+
 	-- Font Zoom
 	{
 		key = "+",
