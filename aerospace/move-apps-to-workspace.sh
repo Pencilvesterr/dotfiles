@@ -66,7 +66,7 @@ move_app_to_workspace() {
 
     if [[ "$new_window" == "true" ]]; then
         echo "$(date): Opening new window for $app_identifier"
-        osascript -e "tell application \"$app_identifier\" to make new window" 2>/dev/null || \
+        osascript -e "tell application \"$app_identifier\" to make new window" 2>/dev/null ||
             open -a "$app_identifier"
         return 0
     fi
@@ -132,7 +132,7 @@ main() {
     for app_entry in "${app_list[@]}"; do
         app="${app_entry%%:*}"
         flags="${app_entry#*:}"
-        [[ "$flags" == "$app" ]] && flags=""  # no colon present
+        [[ "$flags" == "$app" ]] && flags="" # no colon present
 
         echo "$(date): Processing app: '$app'"
         echo "DEBUG: Processing app: '$app'"
