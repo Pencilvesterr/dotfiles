@@ -105,6 +105,7 @@ alias gf='git fetch'
 # Show recent branch history
 alias gbranches='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''NF && !seen[$0]++'\'' | head ${1} | cat -n'
 # Fetch and rebase off the origin version of a branch
+alias lg='lazygit'
 greo() {
     if [ -z "$1" ]; then
         echo "Usage: greo <branch-name>"
@@ -186,6 +187,13 @@ alias pip='pip3'
 # -------------------------------------------------------------------
 # Misc
 # -------------------------------------------------------------------
+# Find a file with fd and open it in nvim
+fvim() {
+  local file
+  file=$(fd --type f | fzf --query "${1:-}" --preview "bat --color=always {}")
+  [[ -n "$file" ]] && nvim "$file"
+}
+
 # Ranger
 alias r=". ranger"
 alias dc="docker compose"
