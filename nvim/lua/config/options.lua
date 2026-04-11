@@ -1,6 +1,8 @@
 -- Options are automatically loaded before lazy.nvim startup
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 
+vim.opt.timeoutlen = 0 -- Show which-key popup immediately
+
 -- Options for edgy.nvim
 -- views can only be fully collapsed with the global statusline
 vim.opt.laststatus = 2 -- Show a status line below every split

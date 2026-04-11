@@ -6,7 +6,7 @@ return {
   opts = function(_, opts)
     opts.window.mappings["P"] = { "toggle_preview", config = { use_float = true } }
 
-    opts.sources = { "filesystem", "buffers", "git_status", "diagnostics" }
+    opts.sources = { "filesystem", "buffers", "git_status" }
     opts.source_selector = {
       winbar = true, -- Toggle to show selector on winbar
       content_layout = "center",
@@ -16,7 +16,6 @@ return {
         { source = "filesystem", display_name = "󰉓" },
         { source = "buffers", display_name = "󰈙" },
         { source = "git_status", display_name = "" },
-        { source = "diagnostics", display_name = "󰒡" },
       },
     }
     opts.filesystem.filtered_items = {

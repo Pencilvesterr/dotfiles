@@ -31,7 +31,7 @@ local function split_nav(resize_or_move, key)
 			else
 				-- Run the wezterm action on the terminal panes
 				if resize_or_move == "resize" then
-					win:perform_action({ AdjustPaneSize = { direction_keys[key], 3 } }, pane)
+					win:perform_action({ AdjustPaneSize = { direction_keys[key], 15 } }, pane)
 				else
 					win:perform_action({ ActivatePaneDirection = direction_keys[key] }, pane)
 				end
@@ -177,7 +177,7 @@ key_map = {
 		action = wezterm.action({ SendString = "\x1b:w\n" }),
 	},
 
-	-- Clear terminal
+	-- CMD+K to clear scrollback (like macOS terminal)
 	{
 		key = "k",
 		mods = "CMD",
@@ -204,7 +204,7 @@ key_map = {
 		description = "ssh",
 		action = wezterm.action_callback(function(window, pane)
 			local servers = require("servers")
-			local choices = {}
+			local choices = { { label = "local", id = "local" } }
 			for _, domain in ipairs(servers.ssh_domains) do
 				table.insert(choices, { label = domain.name, id = domain.name })
 			end

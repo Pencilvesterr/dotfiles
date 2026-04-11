@@ -3,8 +3,8 @@ return {
     "mfussenegger/nvim-lint",
     opts = {
       linters = {
-        markdownlint = {
-          args = { "--disable", "MD013", "--" },
+        ["markdownlint-cli2"] = {
+          args = { "--config", vim.fn.stdpath("config") .. "/.markdownlint-cli2.yaml", "--" },
         },
       },
     },

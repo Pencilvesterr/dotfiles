@@ -12,6 +12,7 @@ REPO_DIR="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 
 SOFTLINKS_CONFIG="$REPO_DIR/softlinks_config.conf"
 SOFTLINKS_MAC_CONFIG="$REPO_DIR/softlinks_config_mac.conf"
+SOFTLINKS_PERSONAL_CONFIG="$REPO_DIR/softlinks_config_personal.conf"
 SOFTLINKS_WORK_CONFIG="$REPO_DIR/softlinks_config_work.conf"
 
 terminal_only="n"
@@ -45,6 +46,7 @@ prompt_user_options() {
         diff_configs+=("$SOFTLINKS_WORK_CONFIG")
         info "Comparing with work dotfiles..."
     else
+        diff_configs+=("$SOFTLINKS_PERSONAL_CONFIG")
         info "Comparing with personal dotfiles..."
     fi
     ./scripts/links.sh --show-diffs "${diff_configs[@]}" || _diffs_exit=$?
@@ -162,6 +164,8 @@ setup_links() {
     fi
     if [[ "$is_work_machine" == "y" ]]; then
         configs+=("$SOFTLINKS_WORK_CONFIG")
+    elif [[ "$terminal_only" != "y" ]]; then
+        configs+=("$SOFTLINKS_PERSONAL_CONFIG")
     fi
 
     for config in "${configs[@]}"; do
