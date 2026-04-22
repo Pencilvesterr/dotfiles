@@ -214,6 +214,7 @@ setup_managed_files
 success "Dotfiles set up successfully."
 
 printf "\n"
-
-info "Restarting zsh to apply changes..."
-exec zsh
+if [[ -t 0 ]]; then
+  info "Restarting zsh to apply changes..."
+  exec zsh
+fi
