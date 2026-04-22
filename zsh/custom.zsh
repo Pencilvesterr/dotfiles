@@ -100,7 +100,7 @@ zle_highlight=('paste:none')
 # TODO: Look into adding https://github.com/softmoth/zsh-vim-mode
 bindkey -v
 export KEYTIMEOUT=1 # Makes switching modes quicker
-export VI_MODE_SET_CURSOR=true 
+export VI_MODE_SET_CURSOR=true
 
 # Change the cursor to block or beam depending on insert mode
 function zle-keymap-select {
@@ -141,5 +141,3 @@ bindkey "^[b" backward-word
 # Default WORDCHARS is: *?_-.[]~=/&;!#$%^(){}<>
 WORDCHARS=''
 
-# Setup fixit, the fuck replacement
-eval "$(fixit init --name fuck zsh)"

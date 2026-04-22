@@ -2,10 +2,6 @@
 
 # Sources
 tap "felixkratz/formulae"
-tap "eugene-babichenko/fixit"
-
-# macOS-only CLI
-brew "eugene-babichenko/fixit/fixit" # The fuck replacement
 brew "terminal-notifier"
 brew "mas" # Mac application store
 brew "gnu-tar" # Provides the ability to tar files

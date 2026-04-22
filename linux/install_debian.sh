@@ -47,15 +47,6 @@ install_linux_cli_tools() {
         info "Docker is already installed."
     fi
 
-    info "Checking for fixit..."
-    if ! command -v fixit &> /dev/null; then
-        echo "deb [arch=$(dpkg --print-architecture) trusted=yes] https://eugene-babichenko.github.io/fixit/ppa ./" | sudo tee /etc/apt/sources.list.d/fixit.list > /dev/null
-        sudo apt update
-        sudo apt install fixit
-    else
-        info "fixit is already installed."
-    fi
-
     info "Checking for OpenSSH Server..."
     # Check if sshd service is active or if package is installed
     if ! dpkg -s openssh-server &> /dev/null && ! systemctl is-active --quiet sshd; then
