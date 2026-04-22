@@ -39,6 +39,7 @@ $git_state\
 $git_metrics\
 $git_status\
 $fill\
+$cmd_duration\
 $pijul_channel\
 $docker_context\
 $cmake\
@@ -100,7 +101,6 @@ $env_var\
 $crystal\
 $custom\
 $sudo\
-$cmd_duration\
 $line_break\
 $jobs\
 $battery\
@@ -224,9 +224,9 @@ format = '[$symbol]($style)'
 
 [cmd_duration]
 min_time = 200
-show_milliseconds=true
+show_milliseconds = true
 style = 'fg:gray'
-format = '[$duration]($style)'
+format = '[$duration]($style) '
 
 [palettes.nord]
 dark_blue = '#5E81AC'
