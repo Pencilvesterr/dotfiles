@@ -27,6 +27,10 @@ vim.keymap.set("n", "<leader><delete>", function()
   Snacks.bufdelete()
 end, { desc = "Close Buffer" })
 
+-- Alt+Right forward word (WezTerm sends \x1bf which nvim sees as <M-f>;
+-- without this, <Esc>f triggers the find-char command instead)
+vim.keymap.set({ "n", "o", "x" }, "<M-f>", "<cmd>lua require('spider').motion('w')<CR>", { desc = "Move forward one word" })
+
 -- Add keymaps for upper text naigation
 vim.keymap.set({ "n", "v" }, "L", "$") -- TODO: Why doesn't this work with d command to delete the reset of the line
 vim.keymap.set({ "n", "v" }, "H", "^")
