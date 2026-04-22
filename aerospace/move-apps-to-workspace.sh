@@ -58,7 +58,7 @@ move_app_to_workspace() {
     echo "$(date): Checking app: $app_identifier for workspace: $current_workspace"
 
     if [[ "$skip_if_present" == "true" ]]; then
-        if aerospace list-windows --workspace "$current_workspace" 2>/dev/null | grep -q "$app_identifier"; then
+        if aerospace list-windows --workspace "$current_workspace" 2>/dev/null | awk -F'|' '{print $2}' | grep -q "$app_identifier"; then
             echo "$(date): $app_identifier already in $current_workspace, skipping"
             return 0
         fi
@@ -72,7 +72,7 @@ move_app_to_workspace() {
     fi
 
     # Check if app exists globally
-    if ! aerospace list-windows --all | grep -q "$app_identifier"; then
+    if ! aerospace list-windows --all | awk -F'|' '{print $2}' | grep -q "$app_identifier"; then
         echo "$(date): $app_identifier not running, skipping"
         return 0 # App not running, skip silently
     fi
@@ -82,7 +82,7 @@ move_app_to_workspace() {
     # First, get all matching window IDs into an array
     local window_ids=()
     while IFS= read -r window_line; do
-        if echo "$window_line" | grep -q "$app_identifier"; then
+        if echo "$window_line" | awk -F'|' '{print $2}' | grep -q "$app_identifier"; then
             local window_id
             window_id=$(echo "$window_line" | awk '{print $1}')
             window_ids+=("$window_id")
