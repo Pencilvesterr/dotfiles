@@ -166,6 +166,7 @@ gcou() {
             echo "Aborting."
             return 1
         fi
+        git reset --hard
         echo
     fi
     git fetch && git checkout "$1" && git reset --hard "origin/$1"
