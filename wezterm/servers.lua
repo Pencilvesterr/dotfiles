@@ -13,13 +13,8 @@ M.ssh_domains = {
 	},
 	{
 		name = "devenv_work",
-		remote_address = "devenv",
+		remote_address = "morgan-v4",
 		username = "ubuntu",
-		ssh_option = {
-			identityfile = "~/.cache/atlassian/remote-dev-env/ssh/id_rsa_rde",
-			stricthostkeychecking = "no",
-			userknownhostsfile = "/dev/null",
-		},
 	},
 }
 
