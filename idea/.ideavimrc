@@ -20,7 +20,7 @@ let mapleader = " "
 let maplocalleader = "\\"
 
 " Base Settings (from original backup)
-set scrolloff=10 " Number of lines to leave on screen before scrolling (original preference)
+set scrolloff=999 " Number of lines to leave on screen before scrolling (original preference)
 set nu " Show line numbers
 set relativenumber " Relative line numbers (LazyVim addition)
 set showmode " Status bar
