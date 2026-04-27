@@ -31,6 +31,10 @@ end, { desc = "Close Buffer" })
 -- without this, <Esc>f triggers the find-char command instead)
 vim.keymap.set({ "n", "o", "x" }, "<M-f>", "<cmd>lua require('spider').motion('w')<CR>", { desc = "Move forward one word" })
 
+-- Keep cursor centered when scrolling half-page
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+
 -- Add keymaps for upper text naigation
 vim.keymap.set({ "n", "v" }, "L", "$") -- TODO: Why doesn't this work with d command to delete the reset of the line
 vim.keymap.set({ "n", "v" }, "H", "^")

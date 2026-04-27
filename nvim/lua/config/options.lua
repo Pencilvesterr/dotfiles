@@ -2,6 +2,7 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 
 vim.opt.timeoutlen = 0 -- Show which-key popup immediately
+vim.opt.scrolloff = 10 -- Match IdeaVim: keep 10 lines between cursor and screen edge
 
 -- Options for edgy.nvim
 -- views can only be fully collapsed with the global statusline
