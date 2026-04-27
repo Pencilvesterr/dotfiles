@@ -38,6 +38,7 @@ $git_commit\
 $git_state\
 $git_metrics\
 $git_status\
+$cmd_duration\
 $fill\
 $cmd_duration\
 $pijul_channel\
