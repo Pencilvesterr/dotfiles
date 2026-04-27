@@ -148,6 +148,7 @@ Plug 'junegunn/vim-peekaboo'
 Plug 'dbakker/vim-paragraph-motion'
 " " Highlight copied text
 Plug 'machakann/vim-highlightedyank'
+Plug 'vuciv/golf'
 call plug#end()
 
 " Setting bottomr vim-airline theme
@@ -178,8 +179,8 @@ nnoremap z zz
 nnoremap G Gzz
 nnoremap gg ggzz
 " nnoremap <C-f> <C-f>zz
-" nnoremap <C-d> <C-d>zz
-" nnoremap <C-u> <C-u>zz
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
 " nnoremap <C-b> <C-b>zz
 nnoremap <CR> :noh<CR><CR>
 
