@@ -34,13 +34,6 @@
     ]
   },
   "model": "sonnet",
-  "statusLine": {
-    "type": "command",
-    "command": "npx -y ccstatusline@latest",
-    "padding": 0
-  },
-  "effortLevel": "medium",
-  "model": "sonnet",
   "hooks": {
     "Notification": [
       {
@@ -59,10 +52,16 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ \"$(uname)\" = \"Darwin\" ] && osascript -e 'tell application \"System Events\" to set frontApp to name of first application process whose frontmost is true' -e 'if frontApp is not in {\"wezterm-gui\", \"idea\"} then display notification \"Done \u2014 ready for your next message\" with title \"Claude Code\" sound name \"Glass\"' || true"
+            "command": "[ \"$(uname)\" = \"Darwin\" ] && osascript -e 'tell application \"System Events\" to set frontApp to name of first application process whose frontmost is true' -e 'if frontApp is not in {\"wezterm-gui\", \"idea\"} then display notification \"Done — ready for your next message\" with title \"Claude Code\" sound name \"Glass\"' || true"
           }
         ]
       }
     ]
-  }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccstatusline@latest",
+    "padding": 0
+  },
+  "effortLevel": "medium"
 }
