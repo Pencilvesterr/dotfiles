@@ -3,7 +3,6 @@ brew "bat"
 brew "coreutils"
 brew "eza" # Modern, maintained replacement for ls
 brew "fzf"
-brew "git-lfs"
 brew "pre-commit"
 brew "htop" # show cpu usage in terminal
 brew "ranger" # r to navigate the file system
