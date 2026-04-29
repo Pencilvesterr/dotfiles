@@ -188,6 +188,36 @@ setup_local_overrides() {
 
     info "Marking zsh/local.zsh as skip-worktree (local changes will not be tracked)..."
     git -C "$REPO_DIR" update-index --skip-worktree zsh/local.zsh
+
+    if [[ "$is_work_machine" == "y" ]]; then
+        # work.gitconfig is symlinked to ~/.gitconfig. Work tooling auto-appends
+        # machine-specific sections ([trace2], [githooks], etc.) below the
+        # "# Work specific" marker. skip-worktree stops git from seeing those
+        # changes in git status or accidentally overwriting the file on
+        # git checkout. To commit intentional changes: temporarily disable with
+        # `git update-index --no-skip-worktree git/global-config/work.gitconfig`,
+        # stage and commit, then re-enable.
+        info "Marking git/global-config/work.gitconfig as skip-worktree (work tooling manages sections below line 27)..."
+        git -C "$REPO_DIR" update-index --skip-worktree git/global-config/work.gitconfig
+    fi
+}
+
+setup_git_filters() {
+    printf "\n"
+    info "===================="
+    info "Git Filters"
+    info "===================="
+
+    # Safety net for work.gitconfig: if skip-worktree is ever disabled and the
+    # file is manually staged, this clean filter strips everything from the
+    # "# Work specific" marker onward so the work-tooling sections ([trace2],
+    # [githooks], etc.) can never accidentally land in a commit.
+    # The smudge filter is a no-op — git never rewrites the file on checkout.
+    # .gitattributes routes work.gitconfig through this filter (committed).
+    # The filter definition lives in .git/config because it is machine-local.
+    info "Registering 'strip-work-tooling' git filter for work.gitconfig..."
+    git -C "$REPO_DIR" config filter.strip-work-tooling.clean "sed '/^# Work specific - kept here/,\$d'"
+    git -C "$REPO_DIR" config filter.strip-work-tooling.smudge cat
 }
 
 setup_managed_files() {
@@ -210,6 +240,7 @@ apply_platform_defaults
 setup_terminal
 setup_links
 setup_local_overrides
+setup_git_filters
 setup_managed_files
 success "Dotfiles set up successfully."
 

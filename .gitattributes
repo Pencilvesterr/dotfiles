@@ -1,0 +1,5 @@
+# Work tooling auto-appends machine-specific sections to work.gitconfig (e.g.
+# [trace2], [githooks]). The clean filter strips those before commits so only
+# intentional config is tracked. The filter itself is registered in .git/config
+# by install.sh — see setup_git_filters() for details.
+git/global-config/work.gitconfig filter=strip-work-tooling
