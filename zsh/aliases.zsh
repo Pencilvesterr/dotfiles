@@ -79,6 +79,7 @@ alias ga='git add'
 # Copying lazygit
 alias gp='git pull'
 alias gP='git push'
+alias gPf='git push --force'
 alias yoink="git pull"
 alias yeet="git push"
 alias gl='git log --all --decorate --oneline --graph'
