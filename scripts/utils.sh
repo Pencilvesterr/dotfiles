@@ -1,10 +1,14 @@
 #!/bin/bash
 
-default_color=$(tput sgr 0)
-red="$(tput setaf 1)"
-yellow="$(tput setaf 3)"
-green="$(tput setaf 2)"
-blue="$(tput setaf 4)"
+if [[ -z "${NO_COLOR:-}" ]]; then
+    default_color=$(tput sgr 0)
+    red="$(tput setaf 1)"
+    yellow="$(tput setaf 3)"
+    green="$(tput setaf 2)"
+    blue="$(tput setaf 4)"
+else
+    default_color="" red="" yellow="" green="" blue=""
+fi
 
 info() {
     printf "%s==> %s%s\n" "$blue" "$1" "$default_color"
