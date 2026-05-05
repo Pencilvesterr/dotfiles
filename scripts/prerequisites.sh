@@ -19,6 +19,10 @@ install_linux_prerequisites() {
     info "Installing Linux prerequisites for Homebrew..."
     sudo apt-get update
     sudo apt-get install -y build-essential procps curl file git
+
+    info "Pre-creating Homebrew prefix so the installer doesn't need sudo..."
+    sudo mkdir -p /home/linuxbrew/.linuxbrew
+    sudo chown -R "$USER:$(id -gn)" /home/linuxbrew
 }
 
 install_homebrew() {
