@@ -27,9 +27,9 @@ get_apps_for_workspace() {
     *"Bitwarden"*)
         echo "Bitwarden"
         ;;
-    *"Browser"*)
-        echo "Arc:skip_if_present+new_window"
-        ;;
+    # *"Browser"*)
+    #     echo "Arc:skip_if_present+new_window"
+    #     ;;
     *"Mail"*)
         echo "Mail"
         ;;
