@@ -1,4 +1,52 @@
 {
+  "effortLevel": "high",
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "command": "[ \"$(uname)\" = \"Darwin\" ] \u0026\u0026 osascript -e 'tell application \"System Events\" to set frontApp to name of first application process whose frontmost is true' -e 'if frontApp is not in {\"wezterm-gui\", \"idea\"} then display notification \"Claude needs your attention\" with title \"Claude Code\" sound name \"Glass\"' || true",
+            "type": "command"
+          }
+        ],
+        "matcher": ""
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/mcrouch/.claude/hooks/aloc-managed/post_to_aloc.sh",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/mcrouch/.claude/hooks/aloc-managed/post_to_aloc.sh",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "[ \"$(uname)\" = \"Darwin\" ] \u0026\u0026 osascript -e 'tell application \"System Events\" to set frontApp to name of first application process whose frontmost is true' -e 'if frontApp is not in {\"wezterm-gui\", \"idea\"} then display notification \"Done — ready for your next message\" with title \"Claude Code\" sound name \"Glass\"' || true",
+            "type": "command"
+          }
+        ],
+        "matcher": ""
+      }
+    ]
+  },
+  "model": "sonnet",
   "permissions": {
     "allow": [
       "Read",
@@ -7,12 +55,6 @@
       "WebSearch",
       "Glob",
       "Grep"
-    ],
-    "deny": [
-      "Read(~/.ssh/**)",
-      "Read(~/.gnupg/**)",
-      "Edit(~/.ssh/**)",
-      "Edit(~/.gnupg/**)"
     ],
     "ask": [
       "Bash(rm -rf *)",
@@ -31,37 +73,17 @@
       "Bash(chown *)",
       "Edit(**/.env)",
       "Edit(**/.env.*)"
-    ]
-  },
-  "model": "sonnet",
-  "hooks": {
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "[ \"$(uname)\" = \"Darwin\" ] && osascript -e 'tell application \"System Events\" to set frontApp to name of first application process whose frontmost is true' -e 'if frontApp is not in {\"wezterm-gui\", \"idea\"} then display notification \"Claude needs your attention\" with title \"Claude Code\" sound name \"Glass\"' || true"
-          }
-        ]
-      }
     ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "[ \"$(uname)\" = \"Darwin\" ] && osascript -e 'tell application \"System Events\" to set frontApp to name of first application process whose frontmost is true' -e 'if frontApp is not in {\"wezterm-gui\", \"idea\"} then display notification \"Done — ready for your next message\" with title \"Claude Code\" sound name \"Glass\"' || true"
-          }
-        ]
-      }
+    "deny": [
+      "Read(~/.ssh/**)",
+      "Read(~/.gnupg/**)",
+      "Edit(~/.ssh/**)",
+      "Edit(~/.gnupg/**)"
     ]
   },
   "statusLine": {
-    "type": "command",
     "command": "npx -y ccstatusline@latest",
-    "padding": 0
-  },
-  "effortLevel": "medium"
+    "padding": 0,
+    "type": "command"
+  }
 }
