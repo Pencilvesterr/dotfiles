@@ -98,11 +98,11 @@ alias gb='git branch'
 alias gcob='git checkout -b'
 alias grh='git reset --hard'
 alias grhu='git reset --hard @{u}'
-# TODO: See if this is useful? Can just use grh
 alias grho='git reset --hard origin/'
 alias grs='git reset --soft'
 alias gcl='git clone'
 alias gf='git fetch'
+alias gfreo='git fetch && git rebase origin/'
 # Show recent branch history
 alias gbranches='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''NF && !seen[$0]++'\'' | head ${1} | cat -n'
 # Fetch and rebase off the origin version of a branch
