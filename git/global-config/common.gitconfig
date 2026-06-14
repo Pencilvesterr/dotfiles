@@ -1,0 +1,39 @@
+# Commands
+[merge]
+	conflictStyle = zdiff3
+[diff]
+    external = difft
+[include]
+	path = ~/.config/difftastic/difft.gitconfig
+[push]
+    default = simple
+	autoSetupRemote = true
+[fetch]
+    prune = true
+    pruneTags = true
+[pull]
+	rebase = true
+[rebase]
+    autoSquash = true
+    autoStash = true
+    updateRefs = true
+[branch]
+    sort = -committerdate
+[tag]
+    sort = version:refname
+
+# Misc
+[help]
+    autocorrect = prompt
+[rerere]
+	enabled = true
+	autoupdate = true
+[core]
+	autocrlf = input
+[column]
+    ui = auto
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
