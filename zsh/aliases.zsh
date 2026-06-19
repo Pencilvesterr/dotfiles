@@ -173,6 +173,13 @@ gcou() {
     git fetch && git checkout "$1" && git reset --hard "origin/$1"
 }
 
+# Force fetch a branch not in the .git/config allow list and track it's remote
+gf-override() {
+     git -C ../jira-full fetch origin "refs/heads/$1:refs/remotes/origin/$1" &&
+     git branch "$1" "origin/$1"
+}
+
+
 # -------------------------------------------------------------------
 # Updating built-ins
 # -------------------------------------------------------------------
@@ -180,9 +187,6 @@ alias del='echo Moving to ~/.Trash/ ...; mv -i $* ~/.Trash/'
 
 # Safe options, this could be dangerous for other apps that aren't expecting these
 alias rm='rm -i'
-alias mv='mv -i'
-alias cp='cp -i'
-
 alias python='python3'
 alias pip='pip3'
 
