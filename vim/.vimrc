@@ -57,7 +57,7 @@ set showmatch
 
 
 " ------ CURSOR & SCROLLING -------
-set scrolloff=20
+set scrolloff=15
 set backspace=indent,eol,start
 
 " Cursor shape: steady bar in insert, steady block in normal, underline in replace
@@ -99,6 +99,11 @@ vnoremap c ""c
 xnoremap p "_dP
 xnoremap P "_dP
 
+" Copy and paste to system clipboard with command key (WezTerm sends these char sequences)
+vnoremap <Char-0xAB> "+x
+nnoremap <Char-0xAB> yydd
+vnoremap <Char-0xAC> "+y
+nnoremap <Char-0xAC> "+y
 
 " ------ MAPPINGS -------
 " Ensure space isn't mapped to anything before making it the leader key
@@ -130,11 +135,6 @@ inoremap <F1> <ESC>:set invfullscreen<CR>a
 nnoremap <F1> :set invfullscreen<CR>
 vnoremap <F1> :set invfullscreen<CR>
 
-" Copy and paste to system clipboard with command key (WezTerm sends these char sequences)
-vnoremap <Char-0xAB> "+x
-nnoremap <Char-0xAB> yydd
-vnoremap <Char-0xAC> "+y
-nnoremap <Char-0xAC> "+y
 
 
 " ------ PLUGINS -------
@@ -163,7 +163,7 @@ Plug 'junegunn/vim-peekaboo'
 Plug 'dbakker/vim-paragraph-motion'
 " Highlight copied text
 Plug 'machakann/vim-highlightedyank'
-Plug 'vuciv/golf'
+" Press s and then two chars to highlight/jump to that position
 Plug 'easymotion/vim-easymotion'
 call plug#end()
 
