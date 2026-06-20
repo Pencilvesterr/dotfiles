@@ -17,6 +17,8 @@ brew "antidote" # Zsh plugin manager
 brew "direnv" # Allows you to setup .envrc for sourcing env values in a dir
 brew "fd" # `fd` - Modern "find" command for finding files/directories
 brew "ripgrep" # `rg` - Modern grep command for finding text in files
+brew "yamllint" # yamllinting 
+brew "jq" # Json linting
 
 
 # Neovim + LazyVim setup
