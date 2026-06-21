@@ -16,6 +16,7 @@ alias vi='vim' # Mask builtin with better default
 # -------------------------------------------------------------------
 # Git
 # -------------------------------------------------------------------
+alias lg=lazygit
 # List all git aliases for easy discovery
 # Git helper function - shows aliases and functions on --help
 _g_print_aliases() {
