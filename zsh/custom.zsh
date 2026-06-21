@@ -21,7 +21,7 @@ else
 fi
 
 # Setup direnv
-# eval "$(direnv hook zsh)"
+eval "$(direnv hook zsh)"
 
 
 # Poetry
