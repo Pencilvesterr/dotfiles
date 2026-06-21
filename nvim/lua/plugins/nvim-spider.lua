@@ -1,6 +1,7 @@
 -- Description: Fix w,b,e when working with CamelCase and snake_case
 return {
   "chrisgrieser/nvim-spider",
+  enabled = false,
   opts = {},
   keys = {
     {
