@@ -99,8 +99,7 @@ for sync_config in "${SYNC_CONFIG_FILES[@]}"; do
 
         # Always pull the system version — sync files are owned by the app, not the repo
         cp "$target" "$source"
-        git add "$rel_source"
-        echo "==> Pulled system version and staged: $rel_source"
+        echo "==> Pulled system version (not staged): $rel_source"
         echo "    (from: $target)"
 
     done < "$sync_config"
