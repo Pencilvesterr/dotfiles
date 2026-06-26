@@ -1,3 +1,4 @@
+-- Vim training, open with :VimBeBetter 
 return {
   "szymonwilczek/vim-be-better",
   config = function()
