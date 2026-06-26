@@ -60,6 +60,8 @@ g() {
 
     _g_print_functions "$file"
 }
+
+alias lg='lazygit'
 # List all git aliases
 alias galiases='g'
 # Git add with fzf
@@ -101,20 +103,14 @@ alias grh='git reset --hard'
 alias grhu='git reset --hard @{u}'
 alias grho='git reset --hard origin/'
 alias grs='git reset --soft'
+alias grb='git rebase'
+# alias doesn't automatically fetch
+alias grbo='git rebase origin/'
 alias gcl='git clone'
 alias gf='git fetch'
-alias gfreo='git fetch && git rebase origin/'
+alias gfrbo='git fetch && git rebase origin/'
 # Show recent branch history
 alias gbranches='git reflog | grep checkout | cut -d '\'' '\'' -f 8 | awk '\''NF && !seen[$0]++'\'' | head ${1} | cat -n'
-# Fetch and rebase off the origin version of a branch
-alias lg='lazygit'
-greo() {
-    if [ -z "$1" ]; then
-        echo "Usage: greo <branch-name>"
-        return 1
-    fi
-    git fetch && git rebase "origin/$1"
-}
 
 # Will work to checkout main or master, even if I get it wrong
 gco() {
@@ -195,7 +191,13 @@ alias pip='pip3'
 # Misc
 # -------------------------------------------------------------------
 # Find a file with fd and open it in nvim
-fvim() {
+fdvim() {
+  local file
+  file=$(fd --type f | fzf --query "${1:-}" --preview "bat --color=always {}")
+  [[ -n "$file" ]] && vim "$file"
+}
+
+fdnvim() {
   local file
   file=$(fd --type f | fzf --query "${1:-}" --preview "bat --color=always {}")
   [[ -n "$file" ]] && nvim "$file"
