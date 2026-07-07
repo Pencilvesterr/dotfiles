@@ -6,7 +6,7 @@ set -e
 # Used for apps that are used in other workspaces frequently, but should be moved to the current workspace when switching into it
 
 # Configuration: Get apps for workspace using case statement
-# Note,ordering  matters. Last one will be on top
+# Note: ordering matters. Last one will be on top
 get_apps_for_workspace() {
     case "$1" in
     *"Slack"*)
@@ -108,22 +108,14 @@ main() {
     current_workspace=$(aerospace list-workspaces --focused)
 
     echo "$(date): Current workspace: $current_workspace"
-    echo "DEBUG: Current workspace: $current_workspace"
 
-    # Test associative array access with error handling
-    echo "$(date): Testing associative array access"
-
-    # Get apps for this workspace using function instead of associative array
+    # Get apps for this workspace
     local apps
     apps=$(get_apps_for_workspace "$current_workspace")
-    echo "$(date): get_apps_for_workspace returned: '$apps'"
-
     echo "$(date): Apps configured: '$apps'"
-    echo "DEBUG: Apps configured for this workspace: '$apps'"
 
     if [[ -z "$apps" ]]; then
         echo "$(date): No apps configured, exiting"
-        echo "DEBUG: No apps configured, exiting"
         exit 0 # No apps configured for this workspace
     fi
 
@@ -135,7 +127,6 @@ main() {
         [[ "$flags" == "$app" ]] && flags="" # no colon present
 
         echo "$(date): Processing app: '$app'"
-        echo "DEBUG: Processing app: '$app'"
         if [[ -n "$app" ]]; then
             move_app_to_workspace "$app" "$current_workspace" "$flags"
             echo "$(date): Finished processing $app"
