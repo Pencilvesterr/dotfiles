@@ -1,0 +1,35 @@
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run shellcheck
+        run: |
+          shellcheck -S warning \
+            install.sh \
+            scripts/*.sh \
+            linux/*.sh \
+            mac_config/*.sh \
+            claude/hooks/*.sh \
+            aerospace/*.sh \
+            git/hooks/pre-commit
+
+  zsh-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install zsh
+        run: sudo apt-get update && sudo apt-get install -y zsh
+      - name: Check zsh file syntax
+        run: |
+          for f in zsh/*.zsh zsh/.zshrc zsh/.zshenv zsh/.zprofile; do
+            echo "checking $f"
+            zsh -n "$f"
+          done
