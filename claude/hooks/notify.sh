@@ -1,6 +1,6 @@
 #!/bin/bash
-# macOS: show a notification unless the app running Claude Code is frontmost.
-# Other platforms: push a notification via ntfy (no frontmost-app concept).
+# macOS: always show a notification.
+# Other platforms: push a notification via ntfy.
 # Usage: notify.sh "<message template>" — a %s in the template is replaced
 # with the name of the app running Claude Code (macOS) or the hostname (ntfy).
 
@@ -14,19 +14,15 @@ if [ "$(uname)" != "Darwin" ]; then
 fi
 
 case "$TERM_PROGRAM" in
-  WezTerm) sysEventsName="wezterm-gui"; runningApp="WezTerm" ;;
-  iTerm.app) sysEventsName="iTerm2"; runningApp="iTerm2" ;;
-  Apple_Terminal) sysEventsName="Terminal"; runningApp="Terminal" ;;
-  vscode) sysEventsName="Code"; runningApp="VS Code" ;;
-  ""|JetBrains-JediTerm) sysEventsName="idea"; runningApp="IntelliJ IDEA" ;;
-  *) sysEventsName="$TERM_PROGRAM"; runningApp="$TERM_PROGRAM" ;;
+  WezTerm) runningApp="WezTerm" ;;
+  iTerm.app) runningApp="iTerm2" ;;
+  Apple_Terminal) runningApp="Terminal" ;;
+  vscode) runningApp="VS Code" ;;
+  ""|JetBrains-JediTerm) runningApp="IntelliJ IDEA" ;;
+  *) runningApp="$TERM_PROGRAM" ;;
 esac
 
-frontApp=$(osascript -e 'tell application "System Events" to get name of first application process whose frontmost is true')
-
-if [ "$frontApp" != "$sysEventsName" ]; then
-  msg=$(printf -- "$1" "$runningApp")
-  osascript -e 'on run argv' -e 'display notification (item 1 of argv) with title "Claude Code" sound name "Glass"' -e 'end run' "$msg"
-fi
+msg=$(printf -- "$1" "$runningApp")
+osascript -e 'on run argv' -e 'display notification (item 1 of argv) with title "Claude Code" sound name "Glass"' -e 'end run' "$msg"
 
 exit 0
