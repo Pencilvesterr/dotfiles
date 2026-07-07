@@ -45,16 +45,14 @@
         "backgroundColor": "ansi256:75"
       },
       {
-        "id": "1257d7ff-9766-4a87-b7ee-b8c225677138",
-        "type": "session-usage",
-        "color": "ansi256:251",
-        "backgroundColor": "ansi256:237"
+        "id": "f1af5c81-9839-4319-af39-e027540f27a3",
+        "type": "tokens-cached",
+        "backgroundColor": "bgYellow"
       },
       {
-        "id": "6ae0c4e7-a30b-43c9-be8c-ba7368ec4699",
-        "type": "weekly-usage",
-        "color": "ansi256:235",
-        "backgroundColor": "ansi256:114"
+        "id": "2d7f165a-1fd0-429e-b0cc-2fc9021bfac4",
+        "type": "session-cost",
+        "backgroundColor": "bgBrightWhite"
       }
     ]
   ],
