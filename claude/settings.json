@@ -3,67 +3,6 @@
     "commit": "",
     "pr": ""
   },
-  "effortLevel": "medium",
-  "enabledPlugins": {
-    "code-review@claude-plugins-official": true,
-    "commit-commands@claude-plugins-official": true,
-    "jdtls-lsp@claude-plugins-official": true,
-    "kotlin-lsp@claude-plugins-official": true
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "[ \"$(uname)\" = \"Darwin\" ] \u0026\u0026 ~/.claude/hooks/aloc-managed/post_to_aloc.sh || true",
-            "type": "command"
-          }
-        ],
-        "matcher": "Bash"
-      },
-      {
-        "hooks": [
-          {
-            "command": "/Users/mcrouch/.claude/hooks/aloc-managed/post_to_aloc.sh",
-            "type": "command"
-          }
-        ],
-        "matcher": "Bash"
-      }
-    ],
-    "PreToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "[ \"$(uname)\" = \"Darwin\" ] \u0026\u0026 ~/.claude/hooks/aloc-managed/post_to_aloc.sh || true",
-            "type": "command"
-          }
-        ],
-        "matcher": "Bash"
-      },
-      {
-        "hooks": [
-          {
-            "command": "/Users/mcrouch/.claude/hooks/aloc-managed/post_to_aloc.sh",
-            "type": "command"
-          }
-        ],
-        "matcher": "Bash"
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "~/.claude/hooks/notify.sh \"Done in %s — ready for your next message\"",
-            "type": "command"
-          }
-        ],
-        "matcher": ""
-      }
-    ]
-  },
-  "model": "opusplan",
   "permissions": {
     "allow": [
       "Read",
@@ -72,6 +11,12 @@
       "WebSearch",
       "Glob",
       "Grep"
+    ],
+    "deny": [
+      "Read(~/.ssh/**)",
+      "Read(~/.gnupg/**)",
+      "Edit(~/.ssh/**)",
+      "Edit(~/.gnupg/**)"
     ],
     "ask": [
       "Bash(rm -rf *)",
@@ -90,18 +35,61 @@
       "Bash(chown *)",
       "Edit(**/.env)",
       "Edit(**/.env.*)"
+    ]
+  },
+  "model": "opusplan",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/mcrouch/.claude/hooks/aloc-managed/post_to_aloc.sh"
+          }
+        ]
+      }
     ],
-    "deny": [
-      "Read(~/.ssh/**)",
-      "Read(~/.gnupg/**)",
-      "Edit(~/.ssh/**)",
-      "Edit(~/.gnupg/**)"
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/mcrouch/.claude/hooks/aloc-managed/post_to_aloc.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify.sh \"Done in %s — ready for your next message\""
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
+    "type": "command",
     "command": "npx -y ccstatusline@latest",
-    "padding": 0,
-    "type": "command"
+    "padding": 0
   },
+  "enabledPlugins": {
+    "code-review@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "jdtls-lsp@claude-plugins-official": true,
+    "kotlin-lsp@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true
+  },
+  "sandbox": {
+    "excludedCommands": [
+      "./jmake *"
+    ]
+  },
+  "effortLevel": "high",
   "theme": "dark"
 }
