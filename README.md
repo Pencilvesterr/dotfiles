@@ -35,7 +35,19 @@ If you ever want to remove the symlinks created by the installation script:
 ./scripts/links.sh --delete softlinks_config.conf
 ```
 
-This will remove the symlinks but will not delete the actual configuration files, allowing you to easily revert to your previous configuration if needed.
+This will remove the symlinks but will not delete the actual configuration files, allowing you to easily revert to your previous configuration if needed. To also delete targets that are regular files or directories, add `--include-files`.
+
+Other useful `links.sh` modes:
+
+```bash
+# Show existing target files that differ from the repo versions
+./scripts/links.sh --show-diffs softlinks_config.conf
+
+# Copy existing target files into the repo, then replace them with symlinks
+./scripts/links.sh --adopt softlinks_config.conf
+```
+
+`install.sh` also accepts `--terminal-only` to skip GUI apps and OS defaults, and `scripts/sync.sh pull|push` copies files managed by third-party apps (which overwrite symlinks) between the system and the repo.
 
 ## Adding New Dotfiles and Software
 
@@ -49,4 +61,4 @@ When adding new dotfiles to this repository, follow these steps:
 
 ### Software Installation
 
-Software is installed using Homebrew. To add a formula or cask, update the `homebrew/Brewfile` and run `./scripts/brew-install-custom.sh`. If you need to install a specific version of a package, find its Ruby script in the commit history of an official Homebrew GitHub repository and place it in the `homebrew/custom-casks/` or `homebrew/custom-formulae/` directory, depending on whether it's a cask or formula.
+Software is installed using Homebrew. To add a formula or cask, update the appropriate Brewfile in `homebrew/` (`Brewfile.terminal` for CLI tools on all machines, `Brewfile.mac` for macOS apps, `Brewfile.mac_personal` / `Brewfile.mac_work` for machine-specific apps) and run `./scripts/brew-install-custom.sh`.

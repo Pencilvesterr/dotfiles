@@ -1,10 +1,10 @@
 #!/bin/zsh
-# --- Machine specific, don't add to git
+# --- Work-machine configuration (tracked in git, symlinked via softlinks_config_work.conf)
 
 # -------------------------------------------------------------------
 # Updating PATH
 # -------------------------------------------------------------------
-export PATH="$PATH:$HOME/.local/bin"
+# NOTE: $HOME/.local/bin is already added in custom.zsh
 # Required for ./jmake healthcheck
 export PATH="/opt/homebrew/opt/util-linux/bin:$PATH"
 

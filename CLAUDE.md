@@ -79,11 +79,10 @@ The core installation mechanism uses **symlinks** via `scripts/links.sh`:
 ├── vscode/            # VS Code settings
 ├── idea/              # IntelliJ IDEA vim plugin configuration
 ├── homebrew/          # Homebrew package definitions
-│   ├── Brewfile.terminal  # CLI tools
-│   ├── Brewfile.personal  # Personal-only packages
-│   ├── Brewfile.work      # Work-only packages
-│   ├── custom-casks/      # Custom version casks
-│   └── custom-formulae/   # Custom version formulae
+│   ├── Brewfile.terminal      # CLI tools (all machines)
+│   ├── Brewfile.mac           # macOS apps (all Macs)
+│   ├── Brewfile.mac_personal  # Personal-only packages
+│   └── Brewfile.mac_work      # Work-only packages
 ├── scripts/           # Installation and utility scripts
 └── linux/             # Linux-specific installation scripts
 ```
@@ -126,15 +125,12 @@ Zsh config is split into modular files for maintainability:
 ## Adding New Software
 
 1. Add the package to the appropriate Brewfile:
-   - `homebrew/Brewfile.terminal` - Shared across personal and work
-   - `homebrew/Brewfile.personal` - Personal machines only
-   - `homebrew/Brewfile.work` - Work machines only
+   - `homebrew/Brewfile.terminal` - CLI tools, shared across personal and work
+   - `homebrew/Brewfile.mac` - macOS apps, all Macs
+   - `homebrew/Brewfile.mac_personal` - Personal machines only
+   - `homebrew/Brewfile.mac_work` - Work machines only
 
 2. Install with: `./scripts/brew-install-custom.sh` or `brew bundle install --file=homebrew/Brewfile.terminal`
-
-3. For specific package versions:
-   - Find the Ruby formula/cask in Homebrew's commit history
-   - Place in `homebrew/custom-casks/` or `homebrew/custom-formulae/`
 
 ## Important Notes
 

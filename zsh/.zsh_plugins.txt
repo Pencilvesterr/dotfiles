@@ -2,7 +2,7 @@
 #
 # .zsh_plugins.txt - antidote plugins file
 # Documentation: https://getantidote.github.io/
-# kind:zsh (default) = DeAult that looks for *.plugin.zsh or *.zsh and sources them
+# kind:zsh (default) = Default that looks for *.plugin.zsh or *.zsh and sources them
 # kind:path = put the plugin in $PATH
 # kind:defer = don't need to load before working with the shell. Only use for syntax highlighting + autosuggestions (https://github.com/romkatv/zsh-bench#deferred-initialization)
 # kind:fpath = put the plugin in $fpath and do nothing else, used for completions

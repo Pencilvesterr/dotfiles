@@ -3,11 +3,10 @@
 #
 
 # NOTE: .zshenv needs to live at ~/.zshenv, not in $ZDOTDIR!
-# This should be done with the setup script in the READM
+# This should be done with the setup script in the README
 # And this file should only ever set environment variables
 
 # Themes (onedark or nord)
-export NVIM_THEME="nord"
 export STARSHIP_THEME="nord"
 export WEZTERM_THEME="nord"
 
