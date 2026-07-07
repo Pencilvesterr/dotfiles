@@ -72,6 +72,10 @@ config = {
 	},
 
 	ssh_domains = servers.ssh_domains,
+	unix_domains = {
+		{ name = "unix" },
+	},
+	default_gui_startup_args = { "connect", "unix" },
 	keys = key_map,
 	mouse_bindings = {
 		{

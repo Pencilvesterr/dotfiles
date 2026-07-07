@@ -1,5 +1,18 @@
 local wezterm = require("wezterm")
 local mux = wezterm.mux
+local servers = require("servers")
+
+-- Domains backed by an SSH connection to a remote host (see servers.lua). Used to
+-- distinguish "actually remote" from the local unix-domain mux, whose domain name
+-- is "unix" rather than "local" but should still be treated as a local session.
+local SSH_DOMAIN_NAMES = {}
+for _, s in ipairs(servers.ssh_domains) do
+  SSH_DOMAIN_NAMES[s.name] = true
+end
+
+local function is_ssh_domain(domain)
+  return SSH_DOMAIN_NAMES[domain] == true
+end
 
 -- Background override for SSH/mux panes. Swaps the default dark overlay (#282c35) for a
 -- warm reddish-brown tint over the same wallpaper, making remote windows visually distinct
@@ -66,7 +79,7 @@ wezterm.on("format-tab-title", function(tab, _, _, _, _, max_width)
 
   -- Build the visible title
   local title = pane.title
-  if domain ~= "local" then
+  if is_ssh_domain(domain) then
     title = string.format("[%s] %s", domain, title)
   end
 
@@ -107,7 +120,7 @@ wezterm.on("format-window-title", function(tab)
   local pane = tab.active_pane
   local domain = pane.domain_name
 
-  if domain ~= "local" then
+  if is_ssh_domain(domain) then
     return string.format("[%s] %s", domain, pane.title)
   end
 
@@ -177,7 +190,7 @@ wezterm.on("update-status", function(window, pane)
   -- Only call set_config_overrides when the background actually needs to change,
   -- to avoid a read-modify-write race that wipes transient overrides (e.g. the
   -- flash_selection colors set by CMD+C) on every status tick.
-  local new_bg = domain ~= "local" and SSH_BACKGROUND or nil
+  local new_bg = is_ssh_domain(domain) and SSH_BACKGROUND or nil
   if overrides.background ~= new_bg then
     overrides.background = new_bg
     window:set_config_overrides(overrides)
