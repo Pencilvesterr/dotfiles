@@ -210,6 +210,9 @@ alias dc="docker compose"
 # Better ls
 alias ls="eza --all --icons=always"
 
+# Setup alias to open Intellij
+alias idea='open -na "IntelliJ IDEA.app" --args'
+
 # Misc
 alias please='sudo'
 alias zshrc='code "${ZDOTDIR:-$HOME}"/.zshrc'
