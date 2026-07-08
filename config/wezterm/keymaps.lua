@@ -205,7 +205,7 @@ key_map = {
 		description = "ssh",
 		action = wezterm.action_callback(function(window, pane)
 			local servers = require("servers")
-			local choices = { { label = "local", id = "local" } }
+			local choices = { { label = "local", id = "local" }, { label = "unix", id = "unix" } }
 			for _, domain in ipairs(servers.ssh_domains) do
 				table.insert(choices, { label = domain.name, id = domain.name })
 			end

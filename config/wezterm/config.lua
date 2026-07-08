@@ -75,7 +75,6 @@ config = {
 	unix_domains = {
 		{ name = "unix" },
 	},
-	default_gui_startup_args = { "connect", "unix" },
 	keys = key_map,
 	mouse_bindings = {
 		{
