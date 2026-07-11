@@ -21,7 +21,9 @@ else
 fi
 
 # Setup direnv
-eval "$(direnv hook zsh)"
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
 
 
 # Poetry
@@ -57,11 +59,6 @@ fi
 # Start zoxide, needs to come after compinit for completion to work
 eval "$(zoxide init zsh)"
 
-
-# If using git-auto-fetch plugin, sets interval to fetch changes
-export GIT_AUTO_FETCH_INTERVAL=1200 # in seconds
-# Don't prompt to import .env files in terminal for dotenv plugin
-export ZSH_DOTENV_PROMPT=false
 
 # Source zstyles you might use with antidote.
 [[ -e ${ZDOTDIR:-~}/.zstyles ]] && source ${ZDOTDIR:-~}/.zstyles
