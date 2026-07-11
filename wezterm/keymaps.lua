@@ -2,8 +2,9 @@ local wezterm = require("wezterm")
 
 -- if you are *NOT* lazy-loading smart-splits.nvim (recommended)
 local function is_vim(pane)
-	-- this is set by the plugin, and unset on ExitPre in Neovim
+	-- IS_NVIM is set by smart-splits.nvim via OSC; falls back to process name for SSH sessions
 	return pane:get_user_vars().IS_NVIM == "true"
+		or (pane:get_foreground_process_name() or ""):find("n?vim") ~= nil
 end
 
 local direction_keys = {
