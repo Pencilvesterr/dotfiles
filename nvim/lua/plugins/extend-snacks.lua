@@ -1,6 +1,16 @@
 -- Update the dashboard have S select session rather than the last one
 return {
   "snacks.nvim",
+  keys = {
+    { "<leader>gd", false },
+    {
+      "<leader>gH",
+      function()
+        Snacks.picker.git_diff()
+      end,
+      desc = "Git Diff (hunks)",
+    },
+  },
   opts = function(_, opts)
     if not vim.g.vscode then
       table.insert(
