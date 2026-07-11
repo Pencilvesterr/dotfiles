@@ -222,3 +222,4 @@ alias zdot='cd ${ZDOTDIR:-~}'
 alias quit='exit'
 alias cd..='cd ..'
 
+alias docker-nuke=alias docker-nuke='docker stop $(docker ps -aq) 2>/dev/null; docker system prune -af --volumes'
