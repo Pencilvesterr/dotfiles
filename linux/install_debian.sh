@@ -9,7 +9,7 @@ GIT_ROOT_DIR="$(git rev-parse --show-toplevel)"
 
 SCRIPT_DIR="$GIT_ROOT_DIR/scripts"
 
-. $SCRIPT_DIR/utils.sh
+. "$SCRIPT_DIR/utils.sh"
 
 configure_linux_settings() {
     info "Configuring Linux settings"
@@ -23,7 +23,7 @@ install_linux_apps() {
         curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /etc/apt/keyrings/wezterm-fury.gpg
         echo 'deb [signed-by=/etc/apt/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list
         sudo apt update
-        sudo apt install wezterm
+        sudo apt install wezterm -y
     else
         info "Wezterm is already installed."
     fi
@@ -33,12 +33,13 @@ install_linux_cli_tools() {
     info "Checking for Docker..."
     if ! command -v docker &> /dev/null; then
         info "Installing Docker"
-        curl -fsSL https://get.docker.com -o install-docker.sh
-        sudo sh install-docker.sh
-        sudo rm install-docker.sh
+        DOCKER_INSTALLER="$(mktemp --suffix=.sh)"
+        curl -fsSL https://get.docker.com -o "$DOCKER_INSTALLER"
+        sudo sh "$DOCKER_INSTALLER"
+        rm "$DOCKER_INSTALLER"
         # Post install steps
         sudo groupadd docker || true
-        sudo usermod -aG docker $USER
+        sudo usermod -aG docker "$USER"
         info "Docker group membership added. Please log out and log back in for it to take effect."
         # Start docker on boot
         sudo systemctl enable docker.service
@@ -68,7 +69,7 @@ install_linux_cli_tools() {
     if [ "$(basename "$SHELL")" != "zsh" ]; then
         info "Setting zsh as default shell"
         if command -v zsh &> /dev/null; then
-            sudo chsh -s $(which zsh)
+            sudo chsh -s "$(command -v zsh)" "$USER"
             info "Default shell changed to ZSH. Please log out and log back in for the change to take effect."
         else
             warning "ZSH is not installed. Cannot set it as default."
@@ -88,7 +89,7 @@ install_linux_cli_tools() {
     info "Checking for Nerd Fonts (JetBrains Mono)..."
     # Simple check: see if the directory exists and is not empty
     FONT_DIR="$HOME/.local/share/fonts/JetBrainsMonoNerd"
-    if [ ! -d "$FONT_DIR" ] || [ -z "$(ls -A $FONT_DIR)" ]; then
+    if [ ! -d "$FONT_DIR" ] || [ -z "$(ls -A "$FONT_DIR")" ]; then
         info "Install nerd fonts (JetBrains Mono)"
         # Create a specific directory for these fonts
         mkdir -p "$FONT_DIR"
