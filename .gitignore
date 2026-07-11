@@ -1,6 +1,10 @@
 .DS_Store
 .env
 .idea
+.venv
+__pycache__/
+.pytest_cache/
+.ruff_cache/
 wezterm/*.jpg
 wezterm/*.png
 Brewfile.lock.json

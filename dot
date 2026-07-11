@@ -1,0 +1,28 @@
+#!/bin/bash
+# Entry point for the dotfiles CLI. Runs the Python package via uv.
+# After a successful `install` on an interactive terminal, replaces itself
+# with a fresh zsh so the new config takes effect immediately.
+set -euo pipefail
+
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if ! command -v uv >/dev/null 2>&1; then
+    for candidate in "$HOME/.local/bin" /opt/homebrew/bin /usr/local/bin /home/linuxbrew/.linuxbrew/bin; do
+        if [ -x "$candidate/uv" ]; then
+            export PATH="$candidate:$PATH"
+            break
+        fi
+    done
+fi
+
+if ! command -v uv >/dev/null 2>&1; then
+    echo "Error: uv not found. On a new machine, run ./bootstrap.sh first." >&2
+    exit 1
+fi
+
+uv run --project "$REPO_DIR" python -m dotfiles "$@"
+
+if [ "${1:-}" = "install" ] && [ -t 0 ]; then
+    echo "==> Restarting zsh to apply changes..."
+    exec zsh
+fi

@@ -4,139 +4,100 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a personal dotfiles repository for macOS and Linux development environment configuration. The repository uses **symlinks** to install configuration files to their target locations, managed through configuration files.
+This is a personal dotfiles repository for macOS and Linux development environment configuration. Config files are **symlinked** into place by a Python CLI (`./dot`, run via uv) that uses [dotbot](https://github.com/anishathalye/dotbot) for the linking layer. Machine differences are handled by a **saved profile** (`personal-mac`, `work-mac`, `personal-linux`, `work-linux`) stored in `~/.config/dotfiles/profile.json`.
 
 ## Key Commands
 
-### Installation and Setup
-
 ```bash
-# Full installation (prompts for options)
-./install.sh
+# New machine: prerequisites (Xcode CLT/apt, Homebrew, uv) then full provisioning
+./bootstrap.sh --profile personal-mac
 
-# Create symlinks from a config file
-./scripts/links.sh --create softlinks_config.conf
+# Full provisioning on an existing machine (apps, OS defaults, links, git housekeeping)
+./dot install [--profile NAME] [--minimal] [--adopt|--overwrite] [--skip-apps] [--dry-run]
 
-# Create work-specific symlinks
-./scripts/links.sh --create softlinks_config_work.conf
+# Frequent path: fast non-interactive sync of links + managed files (seconds)
+./dot sync [--dry-run]
 
-# Delete symlinks
-./scripts/links.sh --delete softlinks_config.conf
+# Inspection / maintenance
+./dot diff              # targets differing from repo; exit 2 = conflict
+./dot adopt [TARGET..]  # copy machine versions into the repo, relink
+./dot pull              # app-managed files: system -> repo
+./dot apps              # brew bundles + non-brew tools for this profile
+./dot defaults          # re-apply macOS defaults / Linux settings
+./dot profile show|set NAME [--minimal]
 
-# Delete symlinks including target files (use when overwriting)
-./scripts/links.sh --delete --include-files softlinks_config.conf
-```
-
-### Package Management
-
-```bash
-# Install packages from Brewfile
-./scripts/brew-install-custom.sh
-
-# Or install a specific Brewfile
-brew bundle install --file=homebrew/Brewfile.terminal
-brew bundle install --file=homebrew/Brewfile.mac_work
-brew bundle install --file=homebrew/Brewfile.mac_personal
-
-# Check if Brewfile dependencies are satisfied
-brew bundle check --file=homebrew/Brewfile.terminal
-```
-
-### Aerospace Window Management
-
-```bash
-# Move applications to designated workspaces
-./aerospace/move-apps-to-workspace.sh
+# Python dev (package lives in install/dotfiles/)
+uv run pytest
+uv run ruff check
 ```
 
 ## Architecture
 
-### Symlink System
+### The `dot` CLI
 
-The core installation mechanism uses **symlinks** via `scripts/links.sh`:
+- `./dot` is a bash shim that runs `uv run python -m dotfiles` (package at `install/dotfiles/`).
+- `cli.py` — argparse subcommands. `install_flow.py` — full provisioning. `linker.py` — link
+  enumeration/classification (OK, MISSING, WRONG_LINK, EXISTS_SAME, EXISTS_DIFFERS, CONFLICT),
+  diff/adopt/heal, and the in-process dotbot dispatch. `managed.py` — copy-based sync for files
+  apps overwrite. `gitrepo.py` — skip-worktree flags, `strip-work-tooling` filter,
+  `core.hooksPath`. `packages.py` / `platform_setup.py` — brew bundles and the platform bash
+  scripts. `hook.py` — pre-commit self-heal logic.
+- A CONFLICT means a target differs from the repo AND the repo source has uncommitted changes;
+  commands exit 2 and never auto-resolve it.
 
-- Configuration:
-  - `softlinks_config.conf` - main symlink config (cross-platform)
-  - `softlinks_config_mac.conf` - macOS-only symlinks (VS Code, Aerospace)
-  - `softlinks_config_work.conf` - work-specific symlinks
-- Format: `source_path:target_path` (one per line, comments start with `#`)
-- The script expands variables like `$(pwd)` and `$HOME`
-- Creates parent directories if needed
-- Existing symlinks pointing elsewhere are automatically updated
+### Link definitions (dotbot YAML layers)
 
-### Directory Structure
+`install/dotbot/` holds one YAML per layer, applied in order (later layers win for the same target):
 
-```
-├── zsh/               # Zsh configuration (split into modular files)
-├── nvim/              # NeoVim configuration (LazyVim-based)
-├── vim/               # Fallback Vim configuration
-├── wezterm/           # WezTerm terminal configuration
-├── starship/          # Starship prompt configuration
-├── aerospace/         # Aerospace window manager configuration
-├── git/               # Git configurations (difftastic, delta, lazygit)
-│   └── global-config/ # Contains personal.gitconfig (default) and work.gitconfig
-├── ranger/            # Ranger file manager configuration
-├── vscode/            # VS Code settings
-├── idea/              # IntelliJ IDEA vim plugin configuration
-├── homebrew/          # Homebrew package definitions
-│   ├── Brewfile.terminal      # CLI tools (all machines)
-│   ├── Brewfile.mac           # macOS apps (all Macs)
-│   ├── Brewfile.mac_personal  # Personal-only packages
-│   └── Brewfile.mac_work      # Work-only packages
-├── scripts/           # Installation and utility scripts
-└── linux/             # Linux-specific installation scripts
-```
+- `base.yaml` — every machine
+- `macos.yaml` / `linux.yaml` — by OS
+- `work.yaml` / `personal.yaml` — by context (both map `~/.gitconfig`, to work/personal gitconfig respectively)
 
-### Work vs Personal Configuration
+Format: `~/target/path: repo/relative/source` under a `link:` task. These YAMLs are the single
+source of truth — dotbot creates the links, and `linker.py` reads the same files for
+diff/adopt/heal and the pre-commit hook.
 
-The repository supports dual configurations:
+Files that third-party apps overwrite (htoprc, Arc sidebar) can't be symlinks; they're listed in
+`install/managed.toml` and copied by `managed.py` (optionally scoped by `context`/`os` keys).
 
-- **Default**: Personal configuration (e.g., `git/global-config/personal.gitconfig`)
-- **Work Override**: Activated by answering "y" to "Work machine?" during `./install.sh`
-  - Uses `softlinks_config_work.conf` to override specific files
-  - Example: `zsh/work.zsh` contains machine-specific PATH configurations for Atlassian tools, nvm, jenv
+### Work vs Personal / Mac vs Linux
 
-### Zsh Configuration Structure
+Both axes come from the saved profile — there is no runtime detection. `--minimal` (persisted in
+the profile) marks servers: skips GUI apps and OS defaults, still links everything.
 
-Zsh config is split into modular files for maintainability:
+### Platform scripts (bash, called by the CLI)
 
-- `.zshrc` - Main entry point
-- `.zshenv` - Environment variables
-- `custom.zsh` - Custom configurations
-- `plugin_settings.zsh` - Plugin-specific settings
-- `aliases.zsh` - Command aliases
-- `work.zsh` - Work-specific settings (PATH, lazy-loaded pyenv/nvm/jenv)
-- `.zsh_plugins.txt` - Plugin list (likely for antidote or similar)
+- `mac_config/osx-defaults.sh [all|keyboard|defaults|capslock]` — macOS `defaults write` calls
+- `linux/install_debian.sh [settings|cli-tools|apps]` — apt/Docker/zsh/fonts setup
+- `bootstrap.sh` — virgin-machine prerequisites, then `exec ./dot install`
+
+### Git hook
+
+`git/hooks/` is the repo's `core.hooksPath`. `pre-commit` shims to `./dot hook pre-commit`,
+which fixes broken links, adopts changed machine files (staged), pulls managed files (unstaged),
+and aborts the commit on conflicts. It skips (never blocks) if no profile or uv is present.
 
 ## Adding New Dotfiles
 
 1. Place the config file in the appropriate subdirectory
-2. Add an entry to the appropriate config file:
-   - `softlinks_config.conf` - shared across personal and work (cross-platform)
-   - `softlinks_config_mac.conf` - macOS-only configs
-   - `softlinks_config_work.conf` - work-specific overrides
-
-   Format:
-   ```
-   $(pwd)/path/to/source:$HOME/path/to/target
-   ```
-3. Run `./scripts/links.sh --create softlinks_config.conf`
+2. Add `~/target/path: repo/relative/source` to the right layer in `install/dotbot/`
+3. Run `./dot sync`
 
 ## Adding New Software
 
 1. Add the package to the appropriate Brewfile:
-   - `homebrew/Brewfile.terminal` - CLI tools, shared across personal and work
+   - `homebrew/Brewfile.terminal` - CLI tools, all machines (including Linux via linuxbrew)
    - `homebrew/Brewfile.mac` - macOS apps, all Macs
-   - `homebrew/Brewfile.mac_personal` - Personal machines only
-   - `homebrew/Brewfile.mac_work` - Work machines only
-
-2. Install with: `./scripts/brew-install-custom.sh` or `brew bundle install --file=homebrew/Brewfile.terminal`
+   - `homebrew/Brewfile.mac_personal` - Personal Macs only
+   - `homebrew/Brewfile.mac_work` - Work Macs only
+2. Install with: `./dot apps`
 
 ## Important Notes
 
-- The repository uses **symlinks** to link config files
 - The `cd` command is aliased to use **zoxide** (use `/bin/cd` for the original command)
-- Nord color palette is used throughout all themes
-- Theme switching via environment variables in `.zshenv`
+- Nord color palette is used throughout all themes; theme switching via env vars in `.zshenv`
 - NeoVim config is based on LazyVim
-- Git config defaults to `personal.gitconfig` unless overridden by `softlinks_config_work.conf`
+- `zsh/local.zsh` is marked skip-worktree (machine-local, never committed)
+- On work machines `git/global-config/work.gitconfig` is skip-worktree because work tooling
+  appends sections to it; the `strip-work-tooling` clean filter is a safety net
+- Never test `./dot` against the real `$HOME` — use a temp `HOME` (see `tests/`)

@@ -114,7 +114,17 @@ remap_capslock_to_escape() {
 }
 
 if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
-    register_keyboard_shortcuts
-    apply_osx_system_defaults
-    remap_capslock_to_escape
+    case "${1:-all}" in
+        keyboard) register_keyboard_shortcuts ;;
+        defaults) apply_osx_system_defaults ;;
+        capslock) remap_capslock_to_escape ;;
+        all)
+            register_keyboard_shortcuts
+            apply_osx_system_defaults
+            ;;
+        *)
+            echo "Usage: $0 [all|keyboard|defaults|capslock]"
+            exit 1
+            ;;
+    esac
 fi

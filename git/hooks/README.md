@@ -1,35 +1,32 @@
 # Git Hooks
 
-This directory contains git hooks that are installed by `./install.sh`.
+This directory is registered as the repo's hooks path (`git config core.hooksPath`)
+by `./dot install` / `./dot sync`.
 
 ## pre-commit
 
-Automatically checks for broken symlinks before each commit to ensure the repository and system config files stay in sync.
+A thin shim that runs `./dot hook pre-commit` (see `install/dotfiles/hook.py`).
+It checks every symlink target defined in `install/dotbot/*.yaml` before each
+commit to keep the repository and system config files in sync:
 
-**What it does:**
-
-For each target in the config files:
 - Correct symlink → skip
 - Broken, same contents → fix the symlink, continue
 - Broken, differs, no git changes to repo file → adopt machine version, stage it, continue
 - Broken, differs, repo file has staged/unstaged changes → warn and abort
 
+Managed (app-owned) files from `install/managed.toml` are always pulled
+system → repo, never staged.
+
 **Why this is needed:**
 When you edit files using certain editors or tools (including the Edit tool), they may replace the file instead of modifying it in-place. This breaks symlinks. The hook ensures that symlinks are recreated before each commit, preventing out-of-sync configurations.
 
-## Installation
-
-The hook is automatically installed when you run `./install.sh`. To manually install:
-
-```bash
-cp git/hooks/pre-commit .git/hooks/pre-commit
-chmod +x .git/hooks/pre-commit
-```
+On machines without a saved profile (`./dot profile set <name>`) or without uv,
+the hook skips its checks rather than blocking commits.
 
 ## Testing
 
 Test the hook manually:
 
 ```bash
-.git/hooks/pre-commit
+./dot hook pre-commit
 ```

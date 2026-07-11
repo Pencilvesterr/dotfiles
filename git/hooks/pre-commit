@@ -1,112 +1,14 @@
 #!/bin/bash
-# Check for broken symlinks in dotfile targets before committing.
-#
-# For each target in the config files:
-#   - Correct symlink              → skip (all good)
-#   - Broken, same contents        → fix the symlink, continue
-#   - Broken, differs, no git changes to repo file → adopt machine version, stage it, continue
-#   - Broken, differs, repo file has staged/unstaged changes → warn and abort
-
+# Self-heal dotfile links before committing (fix/adopt/conflict-abort) and pull
+# app-managed files into the repo. Logic lives in install/dotfiles/hook.py.
+# Skips silently on machines without a saved profile or without uv.
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-. "$REPO_ROOT/scripts/utils.sh"
 
-CONFIG_FILES=(
-    "softlinks_config.conf"
-)
-
-SYNC_CONFIG_FILES=("$REPO_ROOT/sync_config.conf")
-if detect_work_machine 2>/dev/null; then
-    SYNC_CONFIG_FILES+=("$REPO_ROOT/sync_config_work.conf")
+if ! "$REPO_ROOT/dot" hook pre-commit; then
+    # Distinguish a real conflict (dot ran and said abort) from tooling issues
+    if command -v uv >/dev/null 2>&1 || [ -x "$HOME/.local/bin/uv" ]; then
+        exit 1
+    fi
+    echo "==> uv not available; skipping dotfiles pre-commit checks"
 fi
-
-FAIL=false
-
-for config_file in "${CONFIG_FILES[@]}"; do
-    config_path="$REPO_ROOT/$config_file"
-    [ -f "$config_path" ] || continue
-
-    while IFS=: read -r source target || [ -n "$source" ]; do
-        [[ -z "$source" || -z "$target" || "$source" == \#* ]] && continue
-        source=$(eval echo "$source")
-        target=$(eval echo "$target")
-
-        # Skip if target doesn't exist (not yet linked, not our problem here)
-        [ -e "$target" ] || [ -L "$target" ] || continue
-
-        # Skip if already a correct symlink
-        if [ -L "$target" ] && [ "$(readlink "$target")" == "$source" ]; then
-            continue
-        fi
-
-        # Skip if source doesn't exist as a file
-        [ -f "$source" ] || continue
-
-        # Target exists but is not the correct symlink — determine how to handle it
-        rel_source="${source#$REPO_ROOT/}"
-
-        if diff -q "$source" "$target" > /dev/null 2>&1; then
-            # Contents are identical — just fix the symlink
-            rm "$target"
-            ln -s "$source" "$target"
-            echo "==> Fixed symlink (same contents): $target"
-
-        elif git diff --quiet "$rel_source" 2>/dev/null && git diff --cached --quiet "$rel_source" 2>/dev/null; then
-            # Contents differ, but repo file has no staged or unstaged changes
-            # → adopt the machine's version into the repo
-            cp "$target" "$source"
-            rm "$target"
-            ln -s "$source" "$target"
-            git add "$rel_source"
-            echo "==> Adopted machine version and staged: $rel_source"
-            echo "    (symlink fixed: $target)"
-
-        else
-            # Contents differ AND the repo file has changes — conflict
-            echo ""
-            echo "  CONFLICT: $target"
-            echo "  The file on your machine differs from the repo version,"
-            echo "  and the repo file also has staged or unstaged changes."
-            echo ""
-            echo "  Options:"
-            echo "    Keep machine version:  cp '$target' '$source' && git add '$rel_source'"
-            echo "    Keep repo version:     rm '$target' && ln -s '$source' '$target'"
-            echo ""
-            FAIL=true
-        fi
-
-    done < "$config_path"
-done
-
-for sync_config in "${SYNC_CONFIG_FILES[@]}"; do
-    [ -f "$sync_config" ] || continue
-
-    while IFS=: read -r source target || [ -n "$source" ]; do
-        [[ -z "$source" || -z "$target" || "$source" == \#* ]] && continue
-        source=$(eval echo "$source")
-        target=$(eval echo "$target")
-
-        # Skip if system file doesn't exist
-        [ -e "$target" ] || continue
-
-        # Skip if repo file doesn't exist
-        [ -f "$source" ] || continue
-
-        # Skip if contents are identical
-        diff -q "$source" "$target" > /dev/null 2>&1 && continue
-
-        rel_source="${source#$REPO_ROOT/}"
-
-        # Always pull the system version — sync files are owned by the app, not the repo
-        cp "$target" "$source"
-        echo "==> Pulled system version (not staged): $rel_source"
-        echo "    (from: $target)"
-
-    done < "$sync_config"
-done
-
-if $FAIL; then
-    echo "Commit aborted. Resolve the conflicts above and try again."
-    exit 1
-fi
-
 exit 0

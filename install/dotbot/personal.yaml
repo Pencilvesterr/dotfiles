@@ -1,0 +1,10 @@
+# Personal-machine symlinks. Mutually exclusive with work.yaml — both claim
+# ~/.gitconfig, and the last-applied layer wins (relink updates the symlink).
+
+- defaults:
+    link:
+      create: true
+      relink: true
+
+- link:
+    ~/.gitconfig: git/global-config/personal.gitconfig

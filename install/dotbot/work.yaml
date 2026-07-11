@@ -1,0 +1,13 @@
+# Work-machine symlinks. Mutually exclusive with personal.yaml — both claim
+# ~/.gitconfig, and the last-applied layer wins (relink updates the symlink).
+
+- defaults:
+    link:
+      create: true
+      relink: true
+
+- link:
+    ~/.config/zsh/work.zsh: zsh/work.zsh
+    ~/.gitconfig: git/global-config/work.gitconfig
+    ~/.gitconfig_personal: git/global-config/personal.gitconfig
+    ~/.rovodev/config.yml: rovodev/config.yml

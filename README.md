@@ -19,46 +19,69 @@ I'm not a fan of the default window management solutions that macOS provides, li
 
 ## Setup
 
-To set up these dotfiles on your system, run:
+### New machine
 
 ```bash
-./install.sh
+# macOS (running `git clone` prompts to install the Xcode CLI tools first)
+git clone https://github.com/Pencilvesterr/dotfiles.git && cd dotfiles
+./bootstrap.sh --profile personal-mac        # or work-mac
+
+# Ubuntu
+sudo apt install -y git
+git clone https://github.com/Pencilvesterr/dotfiles.git && cd dotfiles
+./bootstrap.sh --profile personal-linux --minimal   # servers: --minimal skips GUI apps / OS defaults
 ```
 
-Then follow the on-screen prompts.
+`bootstrap.sh` installs the prerequisites (Xcode CLT or apt packages, Homebrew, uv) and hands
+off to `./dot install`, which does the actual provisioning. Without `--profile` it asks
+interactively; the answer is saved to `~/.config/dotfiles/profile.json` and reused from then on.
+
+### Day-to-day: syncing config changes
+
+This is the frequent path — after pulling dotfile changes (or editing them locally), run:
+
+```bash
+./dot sync
+```
+
+Non-interactive and takes seconds: repairs/creates all symlinks, pushes app-managed files, and
+refreshes the repo's git housekeeping. It never deletes real files.
+
+### Other commands
+
+```bash
+./dot diff              # show targets that differ from the repo (exit 2 on conflict)
+./dot adopt [TARGET..]  # copy machine versions of differing files into the repo, then relink
+./dot pull              # copy app-managed files (htoprc, Arc sidebar) system -> repo
+./dot apps              # (re)install Homebrew bundles + non-brew tools for this profile
+./dot defaults          # re-apply macOS defaults / Linux settings
+./dot profile show|set  # inspect or change this machine's profile
+./dot install --help    # full provisioning flags (--adopt/--overwrite/--skip-apps/--dry-run)
+```
+
+`./dot install --overwrite` never deletes files outright — anything replaced is backed up to
+`~/.config/dotfiles/backup/<timestamp>/` first.
 
 ## Uninstalling
 
-If you ever want to remove the symlinks created by the installation script:
-
-```bash
-./scripts/links.sh --delete softlinks_config.conf
-```
-
-This will remove the symlinks but will not delete the actual configuration files, allowing you to easily revert to your previous configuration if needed. To also delete targets that are regular files or directories, add `--include-files`.
-
-Other useful `links.sh` modes:
-
-```bash
-# Show existing target files that differ from the repo versions
-./scripts/links.sh --show-diffs softlinks_config.conf
-
-# Copy existing target files into the repo, then replace them with symlinks
-./scripts/links.sh --adopt softlinks_config.conf
-```
-
-`install.sh` also accepts `--terminal-only` to skip GUI apps and OS defaults, and `scripts/sync.sh pull|push` copies files managed by third-party apps (which overwrite symlinks) between the system and the repo.
+The symlinks all point into this repo; remove any you no longer want and put a real file in
+place (`./dot diff` will tell you what differs). There is no bulk-delete command — deleting the
+repo leaves broken symlinks you can remove as you encounter them.
 
 ## Adding New Dotfiles and Software
 
 ### Dotfiles
 
-When adding new dotfiles to this repository, follow these steps:
-
 1. Place your dotfile in the appropriate location within the repository.
-2. Update `softlinks_config.conf` (or `softlinks_config_work.conf` for work-only) to include the symlink for your new dotfile.
-3. If necessary, update the `install.sh` script to set up the software.
+2. Add a `target: source` line to the right layer in `install/dotbot/`:
+   - `base.yaml` — every machine
+   - `macos.yaml` / `linux.yaml` — OS-specific
+   - `work.yaml` / `personal.yaml` — context-specific
+3. Run `./dot sync`.
+
+Files that third-party apps overwrite (so they can't be symlinks) go in `install/managed.toml`
+instead, and move with `./dot pull` / `./dot sync`.
 
 ### Software Installation
 
-Software is installed using Homebrew. To add a formula or cask, update the appropriate Brewfile in `homebrew/` (`Brewfile.terminal` for CLI tools on all machines, `Brewfile.mac` for macOS apps, `Brewfile.mac_personal` / `Brewfile.mac_work` for machine-specific apps) and run `./scripts/brew-install-custom.sh`.
+Software is installed using Homebrew. To add a formula or cask, update the appropriate Brewfile in `homebrew/` (`Brewfile.terminal` for CLI tools on all machines, `Brewfile.mac` for macOS apps, `Brewfile.mac_personal` / `Brewfile.mac_work` for machine-specific apps) and run `./dot apps`.

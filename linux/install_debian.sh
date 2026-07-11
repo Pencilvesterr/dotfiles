@@ -103,3 +103,15 @@ install_linux_cli_tools() {
         info "Nerd Fonts (JetBrains Mono) directory exists. Assuming fonts are installed."
     fi
 }
+
+if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
+    case "${1:-}" in
+        settings) configure_linux_settings ;;
+        cli-tools) install_linux_cli_tools ;;
+        apps) install_linux_apps ;;
+        *)
+            echo "Usage: $0 [settings|cli-tools|apps]"
+            exit 1
+            ;;
+    esac
+fi

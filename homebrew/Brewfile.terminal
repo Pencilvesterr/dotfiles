@@ -20,6 +20,7 @@ brew "ripgrep" # `rg` - Modern grep command for finding text in files
 brew "yamllint" # yamllinting
 brew "jq" # Json linting
 brew "shellcheck" # Shell script linting (also run in CI)
+brew "uv" # Python package manager, runs the ./dot CLI (bootstrap installs it standalone; brew keeps it updated)
 
 
 # Neovim + LazyVim setup
