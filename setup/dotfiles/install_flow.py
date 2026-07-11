@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import argparse
 import shutil
+import subprocess
 import sys
+import threading
 import time
 from pathlib import Path
 
@@ -16,6 +18,29 @@ from dotfiles.linker import State
 from dotfiles.profile import Profile, ProfileError
 
 BACKUP_ROOT = Path("~/.config/dotfiles/backup").expanduser()
+SUDO_KEEPALIVE_INTERVAL = 60
+
+
+def _ensure_sudo() -> threading.Event | None:
+    """Prompt for the sudo password once, upfront, instead of letting it surface
+    unpredictably mid-run (Homebrew casks like docker-desktop, and the Linux
+    platform scripts, both shell out to sudo). Keeps the credential cache alive
+    in the background for the rest of install so those later calls never block
+    on a terminal that isn't there."""
+    if not sys.stdin.isatty():
+        return None
+    ui.info("Some steps need sudo (Homebrew casks, Linux platform scripts) — requesting it upfront.")
+    subprocess.run(["sudo", "-v"], check=True)
+    stop = threading.Event()
+
+    def keepalive() -> None:
+        while not stop.wait(SUDO_KEEPALIVE_INTERVAL):
+            subprocess.run(
+                ["sudo", "-n", "-v"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            )
+
+    threading.Thread(target=keepalive, daemon=True).start()
+    return stop
 
 
 def run_install(repo: Path, args: argparse.Namespace) -> int:
@@ -43,11 +68,16 @@ def run_install(repo: Path, args: argparse.Namespace) -> int:
         _report_plan(repo, prof, args, mode, diffs)
         return 0
 
-    if not args.skip_apps:
-        packages.install_apps(repo, prof)
+    sudo_stop = _ensure_sudo()
+    try:
+        if not args.skip_apps:
+            packages.install_apps(repo, prof)
 
-    if not prof.minimal:
-        platform_setup.apply_defaults(repo, prof)
+        if not prof.minimal:
+            platform_setup.apply_defaults(repo, prof)
+    finally:
+        if sudo_stop:
+            sudo_stop.set()
 
     ui.heading("Symbolic Links")
     if mode == "overwrite" and diffs:
