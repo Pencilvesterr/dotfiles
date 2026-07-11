@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -34,6 +35,28 @@ def brewfiles_for(repo: Path, prof: Profile) -> list[Path]:
         suffix = "mac_work" if prof.is_work else "mac_personal"
         brewfiles.append(repo / f"setup/homebrew/Brewfile.{suffix}")
     return brewfiles
+
+
+_TAP_RE = re.compile(r'^tap\s+"([^"]+)"', re.MULTILINE)
+_QUALIFIED_RE = re.compile(r'^(?:brew|cask)\s+"([^/"]+/[^/"]+)/[^"]+"', re.MULTILINE)
+
+
+def taps_for(brewfile: Path) -> set[str]:
+    """Third-party taps a Brewfile needs: explicit `tap` lines plus taps implied
+    by fully-qualified `brew "owner/repo/name"` / `cask "owner/repo/name"` entries."""
+    text = brewfile.read_text()
+    return set(_TAP_RE.findall(text)) | set(_QUALIFIED_RE.findall(text))
+
+
+def trust_taps(brew: str, brewfiles: list[Path]) -> None:
+    """Pre-trust third-party taps so `brew bundle install` doesn't stop mid-run
+    demanding a manual `brew trust` for each one (Homebrew's tap-trust gate)."""
+    taps: set[str] = set()
+    for brewfile in brewfiles:
+        if brewfile.is_file():
+            taps |= taps_for(brewfile)
+    for tap in sorted(taps):
+        subprocess.run([brew, "trust", "--tap", tap], check=True)
 
 
 def install_brewfile(brew: str, brewfile: Path) -> None:
@@ -68,7 +91,9 @@ def install_claude_cli() -> None:
 def install_apps(repo: Path, prof: Profile) -> None:
     ui.heading("Installing Apps")
     brew = find_brew()
-    for brewfile in brewfiles_for(repo, prof):
+    brewfiles = brewfiles_for(repo, prof)
+    trust_taps(brew, brewfiles)
+    for brewfile in brewfiles:
         install_brewfile(brew, brewfile)
     install_claude_cli()
 
