@@ -4,4 +4,4 @@ os:
   editPreset: nvim
 git:
   pagers:
-    - externalDiffCommand: difft --color=always --display=side-by-side
+    - externalDiffCommand: difft --color=always --display=side-by-side --context=6
