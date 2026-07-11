@@ -49,8 +49,8 @@ prompt_user_options() {
         diff_configs+=("$SOFTLINKS_PERSONAL_CONFIG")
         info "Comparing with personal dotfiles..."
     fi
-    ./scripts/links.sh --show-diffs "${diff_configs[@]}" || _diffs_exit=$?
-    _diffs_exit="${_diffs_exit:-0}"
+    local _diffs_exit=0
+    "$REPO_DIR/scripts/links.sh" --show-diffs "${diff_configs[@]}" || _diffs_exit=$?
     [ "$_diffs_exit" -eq 0 ] && printf "\n"
     [ "$_diffs_exit" -gt 1 ] && exit "$_diffs_exit"
 
@@ -155,7 +155,7 @@ setup_links() {
     info "Symbolic Links"
     info "===================="
 
-    chmod +x ./scripts/links.sh
+    chmod +x "$REPO_DIR/scripts/links.sh"
 
     # Collect all applicable config files
     local configs=("$SOFTLINKS_CONFIG")
@@ -171,12 +171,12 @@ setup_links() {
     for config in "${configs[@]}"; do
         if [[ "$overwrite_dotfiles" == "y" ]]; then
             warning "Deleting existing dotfiles from $(basename "$config")..."
-            ./scripts/links.sh --delete --include-files "$config"
+            "$REPO_DIR/scripts/links.sh" --delete --include-files "$config"
         else
             info "Adopting existing files from $(basename "$config")..."
-            ./scripts/links.sh --adopt "$config"
+            "$REPO_DIR/scripts/links.sh" --adopt "$config"
         fi
-        ./scripts/links.sh --create "$config"
+        "$REPO_DIR/scripts/links.sh" --create "$config"
     done
 }
 
@@ -228,9 +228,9 @@ setup_managed_files() {
 
     if [[ "$overwrite_dotfiles" != "y" ]]; then
         info "Adopting existing managed files into repo..."
-        ./scripts/sync.sh pull
+        "$REPO_DIR/scripts/sync.sh" pull
     fi
-    ./scripts/sync.sh push
+    "$REPO_DIR/scripts/sync.sh" push
 }
 
 info "Dotfiles installation initialized..."

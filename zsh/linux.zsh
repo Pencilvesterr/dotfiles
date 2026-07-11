@@ -1,5 +1,4 @@
 # Linux-specific configuration
+# NOTE: linuxbrew shellenv is set up in custom.zsh (guarded, handles both install locations)
 
-# Linuxbrew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # export HOMEBREW_NO_AUTO_UPDATE=1

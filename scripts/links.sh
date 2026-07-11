@@ -64,6 +64,7 @@ create_links() {
 
 delete_links() {
     local config_file="$1"
+    local include_files="${2:-false}"
     check_config_exists "$config_file" || return
 
     info "Deleting links from $(basename "$config_file")..."
@@ -78,9 +79,17 @@ delete_links() {
         target=$(eval echo "$target")
 
         # Check if the target exists (could be file, directory, or broken symlink)
-        if [ -e "$target" ] || [ -L "$target" ]; then
-            rm -rf "$target"
-            success "Deleted: $target"
+        if [ -L "$target" ]; then
+            rm "$target"
+            success "Deleted link: $target"
+        elif [ -e "$target" ]; then
+            if [ "$include_files" = true ]; then
+                rm -rf "$target"
+                success "Deleted file/directory: $target"
+            else
+                # Regular file or directory — only removed with --include-files
+                warning "Skipping (not a symlink): $target"
+            fi
         else
             warning "Not found: $target"
         fi
@@ -168,7 +177,7 @@ if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
             esac
             shift
         done
-        delete_links "$conf_file"
+        delete_links "$conf_file" "$include_files"
         ;;
     "--show-diffs")
         shift
@@ -183,9 +192,9 @@ if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
         echo ""
         echo "Options:"
         echo "  --create <conf_file>  Create symlinks from the specified config file"
-        echo "  --delete <conf_file>  Delete links from the specified config file"
+        echo "  --delete <conf_file>  Delete symlinks from the specified config file (non-symlink targets are left alone)"
         echo "  --delete --include-files <conf_file>"
-        echo "                        Delete links including target files"
+        echo "                        Also delete targets that are regular files/directories"
         echo "  --show-diffs <conf_files...>"
         echo "                        Show target files that differ from source"
         echo "  --adopt <conf_files...>"
