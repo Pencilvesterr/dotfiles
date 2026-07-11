@@ -1,7 +1,6 @@
 # macOS-only entries (casks, mas, vscode extensions, mac-only formulae)
 
 # Sources
-tap "felixkratz/formulae"
 brew "terminal-notifier"
 brew "mas" # Mac application store
 brew "gnu-tar" # Provides the ability to tar files

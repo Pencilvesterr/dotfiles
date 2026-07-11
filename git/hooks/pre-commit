@@ -8,7 +8,6 @@
 #   - Broken, differs, repo file has staged/unstaged changes → warn and abort
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-REPO_DIR="$REPO_ROOT"
 . "$REPO_ROOT/scripts/utils.sh"
 
 CONFIG_FILES=(
