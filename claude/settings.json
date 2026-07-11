@@ -23,16 +23,12 @@
       "Bash(git push *)",
       "Bash(git push)",
       "Bash(git reset --hard *)",
-      "Bash(git checkout *)",
       "Bash(git clean *)",
       "Bash(git branch -D *)",
-      "Bash(git rebase *)",
       "Bash(sudo *)",
       "Bash(kill *)",
       "Bash(killall *)",
       "Bash(pkill *)",
-      "Bash(chmod *)",
-      "Bash(chown *)",
       "Edit(**/.env)",
       "Edit(**/.env.*)"
     ]
@@ -91,5 +87,7 @@
     ]
   },
   "effortLevel": "high",
-  "theme": "dark"
+  "theme": "dark",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true
 }
