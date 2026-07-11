@@ -15,12 +15,12 @@ jobs:
           shellcheck -S warning \
             bootstrap.sh \
             dot \
-            scripts/*.sh \
-            linux/*.sh \
-            mac_config/*.sh \
-            claude/hooks/*.sh \
-            aerospace/*.sh \
-            git/hooks/pre-commit
+            setup/scripts/*.sh \
+            setup/linux/*.sh \
+            setup/mac/*.sh \
+            config/claude/hooks/*.sh \
+            config/aerospace/*.sh \
+            config/git/hooks/pre-commit
 
   python:
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y zsh
       - name: Check zsh file syntax
         run: |
-          for f in zsh/*.zsh zsh/.zshrc zsh/.zshenv zsh/.zprofile; do
+          for f in config/zsh/*.zsh config/zsh/.zshrc config/zsh/.zshenv config/zsh/.zprofile; do
             echo "checking $f"
             zsh -n "$f"
           done

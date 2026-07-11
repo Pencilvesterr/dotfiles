@@ -28,12 +28,12 @@ docker run --rm -v "$REPO_DIR:/src:ro" ubuntu:24.04 bash -euo pipefail -c '
     ./dot install --profile personal-linux --minimal --skip-apps --adopt
 
     echo "==> Asserting results..."
-    [ "$(readlink "$HOME/.zshenv")" = "/dotfiles/zsh/.zshenv" ]
-    [ "$(readlink "$HOME/.gitconfig")" = "/dotfiles/git/global-config/personal.gitconfig" ]
+    [ "$(readlink "$HOME/.zshenv")" = "/dotfiles/config/zsh/.zshenv" ]
+    [ "$(readlink "$HOME/.gitconfig")" = "/dotfiles/config/git/global-config/personal.gitconfig" ]
     [ -f "$HOME/.hushlogin" ]
     [ -f "$HOME/.config/htop/htoprc" ]
-    [ "$(git config core.hooksPath)" = "/dotfiles/git/hooks" ]
-    git ls-files -v | grep -q "^S zsh/local.zsh"
+    [ "$(git config core.hooksPath)" = "/dotfiles/config/git/hooks" ]
+    git ls-files -v | grep -q "^S config/zsh/local.zsh"
 
     echo "==> Second sync must be a clean no-op..."
     ./dot sync

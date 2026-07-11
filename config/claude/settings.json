@@ -33,30 +33,10 @@
       "Edit(**/.env.*)"
     ]
   },
-  "model": "opusplan",
+  "model": "sonnet",
   "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/mcrouch/.claude/hooks/aloc-managed/post_to_aloc.sh"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/mcrouch/.claude/hooks/aloc-managed/post_to_aloc.sh"
-          }
-        ]
-      }
-    ],
+    "PostToolUse": [],
+    "PreToolUse": [],
     "Stop": [
       {
         "matcher": "",

@@ -1,0 +1,15 @@
+# macOS-only symlinks, applied on Darwin machines.
+
+- defaults:
+    link:
+      create: true
+      relink: true
+
+- link:
+    ~/Library/Application Support/Code/User/settings.json: config/vscode/settings.json
+    ~/Library/Application Support/Code/User/keybindings.json: config/vscode/keybindings.json
+    ~/.config/aerospace/aerospace.toml: config/aerospace/aerospace.toml
+    ~/.config/aerospace/move-apps-to-workspace.sh: config/aerospace/move-apps-to-workspace.sh
+    ~/.claude/hooks/ntfy-notify-remote.sh: config/claude/hooks/ntfy-notify-remote.sh
+    ~/.claude/hooks/ntfy-subscribe-claude-code.sh: config/claude/hooks/ntfy-subscribe-claude-code.sh
+    ~/Library/LaunchAgents/com.mcrouch.ntfy-claude-code.plist: config/launchd/com.mcrouch.ntfy-claude-code.plist

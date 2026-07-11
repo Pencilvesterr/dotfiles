@@ -1,0 +1,44 @@
+# Cross-platform symlinks, applied on every machine.
+# Format: dotbot tasks. Link mapping is  <target on this machine>: <source in this repo>.
+# Consumed by `./dot sync` / `./dot install` (see setup/dotfiles/linker.py).
+
+- defaults:
+    link:
+      create: true # create parent directories of the target
+      relink: true # update symlinks that point somewhere else
+
+- shell:
+    - command: touch ~/.hushlogin
+      description: Suppress 'last login' message in the terminal
+      quiet: true
+
+- link:
+    ~/.config/nvim: config/nvim
+    ~/.config/wezterm: config/wezterm
+
+    ~/.config/zsh/.zshrc: config/zsh/.zshrc
+    ~/.zshenv: config/zsh/.zshenv
+    ~/.config/zsh/.zshenv: config/zsh/.zshenv
+    ~/.config/zsh/local.zsh: config/zsh/local.zsh
+    ~/.config/zsh/custom.zsh: config/zsh/custom.zsh
+    ~/.config/zsh/plugin_settings.zsh: config/zsh/plugin_settings.zsh
+    ~/.config/zsh/aliases.zsh: config/zsh/aliases.zsh
+    ~/.config/zsh/linux.zsh: config/zsh/linux.zsh
+    ~/.config/zsh/.zprofile: config/zsh/.zprofile
+    ~/.config/zsh/.zsh_plugins.txt: config/zsh/.zsh_plugins.txt
+
+    ~/.config/starship/starship.toml: config/starship/starship.toml
+    ~/.vimrc: config/vim/.vimrc
+    ~/.ideavimrc: config/idea/.ideavimrc
+    ~/.config/ranger/rc.conf: config/ranger/rc.conf
+    ~/.config/ranger/scope.sh: config/ranger/scope.sh
+
+    # Difftastic config, included by the global .gitconfig for diffs
+    ~/.config/difftastic/difft.gitconfig: config/git/difftastic/difft.gitconfig
+    ~/.config/git/common.gitconfig: config/git/global-config/common.gitconfig
+    ~/.config/lazygit/config.yml: config/git/lazygit/config.yml
+
+    # Claude Code settings
+    ~/.claude/settings.json: config/claude/settings.json
+    ~/.config/ccstatusline/settings.json: config/claude/ccstatusline_settings.json
+    ~/.claude/hooks/notify.sh: config/claude/hooks/notify.sh

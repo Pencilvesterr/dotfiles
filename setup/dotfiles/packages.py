@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -27,11 +28,11 @@ def find_brew() -> str:
 
 
 def brewfiles_for(repo: Path, prof: Profile) -> list[Path]:
-    brewfiles = [repo / "homebrew/Brewfile.terminal"]
+    brewfiles = [repo / "setup/homebrew/Brewfile.terminal"]
     if prof.is_mac and not prof.minimal:
-        brewfiles.append(repo / "homebrew/Brewfile.mac")
+        brewfiles.append(repo / "setup/homebrew/Brewfile.mac")
         suffix = "mac_work" if prof.is_work else "mac_personal"
-        brewfiles.append(repo / f"homebrew/Brewfile.{suffix}")
+        brewfiles.append(repo / f"setup/homebrew/Brewfile.{suffix}")
     return brewfiles
 
 
@@ -46,7 +47,11 @@ def install_brewfile(brew: str, brewfile: Path) -> None:
         ui.warning(f"{brewfile.name}: dependencies already satisfied.")
         return
     ui.info("Satisfying missing dependencies with 'brew bundle install'...")
-    subprocess.run([brew, "bundle", "install", f"--file={brewfile}"], check=True)
+    # Provisioning must see fresh formula/bottle metadata even though interactive
+    # shells set HOMEBREW_NO_AUTO_UPDATE=1 for speed; stale metadata can crash
+    # `brew bundle install` mid-pour (e.g. Utils::Bottles.load_tab on a stale bottle).
+    env = {**os.environ, "HOMEBREW_NO_AUTO_UPDATE": "0"}
+    subprocess.run([brew, "bundle", "install", f"--file={brewfile}"], check=True, env=env)
     ui.info(f"Finished installing {brewfile.name}.")
 
 

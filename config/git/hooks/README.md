@@ -5,8 +5,8 @@ by `./dot install` / `./dot sync`.
 
 ## pre-commit
 
-A thin shim that runs `./dot hook pre-commit` (see `install/dotfiles/hook.py`).
-It checks every symlink target defined in `install/dotbot/*.yaml` before each
+A thin shim that runs `./dot hook pre-commit` (see `setup/dotfiles/hook.py`).
+It checks every symlink target defined in `setup/dotbot/*.yaml` before each
 commit to keep the repository and system config files in sync:
 
 - Correct symlink → skip
@@ -14,7 +14,7 @@ commit to keep the repository and system config files in sync:
 - Broken, differs, no git changes to repo file → adopt machine version, stage it, continue
 - Broken, differs, repo file has staged/unstaged changes → warn and abort
 
-Managed (app-owned) files from `install/managed.toml` are always pulled
+Managed (app-owned) files from `setup/managed.toml` are always pulled
 system → repo, never staged.
 
 **Why this is needed:**

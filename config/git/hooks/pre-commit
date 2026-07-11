@@ -1,6 +1,6 @@
 #!/bin/bash
 # Self-heal dotfile links before committing (fix/adopt/conflict-abort) and pull
-# app-managed files into the repo. Logic lives in install/dotfiles/hook.py.
+# app-managed files into the repo. Logic lives in setup/dotfiles/hook.py.
 # Skips silently on machines without a saved profile or without uv.
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 

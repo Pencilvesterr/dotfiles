@@ -7,4 +7,4 @@
       relink: true
 
 - link:
-    ~/.gitconfig: git/global-config/personal.gitconfig
+    ~/.gitconfig: config/git/global-config/personal.gitconfig

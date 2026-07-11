@@ -26,16 +26,21 @@ This is a personal dotfiles repository for macOS and Linux development environme
 ./dot defaults          # re-apply macOS defaults / Linux settings
 ./dot profile show|set NAME [--minimal]
 
-# Python dev (package lives in install/dotfiles/)
+# Python dev (package lives in setup/dotfiles/)
 uv run pytest
 uv run ruff check
 ```
 
 ## Architecture
 
+The repo has two top-level buckets: **`config/`** holds the app/tool config
+*payload* (nvim, zsh, git, wezterm, …) that gets symlinked/copied onto a machine,
+and **`setup/`** holds the *provisioning machinery* (the `dot` CLI package, dotbot
+YAML layers, Brewfiles, and platform scripts) that installs and syncs it.
+
 ### The `dot` CLI
 
-- `./dot` is a bash shim that runs `uv run python -m dotfiles` (package at `install/dotfiles/`).
+- `./dot` is a bash shim that runs `uv run python -m dotfiles` (package at `setup/dotfiles/`).
 - `cli.py` — argparse subcommands. `install_flow.py` — full provisioning. `linker.py` — link
   enumeration/classification (OK, MISSING, WRONG_LINK, EXISTS_SAME, EXISTS_DIFFERS, CONFLICT),
   diff/adopt/heal, and the in-process dotbot dispatch. `managed.py` — copy-based sync for files
@@ -47,7 +52,7 @@ uv run ruff check
 
 ### Link definitions (dotbot YAML layers)
 
-`install/dotbot/` holds one YAML per layer, applied in order (later layers win for the same target):
+`setup/dotbot/` holds one YAML per layer, applied in order (later layers win for the same target):
 
 - `base.yaml` — every machine
 - `macos.yaml` / `linux.yaml` — by OS
@@ -58,7 +63,7 @@ source of truth — dotbot creates the links, and `linker.py` reads the same fil
 diff/adopt/heal and the pre-commit hook.
 
 Files that third-party apps overwrite (htoprc, Arc sidebar) can't be symlinks; they're listed in
-`install/managed.toml` and copied by `managed.py` (optionally scoped by `context`/`os` keys).
+`setup/managed.toml` and copied by `managed.py` (optionally scoped by `context`/`os` keys).
 
 ### Work vs Personal / Mac vs Linux
 
@@ -67,29 +72,29 @@ the profile) marks servers: skips GUI apps and OS defaults, still links everythi
 
 ### Platform scripts (bash, called by the CLI)
 
-- `mac_config/osx-defaults.sh [all|keyboard|defaults|capslock]` — macOS `defaults write` calls
-- `linux/install_debian.sh [settings|cli-tools|apps]` — apt/Docker/zsh/fonts setup
+- `setup/mac/osx-defaults.sh [all|keyboard|defaults|capslock]` — macOS `defaults write` calls
+- `setup/linux/install_debian.sh [settings|cli-tools|apps]` — apt/Docker/zsh/fonts setup
 - `bootstrap.sh` — virgin-machine prerequisites, then `exec ./dot install`
 
 ### Git hook
 
-`git/hooks/` is the repo's `core.hooksPath`. `pre-commit` shims to `./dot hook pre-commit`,
+`config/git/hooks/` is the repo's `core.hooksPath`. `pre-commit` shims to `./dot hook pre-commit`,
 which fixes broken links, adopts changed machine files (staged), pulls managed files (unstaged),
 and aborts the commit on conflicts. It skips (never blocks) if no profile or uv is present.
 
 ## Adding New Dotfiles
 
-1. Place the config file in the appropriate subdirectory
-2. Add `~/target/path: repo/relative/source` to the right layer in `install/dotbot/`
+1. Place the config file in the appropriate subdirectory under `config/`
+2. Add `~/target/path: config/relative/source` to the right layer in `setup/dotbot/`
 3. Run `./dot sync`
 
 ## Adding New Software
 
 1. Add the package to the appropriate Brewfile:
-   - `homebrew/Brewfile.terminal` - CLI tools, all machines (including Linux via linuxbrew)
-   - `homebrew/Brewfile.mac` - macOS apps, all Macs
-   - `homebrew/Brewfile.mac_personal` - Personal Macs only
-   - `homebrew/Brewfile.mac_work` - Work Macs only
+   - `setup/homebrew/Brewfile.terminal` - CLI tools, all machines (including Linux via linuxbrew)
+   - `setup/homebrew/Brewfile.mac` - macOS apps, all Macs
+   - `setup/homebrew/Brewfile.mac_personal` - Personal Macs only
+   - `setup/homebrew/Brewfile.mac_work` - Work Macs only
 2. Install with: `./dot apps`
 
 ## Important Notes
@@ -97,7 +102,7 @@ and aborts the commit on conflicts. It skips (never blocks) if no profile or uv 
 - The `cd` command is aliased to use **zoxide** (use `/bin/cd` for the original command)
 - Nord color palette is used throughout all themes; theme switching via env vars in `.zshenv`
 - NeoVim config is based on LazyVim
-- `zsh/local.zsh` is marked skip-worktree (machine-local, never committed)
-- On work machines `git/global-config/work.gitconfig` is skip-worktree because work tooling
+- `config/zsh/local.zsh` is marked skip-worktree (machine-local, never committed)
+- On work machines `config/git/global-config/work.gitconfig` is skip-worktree because work tooling
   appends sections to it; the `strip-work-tooling` clean filter is a safety net
 - Never test `./dot` against the real `$HOME` — use a temp `HOME` (see `tests/`)

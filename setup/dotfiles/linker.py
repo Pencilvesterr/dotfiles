@@ -1,4 +1,4 @@
-"""Symlink management on top of the dotbot YAML layers in install/dotbot/.
+"""Symlink management on top of the dotbot YAML layers in setup/dotbot/.
 
 The YAML files are the single source of truth for link definitions. dotbot performs the
 actual linking; this module reads the same files to classify the state of every target,
@@ -21,7 +21,7 @@ import yaml
 from dotfiles import ui
 from dotfiles.profile import Profile
 
-DOTBOT_DIR = Path("install/dotbot")
+DOTBOT_DIR = Path("setup/dotbot")
 
 
 class State(Enum):

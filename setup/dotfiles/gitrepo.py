@@ -12,7 +12,7 @@ from dotfiles.profile import Profile
 # work.gitconfig is symlinked to ~/.gitconfig on work machines. Work tooling
 # auto-appends machine-specific sections ([trace2], [githooks], etc.) below this
 # marker; skip-worktree and the clean filter keep those out of commits.
-WORK_GITCONFIG = "git/global-config/work.gitconfig"
+WORK_GITCONFIG = "config/git/global-config/work.gitconfig"
 STRIP_FILTER_CLEAN = "sed '/^# Work specific - kept here/,$d'"
 
 
@@ -27,14 +27,14 @@ def housekeeping(repo: Path, prof: Profile) -> None:
 
 
 def set_hooks_path(repo: Path) -> None:
-    _git(repo, "config", "core.hooksPath", str(repo / "git" / "hooks"))
+    _git(repo, "config", "core.hooksPath", str(repo / "config" / "git" / "hooks"))
 
 
 def set_skip_worktree(repo: Path, prof: Profile) -> None:
-    paths = ["zsh/local.zsh"]
+    paths = ["config/zsh/local.zsh"]
     if prof.is_work:
         # To commit intentional changes to work.gitconfig: temporarily disable with
-        # `git update-index --no-skip-worktree git/global-config/work.gitconfig`,
+        # `git update-index --no-skip-worktree config/git/global-config/work.gitconfig`,
         # stage and commit, then re-enable.
         paths.append(WORK_GITCONFIG)
     for path in paths:

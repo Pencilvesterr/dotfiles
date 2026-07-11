@@ -17,15 +17,15 @@ def _run_script(repo: Path, script: str, *args: str) -> None:
 def apply_defaults(repo: Path, prof: Profile) -> None:
     if prof.is_mac:
         ui.heading("OSX System Defaults")
-        _run_script(repo, "mac_config/osx-defaults.sh", "all")
+        _run_script(repo, "setup/mac/osx-defaults.sh", "all")
     else:
         ui.heading("Linux Settings")
-        _run_script(repo, "linux/install_debian.sh", "settings")
+        _run_script(repo, "setup/linux/install_debian.sh", "settings")
 
 
 def install_linux_cli_tools(repo: Path) -> None:
-    _run_script(repo, "linux/install_debian.sh", "cli-tools")
+    _run_script(repo, "setup/linux/install_debian.sh", "cli-tools")
 
 
 def install_linux_apps(repo: Path) -> None:
-    _run_script(repo, "linux/install_debian.sh", "apps")
+    _run_script(repo, "setup/linux/install_debian.sh", "apps")

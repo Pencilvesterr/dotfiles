@@ -1,5 +1,5 @@
 #!/bin/zsh
-# --- Work-machine configuration (tracked in git, symlinked via install/dotbot/work.yaml)
+# --- Work-machine configuration (tracked in git, symlinked via setup/dotbot/work.yaml)
 
 # -------------------------------------------------------------------
 # Updating PATH

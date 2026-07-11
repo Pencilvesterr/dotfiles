@@ -1,4 +1,4 @@
-"""Git hook entry points (invoked via `dot hook <name>` from git/hooks/ shims)."""
+"""Git hook entry points (invoked via `dot hook <name>` from config/git/hooks/ shims)."""
 
 from __future__ import annotations
 

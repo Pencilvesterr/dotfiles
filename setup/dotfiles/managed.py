@@ -1,6 +1,6 @@
 """Managed files: configs owned by third-party apps that overwrite symlinks, so they
 are copied between the repo and the system instead of linked. Defined in
-install/managed.toml."""
+setup/managed.toml."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from pathlib import Path
 from dotfiles import ui
 from dotfiles.profile import Profile
 
-MANAGED_FILE = Path("install/managed.toml")
+MANAGED_FILE = Path("setup/managed.toml")
 
 
 @dataclass(frozen=True)

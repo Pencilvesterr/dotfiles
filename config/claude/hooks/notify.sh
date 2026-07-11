@@ -4,12 +4,18 @@
 # Usage: notify.sh "<message template>" — a %s in the template is replaced
 # with the name of the app running Claude Code (macOS) or the hostname (ntfy).
 
-NTFY_URL="https://ntfy.ketaflix.com/claude-code"
-NTFY_TOKEN="tk_szmpvbxak9mg9qn4owf1tpdtpy423"
+script_source="${BASH_SOURCE[0]}"
+[ -h "$script_source" ] && script_source="$(readlink "$script_source")"
+script_dir="$(cd "$(dirname "$script_source")" && pwd)"
+[ -f "$script_dir/.env" ] && source "$script_dir/.env"
 
 if [ "$(uname)" != "Darwin" ]; then
+  if [ -z "$NTFY_SERVER" ] || [ -z "$NTFY_TOPIC" ] || [ -z "$NTFY_TOKEN" ]; then
+    echo "notify.sh: NTFY_SERVER, NTFY_TOPIC, NTFY_TOKEN must be set in $script_dir/.env" >&2
+    exit 1
+  fi
   msg=$(printf -- "$1" "$(hostname -s)")
-  curl -fsS -H "Authorization: Bearer $NTFY_TOKEN" -d "$msg" "$NTFY_URL" >/dev/null
+  curl -fsS -H "Authorization: Bearer $NTFY_TOKEN" -d "$msg" "https://$NTFY_SERVER/$NTFY_TOPIC" >/dev/null
   exit 0
 fi
 

@@ -25,7 +25,7 @@ def test_link_targets_are_home_relative_and_unique_per_profile():
 
 
 def test_managed_repo_paths_exist():
-    data = tomllib.loads((REAL_REPO / "install/managed.toml").read_text())
+    data = tomllib.loads((REAL_REPO / "setup/managed.toml").read_text())
     for item in data["files"]:
         assert (REAL_REPO / item["repo"]).exists(), f"managed file missing: {item['repo']}"
 

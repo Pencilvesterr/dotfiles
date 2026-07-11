@@ -72,16 +72,16 @@ repo leaves broken symlinks you can remove as you encounter them.
 
 ### Dotfiles
 
-1. Place your dotfile in the appropriate location within the repository.
-2. Add a `target: source` line to the right layer in `install/dotbot/`:
+1. Place your dotfile in the appropriate location under `config/`.
+2. Add a `target: source` line to the right layer in `setup/dotbot/`:
    - `base.yaml` — every machine
    - `macos.yaml` / `linux.yaml` — OS-specific
    - `work.yaml` / `personal.yaml` — context-specific
 3. Run `./dot sync`.
 
-Files that third-party apps overwrite (so they can't be symlinks) go in `install/managed.toml`
+Files that third-party apps overwrite (so they can't be symlinks) go in `setup/managed.toml`
 instead, and move with `./dot pull` / `./dot sync`.
 
 ### Software Installation
 
-Software is installed using Homebrew. To add a formula or cask, update the appropriate Brewfile in `homebrew/` (`Brewfile.terminal` for CLI tools on all machines, `Brewfile.mac` for macOS apps, `Brewfile.mac_personal` / `Brewfile.mac_work` for machine-specific apps) and run `./dot apps`.
+Software is installed using Homebrew. To add a formula or cask, update the appropriate Brewfile in `setup/homebrew/` (`Brewfile.terminal` for CLI tools on all machines, `Brewfile.mac` for macOS apps, `Brewfile.mac_personal` / `Brewfile.mac_work` for machine-specific apps) and run `./dot apps`.

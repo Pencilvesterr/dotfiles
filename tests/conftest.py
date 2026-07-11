@@ -28,11 +28,11 @@ def home(tmp_path, monkeypatch) -> Path:
 def repo(tmp_path) -> Path:
     """A scratch dotfiles repo with two linkable files, committed."""
     repo = tmp_path / "repo"
-    (repo / "install/dotbot").mkdir(parents=True)
+    (repo / "setup/dotbot").mkdir(parents=True)
     (repo / "zsh").mkdir()
     (repo / "zsh/aliases.zsh").write_text("alias ll='ls -l'\n")
     (repo / "zsh/custom.zsh").write_text("export FOO=bar\n")
-    (repo / "install/dotbot/base.yaml").write_text(
+    (repo / "setup/dotbot/base.yaml").write_text(
         textwrap.dedent("""\
         - defaults:
             link:
@@ -43,15 +43,15 @@ def repo(tmp_path) -> Path:
             ~/.config/zsh/custom.zsh: zsh/custom.zsh
         """)
     )
-    (repo / "install/dotbot/linux.yaml").write_text("- link: {}\n")
-    (repo / "install/dotbot/macos.yaml").write_text("- link: {}\n")
-    (repo / "install/dotbot/work.yaml").write_text("- link:\n    ~/.gitconfig: gitconfig.work\n")
-    (repo / "install/dotbot/personal.yaml").write_text(
+    (repo / "setup/dotbot/linux.yaml").write_text("- link: {}\n")
+    (repo / "setup/dotbot/macos.yaml").write_text("- link: {}\n")
+    (repo / "setup/dotbot/work.yaml").write_text("- link:\n    ~/.gitconfig: gitconfig.work\n")
+    (repo / "setup/dotbot/personal.yaml").write_text(
         "- link:\n    ~/.gitconfig: gitconfig.personal\n"
     )
     (repo / "gitconfig.work").write_text("[user]\n  name = work\n")
     (repo / "gitconfig.personal").write_text("[user]\n  name = personal\n")
-    (repo / "install/managed.toml").write_text(
+    (repo / "setup/managed.toml").write_text(
         textwrap.dedent("""\
         [[files]]
         repo = "htoprc"
