@@ -23,3 +23,24 @@ install_brewfile() {
         return 1
     fi
 }
+
+# When run directly (not sourced by install.sh), install the given Brewfiles,
+# or the platform-appropriate defaults if none are given.
+if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
+    if [ $# -gt 0 ]; then
+        for brewfile in "$@"; do
+            install_brewfile "$brewfile"
+        done
+    else
+        REPO_DIR="$(dirname "$SCRIPT_DIR")"
+        install_brewfile "$REPO_DIR/homebrew/Brewfile.terminal"
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            install_brewfile "$REPO_DIR/homebrew/Brewfile.mac"
+            if detect_work_machine; then
+                install_brewfile "$REPO_DIR/homebrew/Brewfile.mac_work"
+            else
+                install_brewfile "$REPO_DIR/homebrew/Brewfile.mac_personal"
+            fi
+        fi
+    fi
+fi
