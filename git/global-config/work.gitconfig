@@ -1,27 +1,10 @@
 [user]
 	name = Morgan Crouch
 	email = mcrouch@atlassian.com
-[push]
-	autoSetupRemote = true
-[core]
-	autocrlf = input
-[merge]
-	conflictStyle = zdiff3
-[diff]
-    external = difft
-[pull]
-	rebase = true
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+
 [include]
-	path = ~/.config/difftastic/difft.gitconfig
-[rerere]
-	enabled = true
+	path = ~/.config/git/common.gitconfig
 
 # Use personal account for personal projects
 [includeIf "gitdir:~/dev/personal/"]
 	path = ~/.gitconfig_personal
-
