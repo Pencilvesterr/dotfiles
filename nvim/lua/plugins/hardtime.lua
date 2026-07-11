@@ -5,5 +5,11 @@ return {
   dependencies = { "MunifTanjim/nui.nvim" },
   opts = {
     restriction_mode = "hint",
+    disabled_keys = {
+      ["<Up>"] = false,
+      ["<Down>"] = false,
+      ["<Left>"] = false,
+      ["<Right>"] = false,
+    },
   },
 }
