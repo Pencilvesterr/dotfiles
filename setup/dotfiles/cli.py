@@ -34,6 +34,7 @@ def cmd_sync(args: argparse.Namespace) -> int:
     from dotfiles import gitrepo, linker, managed
 
     prof = _load_profile()
+    gitrepo.ensure_submodules(REPO_ROOT)
     linker.sync_links(REPO_ROOT, prof, dry_run=args.dry_run)
     managed.push(REPO_ROOT, prof, dry_run=args.dry_run)
     if not args.dry_run:

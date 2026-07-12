@@ -42,3 +42,4 @@
     ~/.claude/settings.json: config/claude/settings.json
     ~/.config/ccstatusline/settings.json: config/claude/ccstatusline_settings.json
     ~/.claude/hooks/notify.sh: config/claude/hooks/notify.sh
+    ~/.claude/hooks/.env: private/claude/hooks/.env

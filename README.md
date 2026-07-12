@@ -36,6 +36,11 @@ git clone https://github.com/Pencilvesterr/dotfiles.git && cd dotfiles
 off to `./dot install`, which does the actual provisioning. Without `--profile` it asks
 interactively; the answer is saved to `~/.config/dotfiles/profile.json` and reused from then on.
 
+This repo has a `private/` git submodule (a separate private repo) holding a couple of files
+that shouldn't be world-readable (an API token, Arc browser sync data). It's owner-only —
+`./dot install`/`./dot sync` update it when accessible and otherwise just skip the handful of
+files that live there, so cloning and provisioning this repo works fine without access to it.
+
 ### Day-to-day: syncing config changes
 
 This is the frequent path — after pulling dotfile changes (or editing them locally), run:

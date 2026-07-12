@@ -168,16 +168,21 @@ def sync_links(repo: Path, prof: Profile, dry_run: bool = False) -> None:
 def run_dotbot(repo: Path, prof: Profile) -> None:
     """Run dotbot once over the merged task list of all applicable layers.
 
-    Targets that exist as real files/directories are excluded (with a warning)
-    rather than passed to dotbot: it refuses to clobber them, which is what we
-    want, but it would also report the whole run as failed."""
+    Targets that exist as real files/directories, or whose repo source doesn't
+    exist (e.g. an uninitialized private submodule), are excluded (with a
+    warning) rather than passed to dotbot: dotbot would otherwise report the
+    whole run as failed for one missing/unwritable entry."""
+    classified = classified_entries(repo, prof)
     skip = {
         e.target
-        for e in classified_entries(repo, prof)
-        if e.state in (State.EXISTS_SAME, State.EXISTS_DIFFERS, State.CONFLICT)
+        for e in classified
+        if e.state in (State.EXISTS_SAME, State.EXISTS_DIFFERS, State.CONFLICT, State.SOURCE_MISSING)
     }
-    for target in sorted(skip):
-        ui.warning(f"File/directory already exists, leaving alone: {target}")
+    for e in sorted(classified, key=lambda e: e.target):
+        if e.state is State.SOURCE_MISSING:
+            ui.warning(f"Source missing in repo, skipping: {e.source} (wanted by {e.target})")
+        elif e.state in (State.EXISTS_SAME, State.EXISTS_DIFFERS, State.CONFLICT):
+            ui.warning(f"File/directory already exists, leaving alone: {e.target}")
 
     merged: list[dict] = []
     for layer in layer_files(repo, prof):
