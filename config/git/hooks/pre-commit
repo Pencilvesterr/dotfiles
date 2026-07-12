@@ -1,12 +1,24 @@
 #!/bin/bash
-# Self-heal dotfile links before committing (fix/adopt/conflict-abort) and pull
-# app-managed files into the repo. Logic lives in setup/dotfiles/hook.py.
+# Run the fast Python test suite, then self-heal dotfile links before committing
+# (fix/adopt/conflict-abort) and pull app-managed files into the repo. Self-heal
+# logic lives in setup/dotfiles/hook.py.
 # Skips silently on machines without a saved profile or without uv.
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 
+have_uv() {
+    command -v uv >/dev/null 2>&1 || [ -x "$HOME/.local/bin/uv" ]
+}
+
+if have_uv; then
+    if ! (cd "$REPO_ROOT" && uv run pytest -q); then
+        echo "==> pytest failed; commit aborted"
+        exit 1
+    fi
+fi
+
 if ! "$REPO_ROOT/dot" hook pre-commit; then
     # Distinguish a real conflict (dot ran and said abort) from tooling issues
-    if command -v uv >/dev/null 2>&1 || [ -x "$HOME/.local/bin/uv" ]; then
+    if have_uv; then
         exit 1
     fi
     echo "==> uv not available; skipping dotfiles pre-commit checks"

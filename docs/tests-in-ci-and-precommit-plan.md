@@ -30,7 +30,8 @@ fast pytest run to the pre-commit hook.
 ## Status
 
 - [x] Plan written
-- [ ] tests.yml added
-- [ ] lint.yml trimmed
-- [ ] pre-commit hook updated
-- [ ] Verified: pytest passes standalone, shellcheck passes on the hook, scratch-clone commit test
+- [x] tests.yml added
+- [x] lint.yml trimmed
+- [x] pre-commit hook updated
+- [x] Verified: pytest passes standalone (22 passed), shellcheck passes on the hook, scratch-clone
+      commit test confirms the hook both blocks a commit on a failing test and allows it once fixed
