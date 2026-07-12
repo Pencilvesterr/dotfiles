@@ -57,6 +57,8 @@ def _copy(src: Path, dest: Path, dry_run: bool, label: str) -> None:
         ui.info(f"would {label}: {src} -> {dest}")
         return
     dest.parent.mkdir(parents=True, exist_ok=True)
+    if dest.is_symlink() and not dest.exists():
+        dest.unlink()
     if src.is_dir():
         shutil.copytree(src, dest, dirs_exist_ok=True)
     else:

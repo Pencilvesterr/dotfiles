@@ -23,6 +23,18 @@ def test_push_then_pull_round_trip(repo, home):
     assert (repo / "htoprc").read_text() == "fields=1 2\n"
 
 
+def test_push_replaces_dangling_destination_symlink(repo, home):
+    prof = Profile("personal-linux")
+    system = home / ".config/htop/htoprc"
+    system.parent.mkdir(parents=True)
+    system.symlink_to(home / "missing/htoprc")
+
+    managed.push(repo, prof)
+
+    assert not system.is_symlink()
+    assert system.read_text() == "fields=0\n"
+
+
 def test_dry_run_changes_nothing(repo, home):
     prof = Profile("personal-linux")
     system = home / ".config/htop/htoprc"
