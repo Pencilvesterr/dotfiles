@@ -15,12 +15,6 @@ export LANG="en_AU.UTF-8" # Sets default locale for all categories
 export LC_ALL="en_AU.UTF-8" # Overrides all other locale settings
 export LC_CTYPE="en_AU.UTF-8" # Controls character classification and case conversion
 
-# Long-lived parent processes (e.g. wezterm-mux-server) can hand new shells a
-# stale, inherited $VIMRUNTIME from before a neovim upgrade, breaking plain
-# vim (which has an incompatible runtime tree). Clear it on every new shell;
-# the nvim() wrapper in aliases.zsh sets the correct value just for nvim.
-# unset VIMRUNTIME
-
 # Use nvim as default editor, falling back to vim if not available
 if command -v nvim >/dev/null 2>&1; then
   export EDITOR="nvim"
