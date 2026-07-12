@@ -1,0 +1,42 @@
+name: Linux smoke test (full)
+
+# Exercises the FULL Linux install path in a clean Ubuntu container, including
+# installing Homebrew itself and all Linux-specific apps (Docker, Wezterm,
+# Nerd Fonts, ...) via bootstrap.sh. Mirrors tests/docker-smoke-full.sh.
+#
+# Slow (15-35 min), so it only triggers when a path relevant to the Linux
+# install actually changes, rather than on every push/PR.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - bootstrap.sh
+      - setup/dotfiles/**
+      - setup/dotbot/**
+      - setup/linux/**
+      - setup/homebrew/Brewfile.terminal
+      - setup/managed.toml
+      - config/git/hooks/**
+      - tests/docker-smoke-full.sh
+      - .github/workflows/linux-smoke-full.yml
+  pull_request:
+    paths:
+      - bootstrap.sh
+      - setup/dotfiles/**
+      - setup/dotbot/**
+      - setup/linux/**
+      - setup/homebrew/Brewfile.terminal
+      - setup/managed.toml
+      - config/git/hooks/**
+      - tests/docker-smoke-full.sh
+      - .github/workflows/linux-smoke-full.yml
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run full Linux install smoke test
+        run: ./tests/docker-smoke-full.sh
