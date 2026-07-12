@@ -33,10 +33,30 @@
       "Edit(**/.env.*)"
     ]
   },
-  "model": "sonnet",
+  "model": "opusplan",
   "hooks": {
-    "PostToolUse": [],
-    "PreToolUse": [],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/mcrouch/.claude/hooks/aloc-managed/post_to_aloc.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/mcrouch/.claude/hooks/aloc-managed/post_to_aloc.sh"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "matcher": "",
@@ -65,6 +85,11 @@
     "excludedCommands": [
       "./jmake *"
     ]
+  },
+  "statusLine": {
+    "command": "npx -y ccstatusline@latest",
+    "padding": 0,
+    "type": "command"
   },
   "effortLevel": "high",
   "theme": "dark",

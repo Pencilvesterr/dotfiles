@@ -1,0 +1,115 @@
+notify = ["/Users/mcrouch/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+model = "gpt-5.6-terra"
+model_reasoning_effort = "high"
+approvals_reviewer = "auto_review"
+
+[features]
+  hooks = true
+js_repl = false
+
+[hooks.state]
+
+[hooks.state."/Users/mcrouch/.codex/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:3fa975cb8afebbdbcad142642db3aa9d2aee3b9f70331528227e15fcfe299aa8"
+
+[hooks.state."/Users/mcrouch/.codex/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:4a26fda072d09e1d357d3120d53a9ffbdd4924b34f91cafbd4b0b7e88723d07f"
+
+[hooks.state."/Users/mcrouch/.codex/hooks.json:permission_request:0:0"]
+trusted_hash = "sha256:fd85288d7c185e0b655c9af5291df3c92851631905e334c5ef369f85d3620301"
+
+[hooks.state."/Users/mcrouch/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:f11a5c6260480f16ed0fd8aec66c2d500b318ef3fce3b7c7509d12776d06b04a"
+
+[projects."/Users/mcrouch/dev/atlassian/mcrouch-dotiles"]
+trust_level = "trusted"
+
+[projects."/Users/mcrouch/dev/atlassian/jira-full"]
+trust_level = "trusted"
+
+[projects."/Users/mcrouch/dev/atlassian/jira-operational-artifacts"]
+trust_level = "trusted"
+
+[projects."/Users/mcrouch/dev/personal/dotfiles"]
+trust_level = "trusted"
+
+[projects."/Users/mcrouch/dev/atlassian/temp"]
+trust_level = "trusted"
+
+[projects."/Users/mcrouch"]
+trust_level = "trusted"
+
+[projects."/Users/mcrouch/dev/atlassian/temp/tenants-without-rovo"]
+trust_level = "trusted"
+
+[tui]
+status_line = ["model-with-reasoning", "current-dir", "git-branch", "branch-changes", "permissions"]
+status_line_use_colors = true
+
+[tui.model_availability_nux]
+"gpt-5.5" = 4
+
+[marketplaces.openai-bundled]
+last_updated = "2026-07-09T22:45:51Z"
+source_type = "local"
+source = "/Users/mcrouch/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-07-09T23:37:32Z"
+source_type = "local"
+source = "/Users/mcrouch/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[plugins."sites@openai-bundled"]
+enabled = true
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."visualize@openai-bundled"]
+enabled = true
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/Codex.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/mcrouch/.codex"
+CODEX_HOME = "/Users/mcrouch/.codex"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f,9f3594de71104f9f06015712cef546902a47ab57709ebf93db6e6081d8e92364"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome"
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.707.31123"
+CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
+
+[desktop]
+conversationDetailMode = "STEPS_COMMANDS"
+ambient-suggestions-enabled = true
+followUpQueueMode = "queue"
+dock-icon-preference = "app-default"
+appearanceTheme = "dark"
+
+[desktop.open-in-target-preferences]
+global = "intellij"
+
+[desktop.open-in-target-preferences.perPath]
+"/Users/mcrouch/dev/personal/dotfiles" = "intellij"

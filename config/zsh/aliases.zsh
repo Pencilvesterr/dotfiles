@@ -13,6 +13,15 @@ alias c='clear'
 alias e='exit'
 alias vi='vim' # Mask builtin with better default
 
+# Homebrew's neovim bottle can ship a stale compiled-in VIMRUNTIME fallback
+# after an upgrade (e.g. pointing at a Cellar version that no longer exists),
+# causing "module 'vim.uri' not found" / E484 errors. Pin it to the "opt"
+# symlink so it always tracks whichever version is currently linked. Scoped
+# to just this command since plain `vim` has an incompatible runtime tree.
+# nvim() {
+#   VIMRUNTIME="/opt/homebrew/opt/neovim/share/nvim/runtime" command nvim "$@"
+# }
+
 # -------------------------------------------------------------------
 # Git
 # -------------------------------------------------------------------
