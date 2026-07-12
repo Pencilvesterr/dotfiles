@@ -24,8 +24,8 @@ docker run --rm -v "$REPO_DIR:/src:ro" ubuntu:24.04 bash -euo pipefail -c '
     curl -LsSf https://astral.sh/uv/install.sh | sh >/dev/null 2>&1
     export PATH="$HOME/.local/bin:$PATH"
 
-    echo "==> Running dot install (minimal, no apps)..."
-    ./dot install --profile personal-linux --minimal --skip-apps --adopt
+    echo "==> Running dot install (terminal apps only, no brew install)..."
+    ./dot install --profile personal-linux --terminal-apps-only --skip-brew-install --adopt
 
     echo "==> Asserting results..."
     [ "$(readlink "$HOME/.zshenv")" = "/dotfiles/config/zsh/.zshenv" ]

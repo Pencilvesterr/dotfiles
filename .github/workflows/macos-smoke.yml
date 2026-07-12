@@ -1,0 +1,43 @@
+name: macOS smoke test
+
+# Exercises the macOS install path (uv -> dot install -> links, hooks, managed
+# files, apps) on a real macOS runner. Mirrors tests/docker-smoke.sh, which
+# covers the equivalent Linux path (Docker can't run macOS containers).
+#
+# --terminal-apps-only keeps this to Brewfile.terminal (CLI formulae only): the
+# full mac profile pulls in GUI casks plus `mas "Trello"`, which needs a Mac
+# App Store login CI doesn't have.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Run dot install (terminal apps only)
+        run: ./dot install --profile personal-mac --terminal-apps-only --adopt
+
+      - name: Assert results
+        run: |
+          set -euo pipefail
+          [ "$(readlink "$HOME/.zshenv")" = "$GITHUB_WORKSPACE/config/zsh/.zshenv" ]
+          [ "$(readlink "$HOME/.gitconfig")" = "$GITHUB_WORKSPACE/config/git/global-config/personal.gitconfig" ]
+          [ -f "$HOME/.hushlogin" ]
+          [ -f "$HOME/.config/htop/htoprc" ]
+          [ "$(git config core.hooksPath)" = "$GITHUB_WORKSPACE/config/git/hooks" ]
+          git ls-files -v | grep -q "^S config/zsh/local.zsh"
+
+      - name: Second sync must be a clean no-op
+        run: |
+          ./dot sync
+          ./dot diff
+
+      - name: Pre-commit hook must pass
+        run: ./dot hook pre-commit

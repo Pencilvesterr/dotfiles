@@ -45,7 +45,7 @@ def _ensure_sudo() -> threading.Event | None:
 
 def run_install(repo: Path, args: argparse.Namespace) -> int:
     prof = _resolve_profile(args)
-    ui.info(f"Installing dotfiles for profile '{prof.name}' (minimal={prof.minimal})...")
+    ui.info(f"Installing dotfiles for profile '{prof.name}' (terminal_apps_only={prof.terminal_apps_only})...")
 
     ui.heading("Checking existing dotfiles")
     states = linker.classified_entries(repo, prof)
@@ -70,10 +70,10 @@ def run_install(repo: Path, args: argparse.Namespace) -> int:
 
     sudo_stop = _ensure_sudo()
     try:
-        if not args.skip_apps:
+        if not args.skip_brew_install:
             packages.install_apps(repo, prof)
 
-        if not prof.minimal:
+        if not prof.terminal_apps_only:
             platform_setup.apply_defaults(repo, prof)
     finally:
         if sudo_stop:
@@ -103,7 +103,7 @@ def run_install(repo: Path, args: argparse.Namespace) -> int:
 
 def _resolve_profile(args: argparse.Namespace) -> Profile:
     if args.profile:
-        prof = Profile(args.profile, minimal=args.minimal)
+        prof = Profile(args.profile, terminal_apps_only=args.terminal_apps_only)
         profile_mod.save(prof)
         return prof
     try:
@@ -111,16 +111,16 @@ def _resolve_profile(args: argparse.Namespace) -> Profile:
     except ProfileError:
         if not sys.stdin.isatty():
             raise
-        prof = _prompt_profile(minimal=args.minimal)
+        prof = _prompt_profile(terminal_apps_only=args.terminal_apps_only)
         profile_mod.save(prof)
         return prof
-    if args.minimal and not prof.minimal:
-        prof = Profile(prof.name, minimal=True)
+    if args.terminal_apps_only and not prof.terminal_apps_only:
+        prof = Profile(prof.name, terminal_apps_only=True)
         profile_mod.save(prof)
     return prof
 
 
-def _prompt_profile(minimal: bool) -> Profile:
+def _prompt_profile(terminal_apps_only: bool) -> Profile:
     print("Which machine is this?")
     choices = [p for p in profile_mod.VALID_PROFILES if p.endswith(profile_mod.current_os())]
     for i, name in enumerate(choices, 1):
@@ -128,7 +128,7 @@ def _prompt_profile(minimal: bool) -> Profile:
     while True:
         answer = input(f"Enter 1-{len(choices)}: ").strip()
         if answer.isdigit() and 1 <= int(answer) <= len(choices):
-            return Profile(choices[int(answer) - 1], minimal=minimal)
+            return Profile(choices[int(answer) - 1], terminal_apps_only=terminal_apps_only)
 
 
 def _resolve_mode(args: argparse.Namespace, diffs: list) -> str | None:
@@ -172,12 +172,12 @@ def _backup_and_remove(diffs: list) -> None:
 
 def _report_plan(repo: Path, prof: Profile, args: argparse.Namespace, mode: str, diffs: list) -> None:
     ui.heading("Dry run — planned actions")
-    if not args.skip_apps:
+    if not args.skip_brew_install:
         for brewfile in packages.brewfiles_for(repo, prof):
             ui.info(f"would install: {brewfile.name}")
         if not prof.is_mac:
-            ui.info("would install: linux CLI tools" + ("" if prof.minimal else " + apps"))
-    if not prof.minimal:
+            ui.info("would install: linux CLI tools" + ("" if prof.terminal_apps_only else " + apps"))
+    if not prof.terminal_apps_only:
         ui.info("would apply OS defaults")
     if diffs:
         ui.info(f"would {mode} {len(diffs)} existing file(s)")

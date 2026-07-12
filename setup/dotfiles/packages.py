@@ -30,7 +30,7 @@ def find_brew() -> str:
 
 def brewfiles_for(repo: Path, prof: Profile) -> list[Path]:
     brewfiles = [repo / "setup/homebrew/Brewfile.terminal"]
-    if prof.is_mac and not prof.minimal:
+    if prof.is_mac and not prof.terminal_apps_only:
         brewfiles.append(repo / "setup/homebrew/Brewfile.mac")
         suffix = "mac_work" if prof.is_work else "mac_personal"
         brewfiles.append(repo / f"setup/homebrew/Brewfile.{suffix}")
@@ -102,6 +102,6 @@ def install_apps(repo: Path, prof: Profile) -> None:
 
         ui.heading("Installing Linux-specific non-brew CLI tools")
         platform_setup.install_linux_cli_tools(repo)
-        if not prof.minimal:
+        if not prof.terminal_apps_only:
             ui.heading("Installing Linux-specific Apps")
             platform_setup.install_linux_apps(repo)

@@ -2,7 +2,7 @@
 # Bootstrap a brand-new machine: installs the prerequisites (Xcode CLT / apt
 # packages, Homebrew, uv) and then hands off to `./dot install`.
 #
-# Usage: ./bootstrap.sh [install flags, e.g. --profile personal-linux --minimal]
+# Usage: ./bootstrap.sh [install flags, e.g. --profile personal-linux --terminal-apps-only]
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

@@ -29,7 +29,7 @@ git clone https://github.com/Pencilvesterr/dotfiles.git && cd dotfiles
 # Ubuntu
 sudo apt install -y git
 git clone https://github.com/Pencilvesterr/dotfiles.git && cd dotfiles
-./bootstrap.sh --profile personal-linux --minimal   # servers: --minimal skips GUI apps / OS defaults
+./bootstrap.sh --profile personal-linux --terminal-apps-only   # servers: --terminal-apps-only skips GUI apps / OS defaults
 ```
 
 `bootstrap.sh` installs the prerequisites (Xcode CLT or apt packages, Homebrew, uv) and hands
@@ -56,7 +56,7 @@ refreshes the repo's git housekeeping. It never deletes real files.
 ./dot apps              # (re)install Homebrew bundles + non-brew tools for this profile
 ./dot defaults          # re-apply macOS defaults / Linux settings
 ./dot profile show|set  # inspect or change this machine's profile
-./dot install --help    # full provisioning flags (--adopt/--overwrite/--skip-apps/--dry-run)
+./dot install --help    # full provisioning flags (--adopt/--overwrite/--skip-brew-install/--dry-run)
 ```
 
 `./dot install --overwrite` never deletes files outright — anything replaced is backed up to

@@ -68,16 +68,16 @@ def cmd_pull(args: argparse.Namespace) -> int:
 
 def cmd_profile(args: argparse.Namespace) -> int:
     if args.profile_action == "set":
-        prof = Profile(name=args.name, minimal=args.minimal)
+        prof = Profile(name=args.name, terminal_apps_only=args.terminal_apps_only)
         profile_mod.save(prof)
-        ui.success(f"Profile saved: {prof.name} (minimal={prof.minimal})")
+        ui.success(f"Profile saved: {prof.name} (terminal_apps_only={prof.terminal_apps_only})")
         return 0
     # show (default)
     prof = _load_profile()
     print(f"profile: {prof.name}")
     print(f"os:      {prof.os}")
     print(f"context: {prof.context}")
-    print(f"minimal: {prof.minimal}")
+    print(f"terminal_apps_only: {prof.terminal_apps_only}")
     print(f"file:    {profile_mod.PROFILE_FILE}")
     return 0
 
@@ -123,11 +123,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("install", help="Full machine provisioning (apps, defaults, links)")
     p.add_argument("--profile", choices=profile_mod.VALID_PROFILES, help="Machine profile")
-    p.add_argument("--minimal", action="store_true", help="Server/minimal machine: skip GUI apps and OS defaults")
+    p.add_argument("--terminal-apps-only", action="store_true", help="Server/minimal machine: skip GUI apps and OS defaults")
     group = p.add_mutually_exclusive_group()
     group.add_argument("--adopt", action="store_true", help="Adopt differing machine files into the repo (no prompt)")
     group.add_argument("--overwrite", action="store_true", help="Replace differing machine files with repo versions, backing them up (no prompt)")
-    p.add_argument("--skip-apps", action="store_true", help="Skip package installation")
+    p.add_argument("--skip-brew-install", action="store_true", help="Skip package installation")
     p.add_argument("--dry-run", action="store_true", help="Show what would happen without doing it")
     p.set_defaults(func=cmd_install)
 
@@ -152,7 +152,7 @@ def build_parser() -> argparse.ArgumentParser:
     pshow.set_defaults(func=cmd_profile, profile_action="show")
     pset = psub.add_parser("set", help="Save this machine's profile")
     pset.add_argument("name", choices=profile_mod.VALID_PROFILES)
-    pset.add_argument("--minimal", action=argparse.BooleanOptionalAction, default=False)
+    pset.add_argument("--terminal-apps-only", action=argparse.BooleanOptionalAction, default=False)
     pset.set_defaults(func=cmd_profile, profile_action="set")
     p.set_defaults(func=cmd_profile, profile_action="show")
 

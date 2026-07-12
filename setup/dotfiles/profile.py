@@ -18,7 +18,7 @@ class ProfileError(Exception):
 @dataclass(frozen=True)
 class Profile:
     name: str
-    minimal: bool = False
+    terminal_apps_only: bool = False
 
     def __post_init__(self) -> None:
         if self.name not in VALID_PROFILES:
@@ -60,7 +60,10 @@ def load(path: Path = PROFILE_FILE) -> Profile:
         )
     try:
         data = json.loads(path.read_text())
-        prof = Profile(name=data["profile"], minimal=bool(data.get("minimal", False)))
+        prof = Profile(
+            name=data["profile"],
+            terminal_apps_only=bool(data.get("terminal_apps_only", False)),
+        )
     except (json.JSONDecodeError, KeyError, TypeError) as exc:
         raise ProfileError(f"Could not parse profile file {path}: {exc}") from exc
 
@@ -74,4 +77,9 @@ def load(path: Path = PROFILE_FILE) -> Profile:
 
 def save(prof: Profile, path: Path = PROFILE_FILE) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps({"profile": prof.name, "minimal": prof.minimal}, indent=2) + "\n")
+    path.write_text(
+        json.dumps(
+            {"profile": prof.name, "terminal_apps_only": prof.terminal_apps_only}, indent=2
+        )
+        + "\n"
+    )

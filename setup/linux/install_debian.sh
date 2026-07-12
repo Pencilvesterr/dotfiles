@@ -3,13 +3,9 @@ set -e
 # All setup assumes a ubuntu based distro
 # Note: `apt install` and `apt-get install` are both the same, but apt install is easier/has less options
 
-# Get the absolute path of the directory where the script is located
-# Get the git root dir
-GIT_ROOT_DIR="$(git rev-parse --show-toplevel)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-SCRIPT_DIR="$GIT_ROOT_DIR/scripts"
-
-. "$SCRIPT_DIR/utils.sh"
+. "$SCRIPT_DIR"/../scripts/utils.sh
 
 configure_linux_settings() {
     info "Configuring Linux settings"

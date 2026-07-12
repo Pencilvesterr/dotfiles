@@ -6,13 +6,13 @@ from dotfiles.profile import Profile, ProfileError
 
 def test_round_trip(tmp_path):
     path = tmp_path / "profile.json"
-    profile_mod.save(Profile("work-mac", minimal=True), path)
+    profile_mod.save(Profile("work-mac", terminal_apps_only=True), path)
     # bypass the platform guard by loading fields directly through load() on the right OS
-    prof = Profile("work-mac", minimal=True)
+    prof = Profile("work-mac", terminal_apps_only=True)
     assert prof.os == "mac"
     assert prof.context == "work"
     saved = path.read_text()
-    assert '"work-mac"' in saved and '"minimal": true' in saved
+    assert '"work-mac"' in saved and '"terminal_apps_only": true' in saved
 
 
 def test_invalid_name_rejected():
@@ -36,7 +36,7 @@ def test_load_rejects_platform_mismatch(tmp_path):
 def test_load_matching_platform(tmp_path):
     path = tmp_path / "profile.json"
     name = f"personal-{profile_mod.current_os()}"
-    profile_mod.save(Profile(name, minimal=True), path)
+    profile_mod.save(Profile(name, terminal_apps_only=True), path)
     prof = profile_mod.load(path)
     assert prof.name == name
-    assert prof.minimal is True
+    assert prof.terminal_apps_only is True

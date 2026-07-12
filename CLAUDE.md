@@ -13,7 +13,7 @@ This is a personal dotfiles repository for macOS and Linux development environme
 ./bootstrap.sh --profile personal-mac
 
 # Full provisioning on an existing machine (apps, OS defaults, links, git housekeeping)
-./dot install [--profile NAME] [--minimal] [--adopt|--overwrite] [--skip-apps] [--dry-run]
+./dot install [--profile NAME] [--terminal-apps-only] [--adopt|--overwrite] [--skip-brew-install] [--dry-run]
 
 # Frequent path: fast non-interactive sync of links + managed files (seconds)
 ./dot sync [--dry-run]
@@ -24,7 +24,7 @@ This is a personal dotfiles repository for macOS and Linux development environme
 ./dot pull              # app-managed files: system -> repo
 ./dot apps              # brew bundles + non-brew tools for this profile
 ./dot defaults          # re-apply macOS defaults / Linux settings
-./dot profile show|set NAME [--minimal]
+./dot profile show|set NAME [--terminal-apps-only]
 
 # Python dev (package lives in setup/dotfiles/)
 uv run pytest
@@ -67,8 +67,8 @@ Files that third-party apps overwrite (htoprc, Arc sidebar) can't be symlinks; t
 
 ### Work vs Personal / Mac vs Linux
 
-Both axes come from the saved profile — there is no runtime detection. `--minimal` (persisted in
-the profile) marks servers: skips GUI apps and OS defaults, still links everything.
+Both axes come from the saved profile — there is no runtime detection. `--terminal-apps-only`
+(persisted in the profile) marks servers: skips GUI apps and OS defaults, still links everything.
 
 ### Platform scripts (bash, called by the CLI)
 
