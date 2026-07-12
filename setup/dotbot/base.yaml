@@ -41,5 +41,9 @@
     # Claude Code settings
     ~/.claude/settings.json: config/claude/settings.json
     ~/.config/ccstatusline/settings.json: config/claude/ccstatusline_settings.json
-    ~/.claude/hooks/notify.sh: config/claude/hooks/notify.sh
-    ~/.claude/hooks/.env: private/claude/hooks/.env
+
+    # Agent settings and shared notifications
+    ~/.codex/config.toml: config/codex/config.toml
+    ~/.codex/hooks.json: config/codex/hooks.json
+    ~/.config/agent-notify/notify.sh: config/agent-notify/notify.sh
+    ~/.config/agent-notify/.env: private/claude/hooks/.env

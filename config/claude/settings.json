@@ -63,7 +63,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/notify.sh \"Done in %s — ready for your next message\""
+            "command": "/bin/bash ~/.config/agent-notify/notify.sh claude complete"
           }
         ]
       }
