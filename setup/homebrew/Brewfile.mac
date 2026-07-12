@@ -6,6 +6,7 @@ brew "mas" # Mac application store
 brew "gnu-tar" # Provides the ability to tar files
 brew "jenv"
 brew "mvnvm" # Maven for Java
+brew "gh" # Github
 
 # Add borders when working with aerospace
 tap "FelixKratz/formulae"
