@@ -1,7 +1,9 @@
 notify = ["/Users/mcrouch/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
-model = "gpt-5.6-sol"
+model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 approvals_reviewer = "auto_review"
+sandbox_mode = "danger-full-access"
+approval_policy = "on-request"
 
 [features]
   hooks = true
@@ -43,13 +45,16 @@ trust_level = "trusted"
 [projects."/Users/mcrouch/dev/atlassian/temp/tenants-without-rovo"]
 trust_level = "trusted"
 
+[projects."/Users/mcrouch/dev/atlassian/temp/getting-deactivated-rovo"]
+trust_level = "trusted"
+
 [tui]
 status_line = ["model-with-reasoning", "current-dir", "git-branch", "branch-changes", "permissions"]
 status_line_use_colors = true
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
-"gpt-5.6-sol" = 3
+"gpt-5.6-sol" = 4
 
 [marketplaces.openai-bundled]
 last_updated = "2026-07-09T22:45:51Z"
