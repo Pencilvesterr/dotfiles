@@ -1,0 +1,128 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      linux-smoke-full: ${{ steps.filter.outputs.linux-smoke-full }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            linux-smoke-full:
+              - bootstrap.sh
+              - setup/dotfiles/**
+              - setup/dotbot/**
+              - setup/linux/**
+              - setup/homebrew/Brewfile.terminal
+              - setup/managed.toml
+              - config/git/hooks/**
+              - tests/docker-smoke-full.sh
+              - .github/workflows/ci.yml
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run shellcheck
+        run: |
+          shellcheck -S warning \
+            bootstrap.sh \
+            dot \
+            setup/scripts/*.sh \
+            setup/linux/*.sh \
+            setup/mac/*.sh \
+            config/agent-notify/*.sh \
+            config/aerospace/*.sh \
+            config/git/hooks/pre-commit
+
+  python-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Sync dependencies
+        run: uv sync
+      - name: Ruff
+        run: uv run ruff check
+
+  zsh-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install zsh
+        run: sudo apt-get update && sudo apt-get install -y zsh
+      - name: Check zsh file syntax
+        run: |
+          for f in config/zsh/*.zsh config/zsh/.zshrc config/zsh/.zshenv config/zsh/.zprofile; do
+            echo "checking $f"
+            zsh -n "$f"
+          done
+
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Sync dependencies
+        run: uv sync
+      - name: Pytest
+        run: uv run pytest
+
+  macos-smoke:
+    # Exercises the macOS install path (uv -> dot install -> links, hooks, managed
+    # files, apps) on a real macOS runner. Mirrors tests/docker-smoke.sh, which
+    # covers the equivalent Linux path (Docker can't run macOS containers).
+    #
+    # --terminal-apps-only keeps this to Brewfile.terminal (CLI formulae only): the
+    # full mac profile pulls in GUI casks plus `mas "Trello"`, which needs a Mac
+    # App Store login CI doesn't have.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Run dot install (terminal apps only)
+        run: ./dot install --profile personal-mac --terminal-apps-only --adopt
+
+      - name: Assert results
+        run: |
+          set -euo pipefail
+          [ "$(readlink "$HOME/.zshenv")" = "$GITHUB_WORKSPACE/config/zsh/.zshenv" ]
+          [ "$(readlink "$HOME/.gitconfig")" = "$GITHUB_WORKSPACE/config/git/global-config/personal.gitconfig" ]
+          [ -f "$HOME/.hushlogin" ]
+          [ -f "$HOME/.config/htop/htoprc" ]
+          [ "$(git config core.hooksPath)" = "$GITHUB_WORKSPACE/config/git/hooks" ]
+          git ls-files -v | grep -q "^S config/zsh/local.zsh"
+
+      - name: Second sync must be a clean no-op
+        run: |
+          ./dot sync
+          ./dot diff
+
+      - name: Pre-commit hook must pass
+        run: ./dot hook pre-commit
+
+  linux-smoke-full:
+    # Exercises the FULL Linux install path in a clean Ubuntu container, including
+    # installing Homebrew itself and all Linux-specific apps (Docker, Wezterm,
+    # Nerd Fonts, ...) via bootstrap.sh. Mirrors tests/docker-smoke-full.sh.
+    #
+    # Slow (15-35 min), so it only runs when a path relevant to the Linux
+    # install actually changes, rather than on every push/PR.
+    needs: changes
+    if: needs.changes.outputs.linux-smoke-full == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run full Linux install smoke test
+        run: ./tests/docker-smoke-full.sh
