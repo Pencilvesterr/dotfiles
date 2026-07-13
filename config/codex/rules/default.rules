@@ -1,0 +1,47 @@
+# Global low-risk command allowlist. Rules execute matching commands outside the
+# sandbox without prompting, so keep prefixes specific and add new entries sparingly.
+
+# Local inspection commands.
+prefix_rule(pattern = ["ls"], decision = "allow", match = ["ls -la"], not_match = ["rm -rf ."])
+prefix_rule(pattern = ["find"], decision = "allow", match = ["find . -maxdepth 2 -type f"], not_match = ["rm file"])
+prefix_rule(pattern = ["rg"], decision = "allow", match = ["rg TODO"], not_match = ["grep TODO"])
+prefix_rule(pattern = ["cat"], decision = "allow", match = ["cat README.md"], not_match = ["less README.md"])
+prefix_rule(pattern = ["sed"], decision = "allow", match = ["sed -n 1,20p README.md"], not_match = ["awk '{print $1}' README.md"])
+prefix_rule(pattern = ["head"], decision = "allow", match = ["head -n 20 README.md"], not_match = ["tail -n 20 README.md"])
+prefix_rule(pattern = ["tail"], decision = "allow", match = ["tail -n 20 README.md"], not_match = ["head -n 20 README.md"])
+prefix_rule(pattern = ["wc"], decision = "allow", match = ["wc -l README.md"], not_match = ["stat README.md"])
+prefix_rule(pattern = ["sort"], decision = "allow", match = ["sort names.txt"], not_match = ["uniq names.txt"])
+prefix_rule(pattern = ["uniq"], decision = "allow", match = ["uniq names.txt"], not_match = ["sort names.txt"])
+prefix_rule(pattern = ["jq"], decision = "allow", match = ["jq . package.json"], not_match = ["yq . package.yaml"])
+prefix_rule(pattern = ["pwd"], decision = "allow", match = ["pwd"], not_match = ["cd .."])
+prefix_rule(pattern = ["which"], decision = "allow", match = ["which git"], not_match = ["type git"])
+prefix_rule(pattern = ["uname"], decision = "allow", match = ["uname -a"], not_match = ["hostname"])
+prefix_rule(pattern = ["date"], decision = "allow", match = ["date"], not_match = ["cal"])
+prefix_rule(pattern = ["df"], decision = "allow", match = ["df -h"], not_match = ["du -sh ."])
+prefix_rule(pattern = ["du"], decision = "allow", match = ["du -sh ."], not_match = ["df -h"])
+
+# Git inspection and remote-fetch operations. History-changing operations remain reviewed.
+prefix_rule(pattern = ["git", "status"], decision = "allow", match = ["git status --short"], not_match = ["git commit -m message"])
+prefix_rule(pattern = ["git", "diff"], decision = "allow", match = ["git diff --check"], not_match = ["git apply change.patch"])
+prefix_rule(pattern = ["git", "log"], decision = "allow", match = ["git log -1 --oneline"], not_match = ["git reflog expire"])
+prefix_rule(pattern = ["git", "show"], decision = "allow", match = ["git show --stat HEAD"], not_match = ["git restore file"])
+prefix_rule(pattern = ["git", "branch"], decision = "allow", match = ["git branch --show-current"], not_match = ["git switch main"])
+prefix_rule(pattern = ["git", "rev-parse"], decision = "allow", match = ["git rev-parse --show-toplevel"], not_match = ["git reset --hard"])
+prefix_rule(pattern = ["git", "remote", "-v"], decision = "allow", match = ["git remote -v"], not_match = ["git remote add origin https://example.com/repo.git"])
+prefix_rule(pattern = ["git", "fetch"], decision = "allow", match = ["git fetch origin"], not_match = ["git pull --ff-only"])
+
+# Read-only GitHub CLI operations. gh api remains reviewed because it can mutate remote state.
+prefix_rule(pattern = ["gh", "pr", ["list", "view", "checks"]], decision = "allow", match = ["gh pr list"], not_match = ["gh pr create"])
+prefix_rule(pattern = ["gh", "issue", ["list", "view"]], decision = "allow", match = ["gh issue list"], not_match = ["gh issue create"])
+prefix_rule(pattern = ["gh", "run", ["list", "view"]], decision = "allow", match = ["gh run list"], not_match = ["gh run rerun 123"])
+prefix_rule(pattern = ["gh", "repo", "view"], decision = "allow", match = ["gh repo view"], not_match = ["gh repo create example"])
+
+# Project checks with a locked dependency graph.
+prefix_rule(pattern = ["uv", "sync", "--locked"], decision = "allow", match = ["uv sync --locked"], not_match = ["uv sync"])
+prefix_rule(pattern = ["uv", "run", "pytest"], decision = "allow", match = ["uv run pytest"], not_match = ["uv run python script.py"])
+prefix_rule(pattern = ["uv", "run", "ruff", "check"], decision = "allow", match = ["uv run ruff check"], not_match = ["uv run ruff format"])
+
+# Explicitly user-approved broad network clients. These rules also allow uploads
+# and state-changing HTTP methods; use them only because this is intentional.
+prefix_rule(pattern = ["curl"], decision = "allow", match = ["curl https://example.com"], not_match = ["wget https://example.com"])
+prefix_rule(pattern = ["wget"], decision = "allow", match = ["wget https://example.com"], not_match = ["curl https://example.com"])
