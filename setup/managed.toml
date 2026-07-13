@@ -12,9 +12,3 @@
 [[files]]
 repo = "config/htop/htoprc"
 system = "~/.config/htop/htoprc"
-
-[[files]]
-repo = "private/arc/StorableSidebar.json"
-system = "~/Library/Application Support/Arc/StorableSidebar.json"
-context = "work"
-os = "mac"

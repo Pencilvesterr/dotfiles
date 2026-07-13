@@ -30,4 +30,4 @@ Recent commits use short, imperative subjects such as `Quote workspace names...`
 
 ## Security & Configuration Tips
 
-Do not commit tokens, machine-local values, or private Arc data. Sensitive files belong in the private submodule or documented local-only locations. Avoid changing skip-worktree files such as `config/zsh/local.zsh` unintentionally.
+Do not commit tokens, machine-local values, or private Arc data. Sensitive files belong in documented local-only locations. Avoid changing skip-worktree files such as `config/zsh/local.zsh` unintentionally.

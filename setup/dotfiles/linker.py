@@ -102,36 +102,6 @@ def _repo_source_dirty(repo: Path, source: Path) -> bool:
     return result.returncode != 0
 
 
-def uninitialized_submodule_root(repo: Path, source: Path) -> Path | None:
-    """Return the owning submodule when ``source`` is unavailable because it is uninitialized."""
-    try:
-        relative_source = source.relative_to(repo)
-    except ValueError:
-        return None
-
-    for depth in range(1, len(relative_source.parts)):
-        candidate = Path(*relative_source.parts[:depth])
-        result = subprocess.run(
-            ["git", "-C", str(repo), "ls-files", "--stage", "--", str(candidate)],
-            capture_output=True,
-            text=True,
-        )
-        is_gitlink = any(
-            line.startswith("160000 ") and line.endswith(f"\t{candidate}")
-            for line in result.stdout.splitlines()
-        )
-        if not is_gitlink:
-            continue
-
-        initialized = subprocess.run(
-            ["git", "-C", str(repo / candidate), "rev-parse", "--is-inside-work-tree"],
-            capture_output=True,
-        ).returncode == 0
-        if not initialized:
-            return repo / candidate
-    return None
-
-
 def classify(repo: Path, entry: LinkEntry) -> LinkEntry:
     source, target = entry.source, entry.target
     if not source.exists():
@@ -169,15 +139,8 @@ def diff(repo: Path, prof: Profile) -> int:
             )
             rc = 2
         elif e.state is State.SOURCE_MISSING:
-            submodule_root = uninitialized_submodule_root(repo, e.source)
-            if submodule_root:
-                ui.warning(
-                    f"Skipping source from uninitialized submodule: {e.source} "
-                    f"(submodule: {submodule_root})"
-                )
-            else:
-                ui.error(f"Source missing in repo: {e.source} (wanted by {e.target})")
-                rc = max(rc, 1)
+            ui.error(f"Source missing in repo: {e.source} (wanted by {e.target})")
+            rc = max(rc, 1)
         else:
             ui.warning(f"{e.state.value}: {e.target}")
             rc = max(rc, 1)
@@ -206,9 +169,8 @@ def run_dotbot(repo: Path, prof: Profile) -> None:
     """Run dotbot once over the merged task list of all applicable layers.
 
     Targets that exist as real files/directories, or whose repo source doesn't
-    exist (e.g. an uninitialized private submodule), are excluded (with a
-    warning) rather than passed to dotbot: dotbot would otherwise report the
-    whole run as failed for one missing/unwritable entry."""
+    exist, are excluded (with a warning) rather than passed to dotbot: dotbot
+    would otherwise report the whole run as failed for one missing/unwritable entry."""
     classified = classified_entries(repo, prof)
     skip = {
         e.target

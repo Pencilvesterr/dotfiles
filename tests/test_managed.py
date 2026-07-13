@@ -154,7 +154,6 @@ def test_cli_sync_conflict_stops_before_links_and_housekeeping(monkeypatch):
 
     calls = []
     monkeypatch.setattr(cli, "_load_profile", lambda: Profile("personal-linux"))
-    monkeypatch.setattr(gitrepo, "ensure_submodules", lambda repo: calls.append("submodules"))
     monkeypatch.setattr(managed, "sync", lambda *args, **kwargs: 2)
     monkeypatch.setattr(linker, "sync_links", lambda *args, **kwargs: calls.append("links"))
     monkeypatch.setattr(gitrepo, "housekeeping", lambda *args, **kwargs: calls.append("housekeeping"))
@@ -164,4 +163,4 @@ def test_cli_sync_conflict_stops_before_links_and_housekeeping(monkeypatch):
     )
 
     assert rc == 2
-    assert calls == ["submodules"]
+    assert calls == []

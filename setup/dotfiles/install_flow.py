@@ -47,8 +47,6 @@ def run_install(repo: Path, args: argparse.Namespace) -> int:
     prof = _resolve_profile(args)
     ui.info(f"Installing dotfiles for profile '{prof.name}' (terminal_apps_only={prof.terminal_apps_only})...")
 
-    gitrepo.ensure_submodules(repo)
-
     ui.heading("Checking existing dotfiles")
     states = linker.classified_entries(repo, prof)
     conflicts = [e for e in states if e.state is State.CONFLICT]

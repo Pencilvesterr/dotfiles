@@ -86,8 +86,8 @@ def same_content(a: Path, b: Path) -> bool:
 def _repo_path_dirty(repo: Path, path: Path) -> bool:
     """Return whether path has staged, unstaged, deleted, or untracked changes.
 
-    Resolve the containing Git worktree independently because managed files may
-    live in a submodule rather than the top-level dotfiles repository.
+    Resolve the containing Git worktree independently so paths are checked against
+    the repository that actually owns them.
     """
     cwd = path.parent
     while not cwd.exists() and cwd != repo:

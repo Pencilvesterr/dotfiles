@@ -26,14 +26,6 @@ def housekeeping(repo: Path, prof: Profile) -> None:
     register_strip_work_tooling_filter(repo)
 
 
-def ensure_submodules(repo: Path) -> None:
-    # Non-fatal: the private submodule isn't reachable by consumers of the public
-    # repo who lack access to it, and provisioning must still succeed for them.
-    result = _git(repo, "submodule", "update", "--init", "--recursive")
-    if result.returncode != 0:
-        ui.warning(f"Could not update git submodules: {result.stderr.strip()}")
-
-
 def set_hooks_path(repo: Path) -> None:
     _git(repo, "config", "core.hooksPath", str(repo / "config" / "git" / "hooks"))
 

@@ -1,5 +1,5 @@
 notify = ["/Users/mcrouch/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
-model = "gpt-5.6-terra"
+model = "gpt-5.6-sol"
 model_reasoning_effort = "medium"
 approvals_reviewer = "auto_review"
 # Enterprise-managed requirements permit workspace writes but reject full machine access.
@@ -50,7 +50,7 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [tui]
-status_line = ["model-with-reasoning", "current-dir", "git-branch", "branch-changes", "permissions"]
+status_line = ["model-with-reasoning", "current-dir", "git-branch", "branch-changes", "permissions", "context-used"]
 status_line_use_colors = true
 
 [tui.model_availability_nux]

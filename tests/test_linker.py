@@ -1,5 +1,4 @@
 import os
-import subprocess
 
 from dotfiles import linker
 from dotfiles.linker import State
@@ -61,31 +60,6 @@ def test_classify_conflict_when_repo_dirty(repo, home):
     (repo / "zsh/custom.zsh").write_text("export FOO=repo-edit\n")  # uncommitted repo change
     assert state_of(repo, "custom.zsh") is State.CONFLICT
     assert linker.diff(repo, PROF) == 2
-
-
-def test_diff_ignores_source_in_uninitialized_submodule(repo, home):
-    submodule = repo.parent / "private"
-    submodule.mkdir()
-    git(submodule, "init")
-    (submodule / "secret").write_text("shh\n")
-    git(submodule, "add", "secret")
-    git(submodule, "commit", "-m", "init")
-    submodule_commit = subprocess.run(
-        ["git", "-C", str(submodule), "rev-parse", "HEAD"],
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.strip()
-
-    (repo / "setup/dotbot/base.yaml").write_text(
-        "- link:\n    ~/.config/private/secret: private/secret\n"
-    )
-    git(repo, "add", "setup/dotbot/base.yaml")
-    git(repo, "update-index", "--add", "--cacheinfo", f"160000,{submodule_commit},private")
-    git(repo, "commit", "-m", "add private submodule")
-
-    assert not (repo / "private").exists()
-    assert linker.diff(repo, PROF) == 0
 
 
 def test_adopt_takes_machine_version(repo, home):

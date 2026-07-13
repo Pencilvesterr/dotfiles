@@ -47,4 +47,3 @@
     ~/.codex/hooks.json: config/codex/hooks.json
     ~/.codex/rules/default.rules: config/codex/rules/default.rules
     ~/.config/agent-notify/notify.sh: config/agent-notify/notify.sh
-    ~/.config/agent-notify/.env: private/agent-notify/.env
