@@ -12,6 +12,8 @@ def test_every_link_source_exists_for_every_profile():
     for name in VALID_PROFILES:
         prof = Profile(name)
         for entry in linker.entries(REAL_REPO, prof):
+            if linker.uninitialized_submodule_root(REAL_REPO, entry.source):
+                continue
             assert entry.source.exists(), (
                 f"{name}: {entry.source} referenced by a dotbot layer but missing from the repo"
             )
@@ -27,7 +29,10 @@ def test_link_targets_are_home_relative_and_unique_per_profile():
 def test_managed_repo_paths_exist():
     data = tomllib.loads((REAL_REPO / "setup/managed.toml").read_text())
     for item in data["files"]:
-        assert (REAL_REPO / item["repo"]).exists(), f"managed file missing: {item['repo']}"
+        repo_path = REAL_REPO / item["repo"]
+        if linker.uninitialized_submodule_root(REAL_REPO, repo_path):
+            continue
+        assert repo_path.exists(), f"managed file missing: {item['repo']}"
 
 
 def test_layers_parse_for_all_profiles():
