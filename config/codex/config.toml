@@ -6,6 +6,7 @@ approvals_reviewer = "auto_review"
 [features]
   hooks = true
 js_repl = false
+memories = true
 
 [hooks.state]
 
@@ -48,7 +49,7 @@ status_line_use_colors = true
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
-"gpt-5.6-sol" = 2
+"gpt-5.6-sol" = 3
 
 [marketplaces.openai-bundled]
 last_updated = "2026-07-09T22:45:51Z"
