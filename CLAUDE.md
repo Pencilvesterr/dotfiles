@@ -62,8 +62,10 @@ Format: `~/target/path: repo/relative/source` under a `link:` task. These YAMLs 
 source of truth — dotbot creates the links, and `linker.py` reads the same files for
 diff/adopt/heal and the pre-commit hook.
 
-Files that third-party apps overwrite (htoprc, Arc sidebar) can't be symlinks; they're listed in
-`setup/managed.toml` and copied by `managed.py` (optionally scoped by `context`/`os` keys).
+Files that third-party apps overwrite can't be symlinks. Public files such as htoprc are listed
+in `setup/managed.toml` and copied by `managed.py` (optionally scoped by `context`/`os` keys).
+On a work Mac, the pre-commit hook backs up Arc's sidebar to the ignored, separately cloned
+`dotfiles-private/` repository.
 
 ### Work vs Personal / Mac vs Linux
 
@@ -80,7 +82,9 @@ Both axes come from the saved profile — there is no runtime detection. `--term
 
 `config/git/hooks/` is the repo's `core.hooksPath`. `pre-commit` shims to `./dot hook pre-commit`,
 which fixes broken links, adopts changed machine files (staged), pulls managed files (unstaged),
-and aborts the commit on conflicts. It skips (never blocks) if no profile or uv is present.
+and aborts the commit on conflicts. On a work Mac it also commits and pushes Arc's sidebar to
+the private repository. Private-sync failures warn without blocking. The hook skips all checks
+if no profile or uv is present.
 
 ## Adding New Dotfiles
 

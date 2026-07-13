@@ -36,9 +36,10 @@ git clone https://github.com/Pencilvesterr/dotfiles.git && cd dotfiles
 off to `./dot install`, which does the actual provisioning. Without `--profile` it asks
 interactively; the answer is saved to `~/.config/dotfiles/profile.json` and reused from then on.
 
-Sensitive and app-owned files stay local. Agent notification credentials live at
-`~/.config/agent-notify/.env` (see `config/agent-notify/.env.sample`), and Arc owns its live
-sidebar data. Neither file is linked to or synchronized with this repository.
+Sensitive files stay outside this public repository. Agent notification credentials live at
+`~/.config/agent-notify/.env` (see `config/agent-notify/.env.sample`). On a work Mac, the
+pre-commit hook backs up Arc's live sidebar to an ignored, separately cloned
+`dotfiles-private/` repository.
 
 ### Day-to-day: syncing config changes
 

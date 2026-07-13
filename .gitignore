@@ -9,3 +9,4 @@ __pycache__/
 wezterm/*.jpg
 wezterm/*.png
 Brewfile.lock.json
+/dotfiles-private/

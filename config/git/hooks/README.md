@@ -17,6 +17,11 @@ commit to keep the repository and system config files in sync:
 Managed (app-owned) files from `setup/managed.toml` are always pulled
 system → repo, never staged.
 
+On a machine with the `work-mac` profile, the hook also copies Arc's current
+`StorableSidebar.json` into the ignored `dotfiles-private/` checkout. When the
+file changed, it commits only that file to the private repository and pushes the
+current branch. Private sync failures warn but do not block the public commit.
+
 **Why this is needed:**
 When you edit files using certain editors or tools (including the Edit tool), they may replace the file instead of modifying it in-place. This breaks symlinks. The hook ensures that symlinks are recreated before each commit, preventing out-of-sync configurations.
 
