@@ -1,7 +1,9 @@
 # Files managed by third-party apps that overwrite symlinks, so they are
 # copied instead of linked.
 #   ./dot pull   copies system -> repo
-#   ./dot sync   copies repo -> system (among other things)
+#   ./dot sync   pulls machine changes into the repo for review
+#   ./dot sync --overwrite-managed-with-repo-version
+#                explicitly copies repo -> system
 #
 # Each entry applies on every machine unless narrowed with:
 #   context = "work" | "personal"

@@ -46,4 +46,4 @@
     ~/.codex/config.toml: config/codex/config.toml
     ~/.codex/hooks.json: config/codex/hooks.json
     ~/.config/agent-notify/notify.sh: config/agent-notify/notify.sh
-    ~/.config/agent-notify/.env: private/claude/hooks/.env
+    ~/.config/agent-notify/.env: private/agent-notify/.env

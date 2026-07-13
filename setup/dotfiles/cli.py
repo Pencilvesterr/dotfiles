@@ -35,8 +35,15 @@ def cmd_sync(args: argparse.Namespace) -> int:
 
     prof = _load_profile()
     gitrepo.ensure_submodules(REPO_ROOT)
+    managed_rc = managed.sync(
+        REPO_ROOT,
+        prof,
+        dry_run=args.dry_run,
+        overwrite_with_repo=args.overwrite_managed_with_repo_version,
+    )
+    if managed_rc:
+        return managed_rc
     linker.sync_links(REPO_ROOT, prof, dry_run=args.dry_run)
-    managed.push(REPO_ROOT, prof, dry_run=args.dry_run)
     if not args.dry_run:
         gitrepo.housekeeping(REPO_ROOT, prof)
     ui.success("Sync complete.")
@@ -134,6 +141,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("sync", help="Fast non-interactive sync: links + managed files + git housekeeping")
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument(
+        "--overwrite-managed-with-repo-version",
+        action="store_true",
+        help="Replace app-owned managed files with their repo versions",
+    )
     p.set_defaults(func=cmd_sync)
 
     p = sub.add_parser("diff", help="Show link/managed-file targets that differ from the repo (exit 2 on conflict)")
