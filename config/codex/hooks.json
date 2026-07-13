@@ -1,16 +1,5 @@
 {
   "hooks": {
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "command": "/bin/bash /Users/mcrouch/.config/agent-notify/notify.sh codex approval",
-            "timeout": 10,
-            "type": "command"
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
       {
         "hooks": [
