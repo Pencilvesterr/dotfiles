@@ -8,12 +8,17 @@ if [ -f "$env_file" ]; then
   source "$env_file"
 fi
 
-if [ -z "${NTFY_SERVER:-}" ] || [ -z "${NTFY_TOPIC:-}" ] || [ -z "${NTFY_TOKEN:-}" ]; then
-  echo "ntfy-subscribe.sh: NTFY_SERVER, NTFY_TOPIC, NTFY_TOKEN must be set in $env_file" >&2
+if [ -z "${NTFY_SERVER:-}" ] || [ -z "${NTFY_TOPIC:-}" ]; then
+  echo "ntfy-subscribe.sh: NTFY_SERVER, NTFY_TOPIC must be set in $env_file" >&2
   exit 1
 fi
 
+ntfy_args=()
+if [ -n "${NTFY_TOKEN:-}" ]; then
+  ntfy_args+=(--token="$NTFY_TOKEN")
+fi
+
 exec /opt/homebrew/bin/ntfy subscribe \
-  --token="$NTFY_TOKEN" \
+  "${ntfy_args[@]}" \
   "$NTFY_SERVER/$NTFY_TOPIC" \
   "$script_dir/ntfy-display.sh"

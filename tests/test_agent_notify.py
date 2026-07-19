@@ -103,7 +103,7 @@ def test_remote_notification_requires_ntfy_credentials(tmp_path):
     result = run_script(NOTIFY, "codex", "complete", env=env)
 
     assert result.returncode == 1
-    assert "NTFY_SERVER, NTFY_TOPIC, NTFY_TOKEN must be set" in result.stderr
+    assert "NTFY_SERVER, NTFY_TOPIC must be set" in result.stderr
 
 
 @pytest.mark.parametrize("args", [("unknown", "complete"), ("claude", "approval")])

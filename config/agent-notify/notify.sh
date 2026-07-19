@@ -68,14 +68,18 @@ if [ -f "$env_file" ]; then
   source "$env_file"
 fi
 
-if [ -z "${NTFY_SERVER:-}" ] || [ -z "${NTFY_TOPIC:-}" ] || [ -z "${NTFY_TOKEN:-}" ]; then
-  echo "notify.sh: NTFY_SERVER, NTFY_TOPIC, NTFY_TOKEN must be set in $env_file" >&2
+if [ -z "${NTFY_SERVER:-}" ] || [ -z "${NTFY_TOPIC:-}" ]; then
+  echo "notify.sh: NTFY_SERVER, NTFY_TOPIC must be set in $env_file" >&2
   exit 1
+fi
+
+curl_args=(-H "X-Title: $title")
+if [ -n "${NTFY_TOKEN:-}" ]; then
+  curl_args+=(-H "Authorization: Bearer $NTFY_TOKEN")
 fi
 
 message=$(printf -- "$remote_message" "$(hostname -s)")
 curl -fsS \
-  -H "Authorization: Bearer $NTFY_TOKEN" \
-  -H "X-Title: $title" \
+  "${curl_args[@]}" \
   -d "$message" \
   "https://$NTFY_SERVER/$NTFY_TOPIC" >/dev/null

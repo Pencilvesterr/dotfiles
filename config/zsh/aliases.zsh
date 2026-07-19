@@ -171,10 +171,10 @@ gcou() {
 }
 
 # Force fetch a branch not in the .git/config allow list and track it's remote
-gf-override() {
-     git -C ../jira-full fetch origin "refs/heads/$1:refs/remotes/origin/$1" &&
-     git branch "$1" "origin/$1"
-}
+  gf-override() {
+      git fetch origin "refs/heads/${1}:refs/remotes/origin/${1}" &&
+      git branch --track "$1" "origin/$1"
+  }
 
 
 # -------------------------------------------------------------------
