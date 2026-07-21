@@ -9,9 +9,11 @@ from __future__ import annotations
 
 import filecmp
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
@@ -22,6 +24,7 @@ from dotfiles import ui
 from dotfiles.profile import Profile
 
 DOTBOT_DIR = Path("setup/dotbot")
+BACKUP_ROOT = Path("~/.config/dotfiles/backup").expanduser()
 
 
 class State(Enum):
@@ -149,8 +152,8 @@ def diff(repo: Path, prof: Profile) -> int:
     return rc
 
 
-def sync_links(repo: Path, prof: Profile, dry_run: bool = False) -> None:
-    """Create/repair all links for the profile via dotbot."""
+def sync_links(repo: Path, prof: Profile, dry_run: bool = False, overwrite: bool = False) -> None:
+    """Create/repair links, optionally replacing real targets with backed-up repo links."""
     if dry_run:
         for e in classified_entries(repo, prof):
             if e.state is State.MISSING:
@@ -158,11 +161,34 @@ def sync_links(repo: Path, prof: Profile, dry_run: bool = False) -> None:
             elif e.state is State.WRONG_LINK:
                 ui.info(f"would relink: {e.target} -> {e.source}")
             elif e.state in (State.EXISTS_SAME, State.EXISTS_DIFFERS, State.CONFLICT):
-                ui.warning(f"would leave alone (not a symlink): {e.target}")
+                if overwrite:
+                    ui.info(f"would back up and link: {e.target} -> {e.source}")
+                else:
+                    ui.warning(f"would leave alone (not a symlink): {e.target}")
             elif e.state is State.SOURCE_MISSING:
                 ui.error(f"source missing in repo: {e.source}")
         return
+    if overwrite:
+        real_targets = [
+            e
+            for e in classified_entries(repo, prof)
+            if e.state in (State.EXISTS_SAME, State.EXISTS_DIFFERS, State.CONFLICT)
+        ]
+        backup_and_remove(real_targets)
     run_dotbot(repo, prof)
+
+
+def backup_and_remove(entries: list[LinkEntry]) -> None:
+    """Move real link targets aside so Dotbot can replace them with symlinks."""
+    if not entries:
+        return
+    backup_dir = BACKUP_ROOT / time.strftime("%Y%m%d-%H%M%S")
+    for entry in entries:
+        destination = backup_dir / str(entry.target).lstrip("/")
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(entry.target), str(destination))
+        ui.warning(f"Backed up and removed: {entry.target} -> {destination}")
+    ui.info(f"Backups saved under {backup_dir}")
 
 
 def run_dotbot(repo: Path, prof: Profile) -> None:

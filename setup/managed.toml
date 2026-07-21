@@ -2,7 +2,7 @@
 # copied instead of linked.
 #   ./dot pull   copies system -> repo
 #   ./dot sync   pulls machine changes into the repo for review
-#   ./dot sync --overwrite-managed-with-repo-version
+#   ./dot sync --overwrite-from-repo
 #                explicitly copies repo -> system
 #
 # Each entry applies on every machine unless narrowed with:

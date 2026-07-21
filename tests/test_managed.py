@@ -142,11 +142,18 @@ def test_sync_dry_run_reports_pull_without_changes(repo, home):
     assert (repo / "htoprc").read_text() == "fields=0\n"
 
 
-def test_sync_parser_accepts_explicit_overwrite_flag():
+def test_sync_parser_accepts_overwrite_from_repo_flag():
     from dotfiles.cli import build_parser
 
-    args = build_parser().parse_args(["sync", "--overwrite-managed-with-repo-version"])
-    assert args.overwrite_managed_with_repo_version is True
+    args = build_parser().parse_args(["sync", "--overwrite-from-repo"])
+    assert args.overwrite_from_repo is True
+
+
+def test_sync_parser_accepts_link_overwrite_flag():
+    from dotfiles.cli import build_parser
+
+    args = build_parser().parse_args(["sync", "--overwrite"])
+    assert args.overwrite is True
 
 
 def test_cli_sync_conflict_stops_before_links_and_housekeeping(monkeypatch):
@@ -159,7 +166,7 @@ def test_cli_sync_conflict_stops_before_links_and_housekeeping(monkeypatch):
     monkeypatch.setattr(gitrepo, "housekeeping", lambda *args, **kwargs: calls.append("housekeeping"))
 
     rc = cli.cmd_sync(
-        SimpleNamespace(dry_run=False, overwrite_managed_with_repo_version=False)
+        SimpleNamespace(dry_run=False, overwrite=False, overwrite_from_repo=False)
     )
 
     assert rc == 2

@@ -53,6 +53,20 @@ def test_classify_real_files(repo, home):
     assert differs.read_text() == "export FOO=machine\n"
 
 
+def test_sync_overwrite_backs_up_real_files_then_links_repo_versions(repo, home, tmp_path, monkeypatch):
+    target = home / ".config/zsh/custom.zsh"
+    target.parent.mkdir(parents=True)
+    target.write_text("export FOO=machine\n")
+    backup_root = tmp_path / "backups"
+    monkeypatch.setattr(linker, "BACKUP_ROOT", backup_root)
+
+    linker.sync_links(repo, PROF, overwrite=True)
+
+    assert target.is_symlink()
+    assert target.read_text() == "export FOO=bar\n"
+    assert list(backup_root.rglob("custom.zsh"))[0].read_text() == "export FOO=machine\n"
+
+
 def test_classify_conflict_when_repo_dirty(repo, home):
     target = home / ".config/zsh/custom.zsh"
     target.parent.mkdir(parents=True)

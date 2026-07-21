@@ -4,11 +4,9 @@
 from __future__ import annotations
 
 import argparse
-import shutil
 import subprocess
 import sys
 import threading
-import time
 from pathlib import Path
 
 from dotfiles import gitrepo, linker, managed, packages, platform_setup
@@ -17,7 +15,6 @@ from dotfiles import ui
 from dotfiles.linker import State
 from dotfiles.profile import Profile, ProfileError
 
-BACKUP_ROOT = Path("~/.config/dotfiles/backup").expanduser()
 SUDO_KEEPALIVE_INTERVAL = 60
 
 
@@ -81,7 +78,7 @@ def run_install(repo: Path, args: argparse.Namespace) -> int:
 
     ui.heading("Symbolic Links")
     if mode == "overwrite" and diffs:
-        _backup_and_remove(diffs)
+        linker.backup_and_remove(diffs)
     elif diffs:
         ui.info("Adopting existing files into the repo...")
         linker.adopt(repo, prof)
@@ -158,16 +155,6 @@ def _resolve_mode(args: argparse.Namespace, diffs: list) -> str | None:
             return "overwrite"
         if answer in ("b", "abort", "q"):
             return None
-
-
-def _backup_and_remove(diffs: list) -> None:
-    backup_dir = BACKUP_ROOT / time.strftime("%Y%m%d-%H%M%S")
-    for e in diffs:
-        dest = backup_dir / str(e.target).lstrip("/")
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        shutil.move(str(e.target), str(dest))
-        ui.warning(f"Backed up and removed: {e.target} -> {dest}")
-    ui.info(f"Backups saved under {backup_dir}")
 
 
 def _report_plan(repo: Path, prof: Profile, args: argparse.Namespace, mode: str, diffs: list) -> None:

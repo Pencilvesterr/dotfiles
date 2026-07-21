@@ -146,7 +146,7 @@ def sync(
                     f"'{entry.system_path}' on this machine also differs."
                 )
                 ui.info("Keep the machine version: ./dot pull")
-                ui.info("Keep the repo version: ./dot sync --overwrite-managed-with-repo-version")
+                ui.info("Keep the repo version: ./dot sync --overwrite-from-repo")
             return 2
 
     for entry, state in classified:
