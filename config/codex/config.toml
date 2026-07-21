@@ -1,10 +1,11 @@
 notify = ["/Users/mcrouch/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
-model = "gpt-5.6-sol"
+model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 approvals_reviewer = "auto_review"
 # Enterprise-managed requirements permit workspace writes but reject full machine access.
 sandbox_mode = "workspace-write"
 approval_policy = "on-request"
+plan_mode_reasoning_effort = "high"
 
 [features]
   hooks = true
@@ -23,7 +24,7 @@ trusted_hash = "sha256:4a26fda072d09e1d357d3120d53a9ffbdd4924b34f91cafbd4b0b7e88
 trusted_hash = "sha256:13de5d4f39a21002f1b4d28e698573f2fe986dfb5b9e4ef682cf2da8e91af7f8"
 
 [hooks.state."/Users/mcrouch/.codex/hooks.json:stop:0:0"]
-trusted_hash = "sha256:0e39d7ddc459587da00f8cf164ce553ff1d3c234036bdda345c5db2bdbc102cf"
+trusted_hash = "sha256:0c91306a431cec7a72b1551b4e31d2dc0d5391ba7f0478ee0864af32ef949f4b"
 
 [projects."/Users/mcrouch/dev/atlassian/mcrouch-dotiles"]
 trust_level = "trusted"
@@ -47,6 +48,21 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/Users/mcrouch/dev/atlassian/temp/getting-deactivated-rovo"]
+trust_level = "trusted"
+
+[projects."/Users/mcrouch/dev/atlassian/agent-api-go"]
+trust_level = "trusted"
+
+[projects."/Users/mcrouch/dev/atlassian/conversational-ai-platform"]
+trust_level = "trusted"
+
+[projects."/Users/mcrouch/dev/atlassian/agent-bridge"]
+trust_level = "trusted"
+
+[projects."/Users/mcrouch/dev/atlassian/temp/transformerservice"]
+trust_level = "trusted"
+
+[projects."/Users/mcrouch/dev/atlassian/temp/catalogue-service"]
 trust_level = "trusted"
 
 [tui]
