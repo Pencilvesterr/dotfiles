@@ -11,20 +11,27 @@ vim.opt.laststatus = 2 -- Show a status line below every split
 -- To prevent this, set `splitkeep` to either `screen` or `topline`.
 vim.opt.splitkeep = "screen"
 
--- Use OSC 52 clipboard (WezTerm supports this natively, including via mux domains)
-vim.g.clipboard = {
-  name = "OSC 52",
-  copy = {
-    ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
-    ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
-  },
-  paste = {
-    -- Paste falls back to unnamed register; OSC 52 paste requires terminal support
-    ["+"] = function()
-      return { vim.fn.split(vim.fn.getreg(""), "\n"), vim.fn.getregtype("") }
-    end,
-    ["*"] = function()
-      return { vim.fn.split(vim.fn.getreg(""), "\n"), vim.fn.getregtype("") }
-    end,
-  },
-}
+-- Use OSC 52 in remote sessions, including WezTerm SSH mux domains. Local sessions
+-- should use Neovim's native provider so the system clipboard can also be pasted.
+local remote_session = vim.env.SSH_CONNECTION
+  or vim.env.SSH_TTY
+  or (vim.env.WEZTERM_PANE and vim.fn.has("macunix") == 0 and not vim.env.DISPLAY and not vim.env.WAYLAND_DISPLAY)
+
+if remote_session then
+  vim.g.clipboard = {
+    name = "OSC 52",
+    copy = {
+      ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+      ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+    },
+    paste = {
+      -- Paste falls back to unnamed register; OSC 52 paste requires terminal support
+      ["+"] = function()
+        return { vim.fn.split(vim.fn.getreg(""), "\n"), vim.fn.getregtype("") }
+      end,
+      ["*"] = function()
+        return { vim.fn.split(vim.fn.getreg(""), "\n"), vim.fn.getregtype("") }
+      end,
+    },
+  }
+end
