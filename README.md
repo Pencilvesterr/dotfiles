@@ -53,7 +53,9 @@ Non-interactive and takes seconds: pulls changed app-managed files into the repo
 repairs/creates all symlinks, and refreshes the repo's git housekeeping. It never deletes real
 files. If both copies of a managed file changed, sync stops without changing anything; after
 reviewing, use `./dot pull` to keep the machine version or
-`./dot sync --overwrite-managed-with-repo-version` to keep the repo version.
+`./dot sync --overwrite-from-repo` to keep the repo version.
+For symlink-managed files that already exist, use `./dot sync --overwrite`; it backs up
+the existing targets before replacing them with links to the repo versions.
 
 ### Other commands
 
@@ -61,8 +63,9 @@ reviewing, use `./dot pull` to keep the machine version or
 ./dot diff              # show targets that differ from the repo (exit 2 on conflict)
 ./dot adopt [TARGET..]  # copy machine versions of differing files into the repo, then relink
 ./dot pull              # copy app-managed files (htoprc, Arc sidebar) system -> repo
-./dot sync --overwrite-managed-with-repo-version
+./dot sync --overwrite-from-repo
                         # explicitly replace managed machine files from the repo
+./dot sync --overwrite  # replace existing linked-file targets from the repo (with backups)
 ./dot apps              # (re)install Homebrew bundles + non-brew tools for this profile
 ./dot defaults          # re-apply macOS defaults / Linux settings
 ./dot profile show|set  # inspect or change this machine's profile
@@ -91,7 +94,7 @@ repo leaves broken symlinks you can remove as you encounter them.
 
 Files that third-party apps overwrite (so they can't be symlinks) go in `setup/managed.toml`
 instead. `./dot sync` pulls machine changes into the repo; use
-`./dot sync --overwrite-managed-with-repo-version` when the repo version should win.
+`./dot sync --overwrite-from-repo` when the repo version should win.
 
 ### Software Installation
 

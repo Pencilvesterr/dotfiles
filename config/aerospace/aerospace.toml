@@ -21,9 +21,9 @@ after-login-command = []
 
 #after-startup-command = []
 after-startup-command = [
-    # JankyBorders has a built-in detection of already running process,
-    # so it won't be run twice on AeroSpace restart
-    'exec-and-forget brew services restart borders && borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=10.0'
+  # JankyBorders has a built-in detection of already running process,
+  # so it won't be run twice on AeroSpace restart
+  'exec-and-forget brew services restart borders && borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=15.0',
 ]
 # # Start AeroSpace at login
 start-at-login = true
@@ -55,9 +55,16 @@ key-mapping.preset = 'qwerty'
 # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
 # Fallback value (if you omit the key): on-focused-monitor-changed = []
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
-on-focus-changed = "move-mouse window-lazy-center"
+on-focus-changed = [
+    'move-mouse window-lazy-center',
+    'exec-and-forget $HOME/.config/aerospace/update-borders.sh',
+]
 
-exec-on-workspace-change = ['/bin/bash', '-c', '$HOME/.config/aerospace/move-apps-to-workspace.sh']
+exec-on-workspace-change = [
+  '/bin/bash',
+  '-c',
+  '$HOME/.config/aerospace/move-apps-to-workspace.sh',
+]
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
@@ -67,12 +74,12 @@ exec-on-workspace-change = ['/bin/bash', '-c', '$HOME/.config/aerospace/move-app
 #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
 #                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
-inner.horizontal = [{ monitor."built-in" = 5}, 12]
+inner.horizontal = [{ monitor."built-in" = 5 }, 12]
 inner.vertical = [{ monitor."built-in" = 5 }, 12]
-outer.left = [{monitor."built-in" = 5}, 5]
-outer.bottom = [{ monitor."built-in" = 5}, 5]
-outer.top = [{ monitor."built-in" = 5}, 5]
-outer.right = [{ monitor."built-in" = 5}, 5]
+outer.left = [{ monitor."built-in" = 5 }, 5]
+outer.bottom = [{ monitor."built-in" = 5 }, 5]
+outer.top = [{ monitor."built-in" = 5 }, 5]
+outer.right = [{ monitor."built-in" = 5 }, 5]
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -121,11 +128,11 @@ ctrl-alt-f6 = 'resize smart -150'
 ctrl-alt-f7 = 'resize smart +150'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-alt-1 = 'workspace "1->Browser"' 
+alt-1 = 'workspace "1->Browser"'
 alt-2 = 'workspace "2->Code"'
-alt-3 = 'workspace "3->Terminal"' 
-alt-4 = 'workspace "4->Zoom+Postman"' 
-alt-5 = 'workspace "5->Slack"' 
+alt-3 = 'workspace "3->Terminal"'
+alt-4 = 'workspace "4->Zoom+Postman"'
+alt-5 = 'workspace "5->Slack"'
 alt-6 = 'workspace "6->Browser"'
 alt-7 = 'workspace "7->Spotify"'
 alt-8 = 'workspace "8->Terminal"'
@@ -152,7 +159,10 @@ ctrl-alt-m = ['move-node-to-workspace "M->Mail"']
 ctrl-alt-n = ['move-node-to-workspace "N->Notion"']
 ctrl-alt-p = ['move-node-to-workspace "P->Postman"']
 ctrl-alt-w = ['move-node-to-workspace "W->WhatsApp"']
-ctrl-alt-enter = "fullscreen"
+ctrl-alt-enter = [
+    'fullscreen',
+    'exec-and-forget $HOME/.config/aerospace/update-borders.sh',
+]
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
@@ -182,14 +192,17 @@ ctrl-alt-semicolon = 'mode service'
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
 esc = ['reload-config', 'mode main']
-r = ['flatten-workspace-tree', 'mode main'] # reset layout
-f = ['layout floating tiling'] # Toggle between floating and tiling layout
+r = ['flatten-workspace-tree', 'mode main']                # reset layout
+f = ['layout floating tiling']                             # Toggle between floating and tiling layout
 backspace = ['close-all-windows-but-current', 'mode main']
-b = ['balance-sizes'] # Balance sizes of windows in the current workspace
+b = ['balance-sizes']                                      # Balance sizes of windows in the current workspace
 
 # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 #s = ['layout sticky tiling', 'mode main']
-ctrl-alt-cmd-h = ['join-with left','mode main',] # mode main will exit sevice mode
+ctrl-alt-cmd-h = [
+  'join-with left',
+  'mode main',
+] # mode main will exit sevice mode
 ctrl-alt-cmd-j = ['join-with down', 'mode main']
 ctrl-alt-cmd-k = ['join-with up', 'mode main']
 ctrl-alt-cmd-l = ['join-with right', 'mode main']
@@ -217,7 +230,7 @@ run = 'move-node-to-workspace "1->Browser"'
 if.app-id = 'com.jetbrains.pycharm'
 run = 'move-node-to-workspace "2->Code"'
 [[on-window-detected]]
-if.app-id = 'com.jetbrains.cwm.guest'  # Remote dev
+if.app-id = 'com.jetbrains.cwm.guest'    # Remote dev
 run = 'move-node-to-workspace "2->Code"'
 [[on-window-detected]]
 if.app-id = 'com.jetbrains.WebStorm'
