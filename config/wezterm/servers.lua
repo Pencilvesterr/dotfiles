@@ -16,6 +16,11 @@ M.ssh_domains = {
 		remote_address = "morgan-v4",
 		username = "ubuntu",
 	},
+	{
+		name = "pi",
+		remote_address = "192.168.1.243",
+		username = "pi",
+	},
 }
 
 return M
