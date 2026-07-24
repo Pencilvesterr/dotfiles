@@ -4,7 +4,7 @@
       {
         "hooks": [
           {
-            "command": "/Users/mcrouch/.codex/hooks/aloc-managed/post_to_aloc.sh",
+            "command": "~/.codex/hooks/aloc-managed/post_to_aloc.sh",
             "type": "command"
           }
         ]
@@ -14,7 +14,7 @@
       {
         "hooks": [
           {
-            "command": "/Users/mcrouch/.codex/hooks/aloc-managed/post_to_aloc.sh",
+            "command": "~/.codex/hooks/aloc-managed/post_to_aloc.sh",
             "type": "command"
           }
         ]

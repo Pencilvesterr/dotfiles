@@ -25,12 +25,9 @@
       "Bash(git reset --hard *)",
       "Bash(git clean *)",
       "Bash(git branch -D *)",
-      "Bash(sudo *)",
       "Bash(kill *)",
       "Bash(killall *)",
-      "Bash(pkill *)",
-      "Edit(**/.env)",
-      "Edit(**/.env.*)"
+      "Bash(pkill *)"
     ]
   },
   "model": "sonnet",

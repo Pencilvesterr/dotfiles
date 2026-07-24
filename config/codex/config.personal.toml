@@ -3,5 +3,13 @@ model_reasoning_effort = "medium"
 [projects."/home/morgan/dev/dotfiles"]
 trust_level = "trusted"
 
+[projects."/Users/morgan/dev/dotfiles"]
+trust_level = "trusted"
+
 [tui.model_availability_nux]
-"gpt-5.6-sol" = 1
+"gpt-5.6-sol" = 2
+
+[hooks.state]
+
+[hooks.state."/Users/morgan/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:0e39d7ddc459587da00f8cf164ce553ff1d3c234036bdda345c5db2bdbc102cf"
