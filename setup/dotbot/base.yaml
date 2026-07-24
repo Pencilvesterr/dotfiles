@@ -38,12 +38,9 @@
     ~/.config/git/common.gitconfig: config/git/global-config/common.gitconfig
     ~/.config/lazygit/config.yml: config/git/lazygit/config.yml
 
-    # Claude Code settings
-    ~/.claude/settings.json: config/claude/settings.json
+    # Claude Code shared settings
     ~/.config/ccstatusline/settings.json: config/claude/ccstatusline_settings.json
 
-    # Agent settings and shared notifications
-    ~/.codex/config.toml: config/codex/config.toml
-    ~/.codex/hooks.json: config/codex/hooks.json
+    # Agent shared notifications and rules
     ~/.codex/rules/default.rules: config/codex/rules/default.rules
     ~/.config/agent-notify/notify.sh: config/agent-notify/notify.sh

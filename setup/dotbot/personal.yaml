@@ -7,4 +7,7 @@
       relink: true
 
 - link:
+    ~/.claude/settings.json: config/claude/settings.personal.json
+    ~/.codex/config.toml: config/codex/config.personal.toml
+    ~/.codex/hooks.json: config/codex/hooks.personal.json
     ~/.gitconfig: config/git/global-config/personal.gitconfig

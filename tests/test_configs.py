@@ -24,6 +24,23 @@ def test_link_targets_are_home_relative_and_unique_per_profile():
         assert len(targets) == len(set(targets))
 
 
+def test_agent_settings_follow_machine_context():
+    for name, expected in (
+        (
+            "personal-mac",
+            ("settings.personal.json", "config.personal.toml", "hooks.personal.json"),
+        ),
+        ("work-mac", ("settings.work.json", "config.work.toml", "hooks.work.json")),
+    ):
+        by_target = {
+            entry.target.name: entry.source.name
+            for entry in linker.entries(REAL_REPO, Profile(name))
+        }
+        assert by_target["settings.json"] == expected[0]
+        assert by_target["config.toml"] == expected[1]
+        assert by_target["hooks.json"] == expected[2]
+
+
 def test_managed_repo_paths_exist():
     data = tomllib.loads((REAL_REPO / "setup/managed.toml").read_text())
     for item in data["files"]:
